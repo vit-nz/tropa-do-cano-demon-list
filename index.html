@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AREDl-Style Demon List</title>
+    <title>Lista de Demons - AREDl Style</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -17,12 +17,12 @@
         }
         table {
             margin: 0 auto;
-            width: 80%;
+            width: 90%;
             border-collapse: collapse;
         }
         th, td {
             border: 1px solid #444;
-            padding: 10px;
+            padding: 12px;
             text-align: center;
         }
         th {
@@ -36,8 +36,53 @@
         tr:nth-child(odd) {
             background-color: #1a1a1a;
         }
-        button {
+        .add-button {
             margin: 20px 0;
             padding: 10px 20px;
             font-size: 16px;
-      
+            cursor: pointer;
+            background-color: #ff6f61;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        .add-button:hover {
+            background-color: #e65a50;
+        }
+        .error {
+            color: red;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Lista de Demons - Estilo AREDl</h1>
+    <table id="demonTable">
+        <thead>
+            <tr>
+                <th>Posição</th>
+                <th>Nome</th>
+                <th>Criador</th>
+                <th>Verificador</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Seus Demons serão adicionados aqui -->
+            <tr>
+                <td>1</td>
+                <td>Waka Waka Interface 1</td>
+                <td>Vrdr</td>
+                <td>Hyfera</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Crumbling Caverns</td>
+                <td>vitnz</td>
+                <td>Arepy</td>
+            </tr>
+            <!-- Adicione mais linhas conforme necessário -->
+        </tbody>
+    </table>
+    <p class="error" id="errorMessage"></p>
+</body>
+</html>
