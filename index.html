@@ -4,11 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tropa do Cano Demon List</title>
-    <style id="theme-styles">
+    <style>
         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
+            transition: background-color 0.3s, color 0.3s;
         }
 
         header {
@@ -78,37 +79,68 @@
             background-color: #2ecc71;
         }
 
-        .dark-mode {
+        /* Tema Claro */
+        .light-theme body {
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        .light-theme header {
+            background-color: #333;
+        }
+
+        .light-theme #demon-list, .light-theme #submit-completion, .light-theme #leaderboard, .light-theme #moderation {
+            background-color: white;
+        }
+
+        .light-theme table {
+            background-color: #fff;
+        }
+
+        .light-theme th {
+            background-color: #333;
+        }
+
+        .light-theme button {
+            background-color: #333;
+        }
+
+        .light-theme button:hover {
+            background-color: #555;
+        }
+
+        /* Tema Escuro */
+        .dark-theme body {
             background-color: #121212;
             color: white;
         }
 
-        .dark-mode header {
+        .dark-theme header {
             background-color: #1e1e1e;
         }
 
-        .dark-mode #demon-list, .dark-mode #submit-completion, .dark-mode #leaderboard, .dark-mode #moderation {
+        .dark-theme #demon-list, .dark-theme #submit-completion, .dark-theme #leaderboard, .dark-theme #moderation {
             background-color: #333;
         }
 
-        .dark-mode table {
+        .dark-theme table {
             background-color: #222;
         }
 
-        .dark-mode th {
+        .dark-theme th {
             background-color: #444;
         }
 
-        .dark-mode button {
+        .dark-theme button {
             background-color: #555;
         }
 
-        .dark-mode button:hover {
+        .dark-theme button:hover {
             background-color: #777;
         }
     </style>
 </head>
-<body>
+<body class="light-theme">
     <header>
         <h1>Tropa do Cano Demon List</h1>
         <p>Os mais difíceis e épicos níveis do Geometry Dash!</p>
@@ -248,33 +280,25 @@
             moderationTable.appendChild(row);
         }
 
-        // Função para moderadores confirmarem a completion
+        // Função para confirmar a conclusão do nível
         function approveCompletion(levelIndex, completionIndex) {
-            const level = demonLevels[levelIndex];
-            const completion = level.completions[completionIndex];
-
+            const completion = demonLevels[levelIndex].completions[completionIndex];
             completion.confirmed = true;
-
             renderDemonList();
-            updateLeaderboard(level, completion);
-
-            const moderationTable = document.querySelector('#moderation-table tbody');
-            const rows = moderationTable.querySelectorAll('tr');
-            rows[completionIndex].querySelector('td:nth-child(4)').classList.remove('pending');
-            rows[completionIndex].querySelector('td:nth-child(4)').classList.add('confirmed');
+            updateLeaderboard(completion, levelIndex);
+            updateModeration();
         }
 
-        // Função para adicionar a completion ao leaderboard
-        function updateLeaderboard(level, completion) {
-            if (completion.confirmed) {
-                const leaderboardList = document.querySelector('#leaderboard-list');
-                const newEntry = document.createElement('li');
-                newEntry.textContent = `${level.nome} - ${completion.playerName} - ${level.pontos} pontos`;
-                leaderboardList.appendChild(newEntry);
-            }
+        // Atualizar o leaderboard após a confirmação
+        function updateLeaderboard(completion, levelIndex) {
+            const leaderboardList = document.querySelector('#leaderboard-list');
+            const level = demonLevels[levelIndex];
+            const newEntry = document.createElement('li');
+            newEntry.textContent = `${level.nome} - ${completion.playerName} - ${level.pontos} pontos`;
+            leaderboardList.appendChild(newEntry);
         }
 
-        // Função para exibir a pessoa que completou o nível
+        // Função para exibir as completions confirmadas
         function showCompletion(levelIndex) {
             const level = demonLevels[levelIndex];
             alert(`Concluído por: ${level.completions.filter(c => c.confirmed).map(c => c.playerName).join(', ')}`);
@@ -282,20 +306,8 @@
 
         // Função para alternar entre tema claro e escuro
         function toggleTheme() {
-            document.body.classList.toggle('dark-mode');
-            const themeStyles = document.getElementById('theme-styles');
-            if (document.body.classList.contains('dark-mode')) {
-                themeStyles.innerHTML = `
-                    /* Estilos para tema escuro aqui */
-                    body {
-                        background-color: #121212;
-                        color: white;
-                    }
-                    /* ... (restante do estilo escuro) */
-                `;
-            } else {
-                themeStyles.innerHTML = ``;
-            }
+            document.body.classList.toggle('dark-theme');
+            document.body.classList.toggle('light-theme');
         }
 
         renderDemonList();
