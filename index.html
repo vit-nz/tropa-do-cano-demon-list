@@ -6,41 +6,49 @@
     <title>Tropa do Cano Demon List</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #fff;
-            color: #000;
-            transition: background-color 0.3s, color 0.3s;
+            background-color: #f5f5f5;
+            color: #333;
             display: flex;
             justify-content: center;
             align-items: flex-start;
             flex-direction: column;
-            height: 100vh;
+            min-height: 100vh;
             text-align: center;
+            transition: background-color 0.3s, color 0.3s;
         }
         body.dark-mode {
-            background-color: #2c2f33;
-            color: #fff;
+            background-color: #2b2b2b;
+            color: #f5f5f5;
         }
         header {
-            background-color: #333;
+            background-color: #0078D4;
             color: white;
-            padding: 20px 0;
+            padding: 30px 0;
             width: 100%;
             text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
         header.dark-mode {
-            background-color: #1a1d21;
+            background-color: #1e1e1e;
+        }
+        .content {
+            width: 80%;
+            max-width: 1200px;
+            margin: 30px 0;
+        }
+        .section-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 15px;
         }
         #demon-list, #submit-completion, #leaderboard, #moderation, #completions {
-            padding: 20px;
-            margin: 20px;
             background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 80%;
-            max-width: 1000px;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             margin-bottom: 20px;
         }
         body.dark-mode #demon-list,
@@ -56,31 +64,45 @@
             margin-bottom: 20px;
         }
         th, td {
-            padding: 10px;
+            padding: 12px;
             text-align: center;
             border: 1px solid #ddd;
+            font-size: 16px;
         }
         th {
-            background-color: #333;
+            background-color: #0078D4;
             color: white;
         }
         body.dark-mode th {
-            background-color: #444;
+            background-color: #1e1e1e;
+        }
+        .level-name {
+            cursor: pointer;
+            color: #0078D4;
+            font-weight: bold;
+            text-decoration: none;
+        }
+        .level-name:hover {
+            text-decoration: underline;
         }
         input, button {
-            padding: 8px;
-            margin: 10px 5px;
-            border-radius: 4px;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
             border: 1px solid #ccc;
+            font-size: 16px;
         }
         button {
-            background-color: #333;
+            background-color: #0078D4;
             color: white;
             border: none;
             cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s;
         }
         button:hover {
-            background-color: #555;
+            background-color: #0056a1;
         }
         .pending {
             background-color: #f1c40f;
@@ -101,69 +123,65 @@
         }
         .modal-content {
             background-color: white;
-            padding: 20px;
-            border-radius: 8px;
+            padding: 30px;
+            border-radius: 12px;
             width: 60%;
-            max-width: 800px;
+            max-width: 900px;
             text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
         body.dark-mode .modal-content {
             background-color: #444;
-        }
-        #profile-modal {
-            width: 60%;
-        }
-        .discord-logo {
-            width: 40px;
-            height: 40px;
-            vertical-align: middle;
-        }
-        .discord-link {
-            color: #7289da;
-            text-decoration: none;
-            font-weight: bold;
-        }
-        .discord-link:hover {
-            text-decoration: underline;
         }
         .theme-toggle {
             position: fixed;
             top: 20px;
             right: 20px;
-            background-color: #333;
+            background-color: #0078D4;
             color: white;
             border: none;
-            padding: 10px;
-            border-radius: 5px;
+            padding: 15px;
+            border-radius: 50%;
             cursor: pointer;
+            font-size: 20px;
         }
         .theme-toggle:hover {
-            background-color: #555;
+            background-color: #0056a1;
         }
-        .theme-icon {
-            width: 20px;
-            height: 20px;
-        }
-        .level-name {
-            cursor: pointer;
-            color: #333;
+        .discord-link {
+            color: #7289da;
             font-weight: bold;
+            font-size: 18px;
         }
-        .level-name:hover {
+        .discord-link:hover {
             text-decoration: underline;
+        }
+        .discord-logo {
+            width: 30px;
+            height: 30px;
+            vertical-align: middle;
         }
         #leaderboard-list {
             list-style-type: none;
             padding: 0;
         }
         #leaderboard-list li {
-            margin: 10px 0;
-            cursor: pointer;
+            margin: 15px 0;
             font-size: 18px;
-            color: #333;
+            cursor: pointer;
         }
         #leaderboard-list li:hover {
             text-decoration: underline;
+        }
+        .level-completions-modal ul {
+            padding: 0;
+            list-style-type: none;
+            text-align: left;
+            margin: 15px 0;
+        }
+        .level-completions-modal li {
+            font-size: 18px;
+            margin-bottom: 10px;
         }
     </style>
 </head>
@@ -176,89 +194,86 @@
         </a>
     </header>
 
-    <button class="theme-toggle" onclick="toggleTheme()">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Font_Awesome_5_solid_moon.svg/1024px-Font_Awesome_5_solid_moon.svg.png" alt="Trocar Tema" class="theme-icon">
-    </button>
+    <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
 
-    <section id="demon-list">
-        <h2>Lista de Níveis Demon</h2>
-        <table id="demon-table">
-            <thead>
-                <tr>
-                    <th>Posição</th>
-                    <th>Nome do Nível</th>
-                    <th>Pontos</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Demon list will be dynamically populated -->
-            </tbody>
-        </table>
-    </section>
+    <div class="content">
+        <section id="demon-list">
+            <h2 class="section-title">Lista de Níveis Demon</h2>
+            <table id="demon-table">
+                <thead>
+                    <tr>
+                        <th>Posição</th>
+                        <th>Nome do Nível</th>
+                        <th>Pontos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Demon list will be dynamically populated -->
+                </tbody>
+            </table>
+        </section>
 
-    <section id="submit-completion">
-        <h2>Submeter Completion</h2>
-        <form id="completion-form">
-            <input type="text" id="player-name" placeholder="Seu Nome" required>
-            <input type="text" id="level-name" placeholder="Nome do Nível" required>
-            <input type="url" id="youtube-link" placeholder="Link do YouTube (prova)" required>
-            <input type="text" id="device" placeholder="Dispositivo (PC/Mobile)" required>
-            <button type="submit">Submeter</button>
-        </form>
-    </section>
+        <section id="submit-completion">
+            <h2 class="section-title">Submeter Completion</h2>
+            <form id="completion-form">
+                <input type="text" id="player-name" placeholder="Seu Nome" required>
+                <input type="text" id="level-name" placeholder="Nome do Nível" required>
+                <input type="url" id="youtube-link" placeholder="Link do YouTube (prova)" required>
+                <input type="text" id="device" placeholder="Dispositivo (PC/Mobile)" required>
+                <button type="submit">Submeter</button>
+            </form>
+        </section>
 
-    <section id="moderation">
-        <h2>Moderação</h2>
-        <p>Moderadores podem confirmar ou rejeitar as submissões de completion aqui:</p>
-        <table id="moderation-table">
-            <thead>
-                <tr>
-                    <th>Nome do Nível</th>
-                    <th>Nome do Jogador</th>
-                    <th>Link do YouTube</th>
-                    <th>Dispositivo</th>
-                    <th>Status</th>
-                    <th>Ação</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Pendentes de moderação -->
-            </tbody>
-        </table>
-    </section>
+        <section id="moderation">
+            <h2 class="section-title">Moderação</h2>
+            <table id="moderation-table">
+                <thead>
+                    <tr>
+                        <th>Nome do Nível</th>
+                        <th>Nome do Jogador</th>
+                        <th>Link do YouTube</th>
+                        <th>Dispositivo</th>
+                        <th>Status</th>
+                        <th>Ação</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Pendentes de moderação -->
+                </tbody>
+            </table>
+        </section>
 
-    <section id="leaderboard">
-        <h2>Leaderboard</h2>
-        <ul id="leaderboard-list">
-            <!-- Leaderboard will be dynamically populated -->
-        </ul>
-    </section>
+        <section id="leaderboard">
+            <h2 class="section-title">Leaderboard</h2>
+            <ul id="leaderboard-list">
+                <!-- Leaderboard will be dynamically populated -->
+            </ul>
+        </section>
 
-    <section id="profile-modal" class="modal">
-        <div class="modal-content">
-            <h2>Perfil do Jogador</h2>
-            <div id="player-profile"></div>
-            <h3>Níveis Completados</h3>
-            <ul id="player-completions-list"></ul>
-            <button onclick="closeProfileModal()">Fechar</button>
-        </div>
-    </section>
+        <section id="profile-modal" class="modal">
+            <div class="modal-content">
+                <h2>Perfil do Jogador</h2>
+                <div id="player-profile"></div>
+                <h3>Níveis Completados</h3>
+                <ul id="player-completions-list"></ul>
+                <button onclick="closeProfileModal()">Fechar</button>
+            </div>
+        </section>
 
-    <section id="level-completions-modal" class="modal">
-        <div class="modal-content">
-            <h2>Completions do Nível</h2>
-            <ul id="level-completions-list"></ul>
-            <button onclick="closeLevelCompletions()">Fechar</button>
-        </div>
-    </section>
+        <section id="level-completions-modal" class="modal">
+            <div class="modal-content level-completions-modal">
+                <h2>Completions do Nível</h2>
+                <ul id="level-completions-list"></ul>
+                <button onclick="closeLevelCompletions()">Fechar</button>
+            </div>
+        </section>
+    </div>
 
     <script>
         let demonLevels = [
             { nome: "The Hell Factory", pontos: 100, completions: [] },
-            { nome: "Theory of Everything 2", pontos: 90, completions: [] },
-            { nome: "Deadlocked", pontos: 80, completions: [] },
-            { nome: "Electrodynamix", pontos: 70, completions: [] },
-            { nome: "Clubstep", pontos: 60, completions: [] }
+            { nome: "Theory of Everything 2", pontos: 80, completions: [] },
+            { nome: "Deadlocked", pontos: 90, completions: [] },
         ];
 
         let players = [];
