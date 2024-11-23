@@ -129,6 +129,10 @@
         .theme-toggle:hover {
             background-color: #555;
         }
+        .theme-icon {
+            width: 20px;
+            height: 20px;
+        }
     </style>
 </head>
 <body>
@@ -141,7 +145,9 @@
         </a>
     </header>
 
-    <button class="theme-toggle" onclick="toggleTheme()">Alterar Tema</button>
+    <button class="theme-toggle" onclick="toggleTheme()">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Font_Awesome_5_solid_moon.svg/1024px-Font_Awesome_5_solid_moon.svg.png" alt="Trocar Tema" class="theme-icon">
+    </button>
 
     <section id="demon-list">
         <h2>Lista de Níveis Demon</h2>
@@ -236,21 +242,33 @@
                 let submitButton = document.createElement("button");
                 submitButton.innerText = "Submeter";
                 submitButton.onclick = function () {
-                    openLevelCompletions(level);
+                    openLevelCompletionsForm(level.nome);
                 };
                 submitCell.appendChild(submitButton);
             });
         }
 
-        // Função para submeter completion
+        // Função para abrir o formulário de completion para o nível
+        function openLevelCompletionsForm(levelName) {
+            document.getElementById("level-name").value = levelName;
+        }
+
+        // Função para submeter a completion
         function submitCompletion(event) {
             event.preventDefault();
+
             const playerName = document.getElementById("player-name").value;
             const levelName = document.getElementById("level-name").value;
             const youtubeLink = document.getElementById("youtube-link").value;
             const device = document.getElementById("device").value;
 
-            let level = demonLevels.find(l => l.nome === levelName);
+            let player = players.find(p => p.name === playerName);
+            if (!player) {
+                player = { name: playerName, completions: [] };
+                players.push(player);
+            }
+
+            const level = demonLevels.find(l => l.nome === levelName);
             if (level) {
                 let completion = {
                     playerName: playerName,
@@ -285,11 +303,21 @@
                             completion.status = "confirmed";
                             updateLeaderboard();
                             updateModeration();
+                            moveCompletionToLevel(level.nome, completion);
                         };
                         actionCell.appendChild(approveButton);
                     }
                 });
             });
+        }
+
+        // Função para mover a completion para a lista do nível após confirmação
+        function moveCompletionToLevel(levelName, completion) {
+            const level = demonLevels.find(l => l.nome === levelName);
+            if (level) {
+                level.completions = level.completions.filter(c => c !== completion);
+                level.completions.push(completion);
+            }
         }
 
         // Função para atualizar a leaderboard
