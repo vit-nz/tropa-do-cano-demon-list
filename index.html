@@ -100,6 +100,7 @@
     <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
 
     <div class="content">
+        <!-- Demon List -->
         <section id="demon-list">
             <h2 class="section-title">Lista de Níveis Demon</h2>
             <table id="demon-table">
@@ -131,9 +132,61 @@
                 </tbody>
             </table>
         </section>
+
+        <!-- Leaderboard -->
+        <section id="leaderboard">
+            <h2 class="section-title">Leaderboard</h2>
+            <table id="leaderboard-table">
+                <thead>
+                    <tr>
+                        <th>Jogador</th>
+                        <th>Pontos</th>
+                    </tr>
+                </thead>
+                <tbody id="leaderboard-body">
+                </tbody>
+            </table>
+        </section>
     </div>
 
     <script>
+        // Process Leaderboard Points
+        const demonData = [
+            { creator: 'vrdr', verifier: 'Hyfera' },
+            { creator: 'vitnz', verifier: 'Arepy' },
+            { creator: 'vrdr', verifier: 'vrdr' },
+            { creator: 'vidashgd', verifier: 'vidashgd' },
+            { creator: 'vrdr', verifier: 'vrdr' },
+            { creator: 'vitnz', verifier: 'virnz' },
+            { creator: 'vitnz', verifier: 'vitnz' },
+            { creator: 'vitnz', verifier: 'vitnz' },
+            { creator: 'vitnz', verifier: 'vitnz' },
+            { creator: 'vitnz', verifier: 'vitnz' },
+            { creator: 'JustusRL', verifier: 'JustusRL' },
+            { creator: 'vidashgd', verifier: 'vidashgd' },
+            { creator: 'vitnz', verifier: 'vitnz' },
+            { creator: 'Arepy', verifier: 'Arepy' },
+            { creator: 'JustusRL', verifier: 'JustusRL' },
+            { creator: 'JustusRL', verifier: 'JustusRL' }
+        ];
+
+        const scores = {};
+        demonData.forEach((level, index) => {
+            const points = 150 - index;
+
+            scores[level.creator] = (scores[level.creator] || 0) + points;
+            scores[level.verifier] = (scores[level.verifier] || 0) + points;
+        });
+
+        const leaderboardBody = document.getElementById('leaderboard-body');
+        const sortedScores = Object.entries(scores).sort((a, b) => b[1] - a[1]);
+
+        sortedScores.forEach(([player, points]) => {
+            const row = document.createElement('tr');
+            row.innerHTML = `<td>${player}</td><td>${points}</td>`;
+            leaderboardBody.appendChild(row);
+        });
+
         function toggleTheme() {
             document.body.classList.toggle("dark-mode");
             document.querySelector("header").classList.toggle("dark-mode");
