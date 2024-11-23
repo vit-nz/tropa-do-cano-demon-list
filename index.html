@@ -66,14 +66,6 @@
         body.dark-mode tr:nth-child(even) {
             background-color: #3b3b3b;
         }
-        .level-name {
-            color: #0078D4;
-            font-weight: bold;
-        }
-        .level-name:hover {
-            text-decoration: underline;
-            cursor: pointer;
-        }
         .theme-toggle {
             position: fixed;
             top: 20px;
@@ -138,6 +130,24 @@
     <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
 
     <div class="content">
+        <!-- Lista de Níveis Demon -->
+        <section id="demon-levels">
+            <h2 class="section-title">Lista de Níveis Demon</h2>
+            <table id="demon-levels-table">
+                <thead>
+                    <tr>
+                        <th>Nível</th>
+                        <th>Criador</th>
+                        <th>Verificador</th>
+                        <th>Dificuldade</th>
+                    </tr>
+                </thead>
+                <tbody id="demon-levels-body">
+                    <!-- Demon Levels will be populated here -->
+                </tbody>
+            </table>
+        </section>
+
         <!-- Leaderboard -->
         <section id="leaderboard">
             <h2 class="section-title">Leaderboard</h2>
@@ -149,23 +159,6 @@
                     </tr>
                 </thead>
                 <tbody id="leaderboard-body">
-                </tbody>
-            </table>
-        </section>
-
-        <!-- Lista de Níveis Demon -->
-        <section id="demon-levels">
-            <h2 class="section-title">Lista de Níveis Demon</h2>
-            <table id="demon-levels-table">
-                <thead>
-                    <tr>
-                        <th>Nível</th>
-                        <th>Verificador</th>
-                        <th>Dificuldade</th>
-                    </tr>
-                </thead>
-                <tbody id="demon-levels-body">
-                    <!-- Demon Levels will be populated here -->
                 </tbody>
             </table>
         </section>
@@ -181,22 +174,22 @@
     <script>
         // Data for Demon Levels and their Verifiers
         const demonData = [
-            { level: 'WakaWaka Interface', verifier: 'Hyfera', difficulty: 150 },
-            { level: 'Crumbling Caverns', verifier: 'Arepy', difficulty: 149 },
-            { level: 'Phobia', verifier: 'vrdr', difficulty: 148 },
-            { level: 'Dedicacao', verifier: 'vidashgd', difficulty: 147 },
-            { level: 'Alpha Coronae', verifier: 'vrdr', difficulty: 146 },
-            { level: 'Saas III', verifier: 'vitnz', difficulty: 145 },
-            { level: 'Saas II', verifier: 'vitnz', difficulty: 144 },
-            { level: 'Coolio', verifier: 'vitnz', difficulty: 143 },
-            { level: 'Nem Fodendo', verifier: 'vitnz', difficulty: 142 },
-            { level: 'Tudo Fodendo', verifier: 'vitnz', difficulty: 141 },
-            { level: 'cursed circles lmao', verifier: 'JustusRL', difficulty: 140 },
-            { level: 'Obscuro', verifier: 'vidashgd', difficulty: 139 },
-            { level: 'Saas', verifier: 'vitnz', difficulty: 138 },
-            { level: 'Invincible', verifier: 'Arepy', difficulty: 137 },
-            { level: 'Mixtape', verifier: 'JustusRL', difficulty: 136 },
-            { level: 'Renan Circles', verifier: 'JustusRL', difficulty: 135 }
+            { level: 'WakaWaka Interface', creator: 'vrdr', verifier: 'Hyfera', difficulty: 150 },
+            { level: 'Crumbling Caverns', creator: 'vitnz', verifier: 'Arepy', difficulty: 149 },
+            { level: 'Phobia', creator: 'vrdr', verifier: 'vrdr', difficulty: 148 },
+            { level: 'Dedicacao', creator: 'vidashgd', verifier: 'vidashgd', difficulty: 147 },
+            { level: 'Alpha Coronae', creator: 'vrdr', verifier: 'vrdr', difficulty: 146 },
+            { level: 'Saas III', creator: 'vitnz', verifier: 'vitnz', difficulty: 145 },
+            { level: 'Saas II', creator: 'vitnz', verifier: 'vitnz', difficulty: 144 },
+            { level: 'Coolio', creator: 'vitnz', verifier: 'vitnz', difficulty: 143 },
+            { level: 'Nem Fodendo', creator: 'vitnz', verifier: 'vitnz', difficulty: 142 },
+            { level: 'Tudo Fodendo', creator: 'vitnz', verifier: 'vitnz', difficulty: 141 },
+            { level: 'cursed circles lmao', creator: 'JustusRL', verifier: 'JustusRL', difficulty: 140 },
+            { level: 'Obscuro', creator: 'vidashgd', verifier: 'vidashgd', difficulty: 139 },
+            { level: 'Saas', creator: 'vitnz', verifier: 'vitnz', difficulty: 138 },
+            { level: 'Invincible', creator: 'Arepy', verifier: 'Arepy', difficulty: 137 },
+            { level: 'Mixtape', creator: 'JustusRL', verifier: 'JustusRL', difficulty: 136 },
+            { level: 'Renan Circles', creator: 'JustusRL', verifier: 'JustusRL', difficulty: 135 }
         ];
 
         // Process Leaderboard Points
@@ -229,7 +222,8 @@
         demonData.forEach((level) => {
             const row = document.createElement('tr');
             row.innerHTML = `
-                <td><a href="#" class="level-name" onclick="showLevelInfo('${level.level}')">${level.level}</a></td>
+                <td>${level.level}</td>
+                <td>${level.creator}</td>
                 <td>${level.verifier}</td>
                 <td>${level.difficulty}</td>
             `;
@@ -243,21 +237,16 @@
             const modalHeader = document.getElementById('modal-header');
             const modalBody = document.getElementById('modal-body');
             
-            modalHeader.textContent = `${player} - Níveis Verificados`;
-            
+            modalHeader.innerText = `${player}'s Information`;
             modalBody.innerHTML = `
-                <p><strong>Níveis Passados/Verificados:</strong></p>
+                <p><strong>Níveis completados:</strong></p>
                 <ul>
-                    ${levels.map(level => `<li>${level.level}</li>`).join('')}
+                    ${levels.map(level => `<li>${level.level} (Dificuldade: ${level.difficulty})</li>`).join('')}
                 </ul>
                 <p><strong>Nível mais difícil completado:</strong> ${hardestLevel.level} (Dificuldade: ${hardestLevel.difficulty})</p>
             `;
             
             openModal();
-        }
-
-        function showLevelInfo(levelName) {
-            alert(`Você clicou no nível: ${levelName}`);
         }
 
         function openModal() {
