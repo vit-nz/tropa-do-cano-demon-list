@@ -204,12 +204,6 @@
             width: 40px;
             height: 40px;
         }
-
-        /* Adicionado para os campos FPS e Dispositivo na moderação */
-        #moderation td input {
-            width: 100px;
-            margin-top: 5px;
-        }
     </style>
 </head>
 <body class="light-theme">
@@ -244,6 +238,11 @@
             <input type="text" id="player-name" placeholder="Seu Nome" required>
             <input type="text" id="level-name" placeholder="Nome do Nível" required>
             <input type="url" id="youtube-link" placeholder="Link do YouTube (prova)" required>
+            <input type="number" id="fps" placeholder="FPS" required>
+            <select id="device">
+                <option value="pc">PC</option>
+                <option value="mobile">Mobile</option>
+            </select>
             <button type="submit">Submeter</button>
         </form>
     </section>
@@ -285,8 +284,6 @@
                     <tr>
                         <th>Jogador</th>
                         <th>Link do YouTube</th>
-                        <th>FPS</th>
-                        <th>Dispositivo</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -305,121 +302,90 @@
         let demonLevels = [
             { nome: "The Hell Factory", pontos: 100, completions: [] },
             { nome: "Deadlocked", pontos: 90, completions: [] },
-            { nome: "Clubstep", pontos: 80, completions: [] }
+            { nome: "Clubstep", pontos: 80, completions: [] },
+            { nome: "Theory of Everything 2", pontos: 95, completions: [] },
+            { nome: "Finger Dash", pontos: 85, completions: [] }
         ];
 
-        // Submissão de Completion com moderação
-        document.querySelector('#completion-form').addEventListener('submit', function(event) {
-            event.preventDefault();
+        let completions = [];
 
-            const playerName = document.querySelector('#player-name').value;
-            const levelName = document.querySelector('#level-name').value;
-            const youtubeLink = document.querySelector('#youtube-link').value;
-
-            const newCompletion = {
-                nomeJogador: playerName,
-                linkYoutube: youtubeLink,
-                status: 'Pendente',
-                fps: '',
-                dispositivo: ''
-            };
-
-            const level = demonLevels.find(level => level.nome === levelName);
-            if (level) {
-                level.completions.push(newCompletion);
-                alert('Completion submetida com sucesso!');
-                document.querySelector('#completion-form').reset();
-                updateModerationTable();
-            } else {
-                alert('Nível não encontrado.');
-            }
-        });
-
-        // Função para atualizar a tabela de moderação
-        function updateModerationTable() {
-            const tableBody = document.querySelector('#moderation-table tbody');
-            tableBody.innerHTML = '';
-
-            demonLevels.forEach(level => {
-                level.completions.forEach(completion => {
-                    if (completion.status === 'Pendente') {
-                        const row = document.createElement('tr');
-                        row.classList.add('pending');
-
-                        row.innerHTML = `
-                            <td>${level.nome}</td>
-                            <td>${completion.nomeJogador}</td>
-                            <td><a href="${completion.linkYoutube}" target="_blank">Link</a></td>
-                            <td><input type="text" class="fps-input" placeholder="FPS"></td>
-                            <td>
-                                <select class="device-input">
-                                    <option value="PC">PC</option>
-                                    <option value="Mobile">Mobile</option>
-                                </select>
-                            </td>
-                            <td>${completion.status}</td>
-                            <td>
-                                <button onclick="approveCompletion('${level.nome}', '${completion.nomeJogador}')">Aprovar</button>
-                                <button onclick="rejectCompletion('${level.nome}', '${completion.nomeJogador}')">Rejeitar</button>
-                            </td>
-                        `;
-                        tableBody.appendChild(row);
-                    }
-                });
+        function populateDemonList() {
+            const table = document.getElementById("demon-table").getElementsByTagName("tbody")[0];
+            table.innerHTML = "";
+            demonLevels.forEach((level, index) => {
+                let row = table.insertRow();
+                row.insertCell(0).innerText = index + 1;
+                row.insertCell(1).innerText = level.nome;
+                row.insertCell(2).innerText = level.pontos;
+                let submitCell = row.insertCell(3);
+                let submitButton = document.createElement("button");
+                submitButton.innerText = "Submeter";
+                submitButton.onclick = function () {
+                    openLevelCompletions(level);
+                };
+                submitCell.appendChild(submitButton);
             });
         }
 
-        // Função de aprovação da conclusão
-        function approveCompletion(levelName, playerName) {
-            const level = demonLevels.find(level => level.nome === levelName);
-            const completion = level.completions.find(completion => completion.nomeJogador === playerName);
+        function openLevelCompletions(level) {
+            const modal = document.getElementById("level-completions");
+            const table = document.getElementById("level-completions-table").getElementsByTagName("tbody")[0];
+            table.innerHTML = "";
+            level.completions.forEach(completion => {
+                let row = table.insertRow();
+                row.insertCell(0).innerText = completion.playerName;
+                row.insertCell(1).innerHTML = `<a href="${completion.youtubeLink}" target="_blank">Link</a>`;
+            });
+            modal.style.display = "block";
+        }
 
-            if (completion) {
-                const fps = document.querySelector('.fps-input').value;
-                const device = document.querySelector('.device-input').value;
+        function closeLevelCompletions() {
+            document.getElementById("level-completions").style.display = "none";
+        }
 
-                completion.fps = fps;
-                completion.dispositivo = device;
-                completion.status = 'Confirmado';
+        function submitCompletion(event) {
+            event.preventDefault();
+            const playerName = document.getElementById("player-name").value;
+            const levelName = document.getElementById("level-name").value;
+            const youtubeLink = document.getElementById("youtube-link").value;
+            const fps = document.getElementById("fps").value;
+            const device = document.getElementById("device").value;
 
-                updateModerationTable();
+            let level = demonLevels.find(l => l.nome === levelName);
+            if (level) {
+                level.completions.push({
+                    playerName,
+                    youtubeLink,
+                    fps,
+                    device
+                });
+                alert("Completion submetido com sucesso!");
+                populateDemonList();
             }
         }
 
-        // Função de rejeição da conclusão
-        function rejectCompletion(levelName, playerName) {
-            const level = demonLevels.find(level => level.nome === levelName);
-            const completion = level.completions.find(completion => completion.nomeJogador === playerName);
+        document.getElementById("completion-form").addEventListener("submit", submitCompletion);
 
-            if (completion) {
-                completion.status = 'Rejeitado';
-                updateModerationTable();
-            }
-        }
-
-        // Alterando tema
         function toggleTheme() {
             const body = document.body;
-            body.classList.toggle('dark-theme');
-            body.classList.toggle('light-theme');
-            
-            const themeIcon = document.getElementById('theme-icon');
-            if (body.classList.contains('dark-theme')) {
-                themeIcon.src = "https://img.icons8.com/ios-filled/50/ffffff/moon.png";
-                themeIcon.alt = "Tema Escuro";
+            const themeIcon = document.getElementById("theme-icon");
+            if (body.classList.contains("light-theme")) {
+                body.classList.remove("light-theme");
+                body.classList.add("dark-theme");
+                themeIcon.src = "https://img.icons8.com/ios-filled/50/000000/moon.png";
             } else {
+                body.classList.remove("dark-theme");
+                body.classList.add("light-theme");
                 themeIcon.src = "https://img.icons8.com/ios-filled/50/000000/sun.png";
-                themeIcon.alt = "Tema Claro";
             }
         }
 
-        // Função para abrir a caixa do Discord
         function openDiscord() {
-            window.open("https://discord.gg/TropaDoCano", "_blank");
+            window.open("https://discord.com", "_blank");
         }
 
-        // Inicializa a tabela de moderação com dados iniciais
-        updateModerationTable();
+        // Inicialização
+        populateDemonList();
     </script>
 </body>
 </html>
