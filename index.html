@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lista de Demons - AREDl Style</title>
+    <title>Tropa do Cano Demon List</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -70,7 +70,7 @@
             <!-- Seus Demons serão adicionados aqui -->
             <tr>
                 <td>1</td>
-                <td>Waka Waka Interface 1</td>
+                <td>Waka Waka Interface</td>
                 <td>Vrdr</td>
                 <td>Hyfera</td>
             </tr>
@@ -80,9 +80,138 @@
                 <td>vitnz</td>
                 <td>Arepy</td>
             </tr>
+             <tr>
+                <td>3</td>
+                <td>Phobia</td>
+                <td>vrdr</td>
+                <td>vrdr</td>
+            </tr>
+             <tr>
+                <td>4</td>
+                <td>Dedicação</td>
+                <td>vidash</td>
+                <td>vidash</td>
+            </tr>
+             <tr>
+                <td>5</td>
+                <td>Dedicação</td>
+                <td>vidash</td>
+                <td>vidash</td>
+            </tr>
+             <tr>
+                <td>6</td>
+                <td>Alpha Coronae</td>
+                <td>vrdr</td>
+                <td>vrdr</td>
+            </tr>
+             <tr>
+                <td>6</td>
+                <td>Saas III</td>
+                <td>vitnz</td>
+                <td>vitnz</td>
+            </tr>
+             <tr>
+                <td>7</td>
+                <td>Saas II</td>
+                <td>vitnz</td>
+                <td>vitnz</td>
+            </tr>
+             <tr>
+                <td>8</td>
+                <td>Coolio</td>
+                <td>vitnz</td>
+                <td>vitnz</td>
+            </tr>
+             <tr>
+                <td>9</td>
+                <td>Nem Fudendo</td>
+                <td>vitnz</td>
+                <td>vitnz</td>
+            </tr>
+             <tr>
+                <td>10</td>
+                <td>Tudo Fudendo</td>
+                <td>vitnz</td>
+                <td>vitnz</td>
+            </tr>
+             <tr>
+                <td>11</td>
+                <td>Cursed Circles Lmao</td>
+                <td>justusrl</td>
+                <td>justusrl</td>
+            </tr>
+             <tr>
+                <td>12</td>
+                <td>Obscuro</td>
+                <td>vidash</td>
+                <td>vidash</td>
+            </tr>
+             <tr>
+                <td>13</td>
+                <td>Saas</td>
+                <td>vitnz</td>
+                <td>vitnz</td>
+            </tr>
+             <tr>
+                <td>14</td>
+                <td>Invicible</td>
+                <td>Arepy</td>
+                <td>Arepy</td>
+            </tr>
+             <tr>
+                <td>15</td>
+                <td>Mixtape</td>
+                <td>justusrl</td>
+                <td>justusrl</td>
+            </tr> 
+             <tr>
+                <td>16</td>
+                <td>Renan Circles</td>
+                <td>justusrl</td>
+                <td>justusrl</td>
+            </tr>
+            
             <!-- Adicione mais linhas conforme necessário -->
         </tbody>
     </table>
     <p class="error" id="errorMessage"></p>
 </body>
 </html>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tropa do Cano Demon List</title>
+</head>
+<body>
+    <!-- Formulário para adicionar um novo nível -->
+    <div>
+        <input type="text" id="levelName" placeholder="Nome do nível" required>
+        <input type="text" id="creator" placeholder="Criador" required>
+        <input type="text" id="verifier" placeholder="Verificador" required>
+        <input type="number" id="rating" placeholder="Nota" required>
+        <button onclick="addLevel()">Adicionar Nível</button>
+    </div>
+
+    <!-- Tabela para exibir a lista de níveis -->
+    <table>
+        <thead>
+            <tr>
+                <th>Posição</th>
+                <th>Nome</th>
+                <th>Criador</th>
+                <th>Verificador</th>
+            </tr>
+        </thead>
+        <tbody id="demonTable">
+        </tbody>
+    </table>
+
+    <script>
+        function addLevel() {
+            // Referências aos campos de input
+            const name = document.getElementById("levelName").value;
+            const creator = document.getElementById("crea
+
