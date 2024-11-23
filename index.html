@@ -277,24 +277,7 @@
             { nome: "Clubstep", pontos: 80, completions: [] }
         ];
 
-        // Função para renderizar a tabela de Níveis Demon
-        function renderDemonList() {
-            const tableBody = document.querySelector('#demon-table tbody');
-            tableBody.innerHTML = '';
-
-            demonLevels.forEach((level, index) => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${index + 1}</td>
-                    <td><a href="#" onclick="showLevelCompletions(${index})">${level.nome}</a></td>
-                    <td>${level.pontos}</td>
-                    <td><button onclick="submitCompletion(${index})">Submeter Completion</button></td>
-                `;
-                tableBody.appendChild(row);
-            });
-        }
-
-        // Função para submeter um novo nível Demon
+        // Submissão de Completion com moderação
         document.querySelector('#completion-form').addEventListener('submit', function(event) {
             event.preventDefault();
 
@@ -302,17 +285,51 @@
             const levelName = document.querySelector('#level-name').value;
             const youtubeLink = document.querySelector('#youtube-link').value;
 
+            // Aguardando moderação para aprovação
             const newCompletion = { playerName, youtubeLink, confirmed: false };
             const level = demonLevels.find(l => l.nome === levelName);
             if (level) {
-                level.completions.push(newCompletion);
-                renderDemonList();
+                // Envia para moderação
+                const moderationTable = document.querySelector('#moderation-table tbody');
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${levelName}</td>
+                    <td>${playerName}</td>
+                    <td><a href="${youtubeLink}" target="_blank">${youtubeLink}</a></td>
+                    <td class="pending">Pendente</td>
+                    <td><button onclick="approveCompletion(${demonLevels.indexOf(level)}, ${moderationTable.rows.length - 1})">Aprovar</button></td>
+                `;
+                moderationTable.appendChild(row);
             }
 
             document.querySelector('#completion-form').reset();
         });
 
-        // Função para exibir completions de um nível específico
+        // Função para aprovar uma completion
+        function approveCompletion(levelIndex, completionIndex) {
+            const level = demonLevels[levelIndex];
+            const completion = level.completions[completionIndex];
+
+            // Aprovar a completion
+            completion.confirmed = true;
+
+            // Atualiza a tabela de completions
+            const completionTable = document.querySelector('#level-completions-table tbody');
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${completion.playerName}</td>
+                <td><a href="${completion.youtubeLink}" target="_blank">${completion.youtubeLink}</a></td>
+            `;
+            completionTable.appendChild(row);
+
+            // Marca como confirmado na tabela de moderação
+            const moderationRow = document.querySelector(`#moderation-table tbody tr:nth-child(${completionIndex + 1})`);
+            moderationRow.cells[3].textContent = 'Confirmado';
+            moderationRow.cells[3].classList.add('confirmed');
+            moderationRow.querySelector('button').disabled = true;
+        }
+
+        // Exibir completions ao clicar no nome do nível
         function showLevelCompletions(index) {
             const level = demonLevels[index];
             const completionTable = document.querySelector('#level-completions-table tbody');
@@ -330,7 +347,6 @@
             document.getElementById('level-completions').style.display = 'block';
         }
 
-        // Função para fechar a modal de completions
         function closeLevelCompletions() {
             document.getElementById('level-completions').style.display = 'none';
         }
@@ -347,7 +363,23 @@
             }
         }
 
-        // Inicializa a lista
+        // Função para renderizar a lista de Demon Levels
+        function renderDemonList() {
+            const tableBody = document.querySelector('#demon-table tbody');
+            tableBody.innerHTML = ''; // Limpa a tabela
+
+            demonLevels.forEach((level, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td onclick="showLevelCompletions(${index})">${level.nome}</td>
+                    <td>${level.pontos}</td>
+                    <td><button onclick="submitCompletion(${index})">Submeter Completion</button></td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
         renderDemonList();
     </script>
 </body>
