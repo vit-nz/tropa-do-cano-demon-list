@@ -175,7 +175,7 @@
         let demonLevels = [
             { nome: "Waka Waka Interface", creator: "vrdr", verifier: "Hyfera", pontos: 150 },
             { nome: "Crumbling Caverns", creator: "vitnz", verifier: "Arepy", pontos: 149 },
-            { nome: "Phobia", creator: "vrdr", verifier: "justusrl", pontos: 148 },
+            { nome: "Phobia", creator: "vrdr", verifier: "JustusRL", pontos: 148 },
             { nome: "Dedicacao", creator: "vidashgd", verifier: "vidashgd", pontos: 147 },
             { nome: "Alpha Coronae", creator: "vrdr", verifier: "vrdr", pontos: 146 },
             { nome: "Saas III", creator: "vitnz", verifier: "vitnz", pontos: 145 },
@@ -201,16 +201,15 @@
             { name: "vidashgd", completions: ["Dedicacao", "Obscuro"] },
             { name: "Arepy", completions: ["Crumbling Caverns", "Invincible"] },
             { name: "JustusRL", completions: [
-                "cursed circles lmao", "Mixtape", "Renan Circles", "Alpha Coronae",
-                "Coolio", "Tudo Fudendo", "Saas" 
+                "cursed circles lmao", "Mixtape", "Renan Circles", "Alpha Coronae", 
+                "Coolio", "Tudo Fodendo", "Saas"
             ] }
         ];
 
         function populateDemonList() {
-            const table = document.getElementById("demon-table").getElementsByTagName("tbody")[0];
-            table.innerHTML = "";
+            const demonTable = document.getElementById("demon-table").getElementsByTagName("tbody")[0];
             demonLevels.forEach((level, index) => {
-                let row = table.insertRow();
+                let row = demonTable.insertRow();
                 row.insertCell(0).innerText = index + 1; // Posição
                 row.insertCell(1).innerText = level.nome; // Nome do nível
                 row.insertCell(2).innerText = level.creator; // Criador
