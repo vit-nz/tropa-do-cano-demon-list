@@ -19,7 +19,7 @@
             padding: 20px 0;
         }
 
-        #demon-list, #submit-completion, #leaderboard {
+        #demon-list, #submit-completion, #leaderboard, #moderation {
             padding: 20px;
             margin: 20px;
             background-color: white;
@@ -66,6 +66,18 @@
         #completion-option {
             margin-top: 10px;
         }
+
+        #moderation {
+            background-color: #f9f9f9;
+        }
+
+        .pending {
+            background-color: #f1c40f;
+        }
+
+        .confirmed {
+            background-color: #2ecc71;
+        }
     </style>
 </head>
 <body>
@@ -106,8 +118,29 @@
                 <input type="checkbox" id="submit-completion" value="sim">
             </div>
             
+            <input type="url" id="youtube-link" placeholder="Link do YouTube (prova)" required>
+            
             <button type="submit">Submeter</button>
         </form>
+    </section>
+    
+    <section id="moderation">
+        <h2>Moderação</h2>
+        <p>Moderadores podem confirmar ou rejeitar as submissões de completion aqui:</p>
+        <table id="moderation-table">
+            <thead>
+                <tr>
+                    <th>Nome do Nível</th>
+                    <th>Nome do Jogador</th>
+                    <th>Link do YouTube</th>
+                    <th>Status</th>
+                    <th>Ação</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Pendentes de moderação -->
+            </tbody>
+        </table>
     </section>
     
     <section id="leaderboard">
@@ -118,26 +151,24 @@
     </section>
     
     <script>
-        // Array de Níveis com informações (inicialmente vazio)
         let demonLevels = [
-            { nome: "The Hell Factory", dificuldade: 10, pontos: 100, comentarios: "Extreme Demon" },
-            { nome: "Deadlocked", dificuldade: 9, pontos: 90, comentarios: "Very difficult level!" },
-            { nome: "Clubstep", dificuldade: 8, pontos: 80, comentarios: "Difficult but achievable" }
+            { nome: "The Hell Factory", dificuldade: 10, pontos: 100, comentarios: "Extreme Demon", completions: [] },
+            { nome: "Deadlocked", dificuldade: 9, pontos: 90, comentarios: "Very difficult level!", completions: [] },
+            { nome: "Clubstep", dificuldade: 8, pontos: 80, comentarios: "Difficult but achievable", completions: [] }
         ];
 
         // Função para renderizar a tabela de Níveis Demon
         function renderDemonList() {
             const tableBody = document.querySelector('#demon-table tbody');
-            tableBody.innerHTML = ''; // Limpa a tabela
+            tableBody.innerHTML = '';
 
-            // Ordena os níveis por dificuldade (maior para menor)
             demonLevels.sort((a, b) => b.dificuldade - a.dificuldade);
 
             demonLevels.forEach((level, index) => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td>${index + 1}</td>
-                    <td>${level.nome}</td>
+                    <td><a href="#" onclick="showCompletion(${index})">${level.nome}</a></td>
                     <td>${level.dificuldade}</td>
                     <td>${level.comentarios}</td>
                     <td>${level.pontos}</td>
@@ -156,32 +187,73 @@
             const difficulty = document.querySelector('#difficulty').value;
             const points = document.querySelector('#points').value;
             const submitCompletion = document.querySelector('#submit-completion').checked;
+            const youtubeLink = document.querySelector('#youtube-link').value;
 
-            const newLevel = {
-                nome: levelName,
-                dificuldade: parseInt(difficulty),
-                pontos: parseInt(points),
-                comentarios: submitCompletion ? "Novo nível completado e enviado!" : "Novo nível completado, mas não enviado."
+            const newCompletion = {
+                playerName: playerName,
+                youtubeLink: youtubeLink,
+                confirmed: false, // Inicialmente a submission está pendente de moderação
+                submitCompletion: submitCompletion
             };
 
-            demonLevels.push(newLevel); // Adiciona o novo nível
-            renderDemonList(); // Re-renderiza a tabela
-            if (submitCompletion) {
-                updateLeaderboard(newLevel); // Atualiza o leaderboard se completado
+            const level = demonLevels.find(level => level.nome === levelName);
+
+            if (level) {
+                level.completions.push(newCompletion);
             }
 
-            document.querySelector('#completion-form').reset(); // Reseta o formulário
+            renderDemonList();
+            addToModeration(newCompletion, levelName);
+            document.querySelector('#completion-form').reset();
         });
 
-        // Função para atualizar o leaderboard
-        function updateLeaderboard(level) {
-            const leaderboardList = document.querySelector('#leaderboard-list');
-            const newEntry = document.createElement('li');
-            newEntry.textContent = `${level.nome} - ${level.pontos} pontos`;
-            leaderboardList.appendChild(newEntry);
+        // Função para adicionar a submissão para moderação
+        function addToModeration(completion, levelName) {
+            const moderationTable = document.querySelector('#moderation-table tbody');
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${levelName}</td>
+                <td>${completion.playerName}</td>
+                <td><a href="${completion.youtubeLink}" target="_blank">Ver vídeo</a></td>
+                <td class="pending">Pendente</td>
+                <td><button onclick="approveCompletion(${demonLevels.length - 1}, ${demonLevels[demonLevels.length - 1].completions.length - 1})">Confirmar</button></td>
+            `;
+            moderationTable.appendChild(row);
         }
 
-        // Chama a renderização inicial da lista de Níveis Demon
+        // Função para moderadores confirmarem a completion
+        function approveCompletion(levelIndex, completionIndex) {
+            const level = demonLevels[levelIndex];
+            const completion = level.completions[completionIndex];
+
+            completion.confirmed = true;
+
+            renderDemonList();
+            updateLeaderboard(level, completion);
+
+            // Atualiza a moderação
+            const moderationTable = document.querySelector('#moderation-table tbody');
+            const rows = moderationTable.querySelectorAll('tr');
+            rows[completionIndex].querySelector('td:nth-child(4)').classList.remove('pending');
+            rows[completionIndex].querySelector('td:nth-child(4)').classList.add('confirmed');
+        }
+
+        // Função para adicionar a completion ao leaderboard
+        function updateLeaderboard(level, completion) {
+            if (completion.confirmed) {
+                const leaderboardList = document.querySelector('#leaderboard-list');
+                const newEntry = document.createElement('li');
+                newEntry.textContent = `${level.nome} - ${completion.playerName} - ${level.pontos} pontos`;
+                leaderboardList.appendChild(newEntry);
+            }
+        }
+
+        // Função para exibir a pessoa que completou o nível
+        function showCompletion(levelIndex) {
+            const level = demonLevels[levelIndex];
+            alert(`Concluído por: ${level.completions.filter(c => c.confirmed).map(c => c.playerName).join(', ')}`);
+        }
+
         renderDemonList();
     </script>
 </body>
