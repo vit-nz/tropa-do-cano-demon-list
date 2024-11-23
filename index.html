@@ -5,27 +5,143 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tropa do Cano Demon List</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
-        header { background-color: #333; color: white; text-align: center; padding: 20px 0; }
-        #demon-list, #submit-completion, #leaderboard, #moderation, #completions { padding: 20px; margin: 20px; background-color: white; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 10px; text-align: center; border: 1px solid #ddd; }
-        th { background-color: #333; color: white; }
-        input, button { padding: 8px; margin: 10px 5px; border-radius: 4px; border: 1px solid #ccc; }
-        button { background-color: #333; color: white; border: none; cursor: pointer; }
-        button:hover { background-color: #555; }
-        .pending { background-color: #f1c40f; }
-        .confirmed { background-color: #2ecc71; }
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); justify-content: center; align-items: center; }
-        .modal-content { background-color: white; padding: 20px; border-radius: 8px; width: 80%; max-width: 800px; }
-        #profile-modal { width: 60%; }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #fff;
+            color: #000;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        body.dark-mode {
+            background-color: #2c2f33;
+            color: #fff;
+        }
+        header {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+        }
+        header.dark-mode {
+            background-color: #1a1d21;
+        }
+        #demon-list, #submit-completion, #leaderboard, #moderation, #completions {
+            padding: 20px;
+            margin: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        body.dark-mode #demon-list,
+        body.dark-mode #submit-completion,
+        body.dark-mode #leaderboard,
+        body.dark-mode #moderation,
+        body.dark-mode #completions {
+            background-color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+        th {
+            background-color: #333;
+            color: white;
+        }
+        body.dark-mode th {
+            background-color: #444;
+        }
+        input, button {
+            padding: 8px;
+            margin: 10px 5px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+        button {
+            background-color: #333;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #555;
+        }
+        .pending {
+            background-color: #f1c40f;
+        }
+        .confirmed {
+            background-color: #2ecc71;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            width: 80%;
+            max-width: 800px;
+            text-align: center;
+        }
+        body.dark-mode .modal-content {
+            background-color: #444;
+        }
+        #profile-modal {
+            width: 60%;
+        }
+        .discord-logo {
+            width: 40px;
+            height: 40px;
+            vertical-align: middle;
+        }
+        .discord-link {
+            color: #7289da;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .discord-link:hover {
+            text-decoration: underline;
+        }
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #333;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .theme-toggle:hover {
+            background-color: #555;
+        }
     </style>
 </head>
 <body>
     <header>
         <h1>Tropa do Cano Demon List</h1>
         <p>Os mais difíceis e épicos níveis do Geometry Dash!</p>
+        <a href="https://discord.gg/amjFUaywuw" target="_blank">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/a/a7/Discord_logo.svg" class="discord-logo" alt="Discord">
+            <span class="discord-link">Junte-se ao Discord!</span>
+        </a>
     </header>
+
+    <button class="theme-toggle" onclick="toggleTheme()">Alterar Tema</button>
 
     <section id="demon-list">
         <h2>Lista de Níveis Demon</h2>
@@ -97,7 +213,7 @@
     </section>
 
     <script>
-        // Lista de níveis demon
+        // Variáveis globais
         let demonLevels = [
             { nome: "The Hell Factory", pontos: 100, completions: [] },
             { nome: "Theory of Everything 2", pontos: 90, completions: [] },
@@ -105,8 +221,6 @@
             { nome: "Electrodynamix", pontos: 70, completions: [] },
             { nome: "Clubstep", pontos: 60, completions: [] }
         ];
-
-        // Lista de jogadores e suas completions
         let players = [];
 
         // Função para popular a lista de níveis demon
@@ -138,68 +252,44 @@
 
             let level = demonLevels.find(l => l.nome === levelName);
             if (level) {
-                const pendingCompletion = {
-                    playerName,
-                    youtubeLink,
-                    device,
-                    levelName,
-                    pontos: level.pontos,
-                    status: 'pendente'
+                let completion = {
+                    playerName: playerName,
+                    levelName: levelName,
+                    youtubeLink: youtubeLink,
+                    device: device,
+                    status: "pending"
                 };
-
-                // Verificar se o jogador já existe
-                let player = players.find(p => p.name === playerName);
-                if (!player) {
-                    player = { name: playerName, completions: [] };
-                    players.push(player);
-                }
-
-                // Adicionar a completion ao jogador
-                player.completions.push(pendingCompletion);
-
-                alert("Completion submetido com sucesso! Aguardando aprovação.");
-                populateDemonList();
-                populateModeration();
-                updateLeaderboard();
+                level.completions.push(completion);
+                alert("Sua completion foi enviada para moderação.");
+                updateModeration();
             }
         }
 
-        // Função para popular a tabela de moderação
-        function populateModeration() {
+        // Função para mostrar níveis pendentes de moderação
+        function updateModeration() {
             const table = document.getElementById("moderation-table").getElementsByTagName("tbody")[0];
             table.innerHTML = "";
-            players.forEach(player => {
-                player.completions.forEach(completion => {
-                    if (completion.status === 'pendente') {
+            demonLevels.forEach(level => {
+                level.completions.forEach(completion => {
+                    if (completion.status === "pending") {
                         let row = table.insertRow();
-                        row.insertCell(0).innerText = completion.levelName;
+                        row.insertCell(0).innerText = level.nome;
                         row.insertCell(1).innerText = completion.playerName;
-                        row.insertCell(2).innerHTML = `<a href="${completion.youtubeLink}" target="_blank">Link</a>`;
+                        row.insertCell(2).innerText = completion.youtubeLink;
                         row.insertCell(3).innerText = completion.device;
                         row.insertCell(4).innerText = completion.status;
                         let actionCell = row.insertCell(5);
-                        let acceptButton = document.createElement("button");
-                        acceptButton.innerText = "Aceitar";
-                        acceptButton.onclick = function () {
-                            acceptCompletion(completion);
+                        let approveButton = document.createElement("button");
+                        approveButton.innerText = "Aprovar";
+                        approveButton.onclick = function () {
+                            completion.status = "confirmed";
+                            updateLeaderboard();
+                            updateModeration();
                         };
-                        actionCell.appendChild(acceptButton);
+                        actionCell.appendChild(approveButton);
                     }
                 });
             });
-        }
-
-        // Função para aceitar a submission
-        function acceptCompletion(completion) {
-            completion.status = 'confirmado';
-            populateModeration();
-
-            // Mover a completion para o nível correspondente
-            let level = demonLevels.find(l => l.nome === completion.levelName);
-            if (level) {
-                level.completions.push(completion);
-                updateLeaderboard();
-            }
         }
 
         // Função para atualizar a leaderboard
@@ -207,7 +297,10 @@
             const leaderboard = document.getElementById("leaderboard-list");
             leaderboard.innerHTML = "";
             players.forEach(player => {
-                let totalPoints = player.completions.reduce((sum, completion) => sum + demonLevels.find(level => level.nome === completion.levelName).pontos, 0);
+                let totalPoints = player.completions.reduce((sum, completion) => {
+                    return sum + demonLevels.find(level => level.nome === completion.levelName).pontos;
+                }, 0);
+
                 let leaderboardEntry = document.createElement("li");
                 leaderboardEntry.innerText = `${player.name} - ${totalPoints} pontos`;
                 leaderboardEntry.onclick = function () {
@@ -248,10 +341,16 @@
             profileModal.style.display = "none";
         }
 
-        // Inicializar
+        // Função para alternar o tema
+        function toggleTheme() {
+            document.body.classList.toggle("dark-mode");
+            document.querySelector("header").classList.toggle("dark-mode");
+        }
+
+        // Inicialização
         document.getElementById("completion-form").addEventListener("submit", submitCompletion);
         populateDemonList();
-        populateModeration();
+        updateModeration();
         updateLeaderboard();
     </script>
 </body>
