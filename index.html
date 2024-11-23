@@ -238,21 +238,18 @@
                 row.insertCell(2).innerText = level.pontos;
                 let levelCell = row.insertCell(3);
                 let levelButton = document.createElement("button");
-                levelButton.innerText = "Ver Completions";
+                levelButton.innerText = level.nome;
                 levelButton.onclick = function () {
-                    showLevelCompletions(level.nome);
+                    showLevelCompletions(level);
                 };
                 levelCell.appendChild(levelButton);
             });
         }
 
         // Função para mostrar completions de um nível
-        function showLevelCompletions(levelName) {
-            const level = demonLevels.find(l => l.nome === levelName);
-            if (level) {
-                const playersList = level.completions.map(c => `<li>${c.playerName}</li>`).join('');
-                alert(`Completions de ${levelName}: ${playersList}`);
-            }
+        function showLevelCompletions(level) {
+            const completionsList = level.completions.map(c => `<li>${c.playerName}</li>`).join('');
+            alert(`Completions de ${level.nome}: ${completionsList}`);
         }
 
         // Função para submeter a completion
