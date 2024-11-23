@@ -14,9 +14,9 @@
             transition: background-color 0.3s, color 0.3s;
             display: flex;
             justify-content: center;
-            align-items: center;
-            height: 100vh;
+            align-items: flex-start;
             flex-direction: column;
+            height: 100vh;
             text-align: center;
         }
         body.dark-mode {
@@ -41,6 +41,7 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             width: 80%;
             max-width: 1000px;
+            margin-bottom: 20px;
         }
         body.dark-mode #demon-list,
         body.dark-mode #submit-completion,
@@ -102,7 +103,7 @@
             background-color: white;
             padding: 20px;
             border-radius: 8px;
-            width: 80%;
+            width: 60%;
             max-width: 800px;
             text-align: center;
         }
@@ -149,6 +150,19 @@
             font-weight: bold;
         }
         .level-name:hover {
+            text-decoration: underline;
+        }
+        #leaderboard-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        #leaderboard-list li {
+            margin: 10px 0;
+            cursor: pointer;
+            font-size: 18px;
+            color: #333;
+        }
+        #leaderboard-list li:hover {
             text-decoration: underline;
         }
     </style>
@@ -215,9 +229,9 @@
 
     <section id="leaderboard">
         <h2>Leaderboard</h2>
-        <ol id="leaderboard-list">
+        <ul id="leaderboard-list">
             <!-- Leaderboard will be dynamically populated -->
-        </ol>
+        </ul>
     </section>
 
     <section id="profile-modal" class="modal">
@@ -257,11 +271,9 @@
                 row.insertCell(0).innerText = index + 1;
                 let levelNameCell = row.insertCell(1);
                 let levelName = document.createElement("span");
-                levelName.className = "level-name";
                 levelName.innerText = level.nome;
-                levelName.onclick = function () {
-                    showLevelCompletions(level);
-                };
+                levelName.classList.add("level-name");
+                levelName.onclick = () => showLevelCompletions(level);
                 levelNameCell.appendChild(levelName);
                 row.insertCell(2).innerText = level.pontos;
             });
