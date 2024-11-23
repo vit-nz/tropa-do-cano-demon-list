@@ -202,11 +202,17 @@
         </ol>
     </section>
     
-    <section id="level-completions-modal" class="modal">
+    <section id="profile-modal" class="modal">
         <div class="modal-content">
-            <h2>Completions do Nível</h2>
-            <ul id="level-completions-list"></ul>
-            <button onclick="closeLevelCompletions()">Fechar</button>
+            <h2>Perfil do Jogador</h2>
+            <p id="player-info"></p>
+            <h3>Completions</h3>
+            <ul id="player-completions-list">
+                <!-- Completions do jogador -->
+            </ul>
+            <h3>Nível Mais Difícil Completado</h3>
+            <p id="most-difficult-level"></p>
+            <button onclick="closeProfile()">Fechar</button>
         </div>
     </section>
 
@@ -230,38 +236,26 @@
                 row.insertCell(0).innerText = index + 1;
                 row.insertCell(1).innerText = level.nome;
                 row.insertCell(2).innerText = level.pontos;
-                let levelButtonCell = row.insertCell(3);
+                let levelCell = row.insertCell(3);
                 let levelButton = document.createElement("button");
                 levelButton.innerText = level.nome;
                 levelButton.onclick = function () {
                     showLevelCompletions(level);
                 };
-                levelButtonCell.appendChild(levelButton);
+                levelCell.appendChild(levelButton);
             });
         }
 
         // Função para mostrar completions de um nível
         function showLevelCompletions(level) {
-            const levelCompletionsList = document.getElementById("level-completions-list");
-            levelCompletionsList.innerHTML = "";
-            level.completions.forEach(completion => {
-                let li = document.createElement("li");
-                li.textContent = completion.playerName;
-                levelCompletionsList.appendChild(li);
-            });
-
-            document.getElementById("level-completions-modal").style.display = "flex";
-        }
-
-        // Função para fechar o modal de completions de nível
-        function closeLevelCompletions() {
-            document.getElementById("level-completions-modal").style.display = "none";
+            const completionsList = level.completions.map(c => `<li>${c.playerName}</li>`).join('');
+            alert(`Completions de ${level.nome}: ${completionsList}`);
         }
 
         // Função para submeter a completion
         function submitCompletion(event) {
             event.preventDefault();
-            
+
             const playerName = document.getElementById("player-name").value;
             const levelName = document.getElementById("level-name").value;
             const youtubeLink = document.getElementById("youtube-link").value;
@@ -337,8 +331,43 @@
 
                 let leaderboardEntry = document.createElement("li");
                 leaderboardEntry.innerText = `${player.name} - ${totalPoints} pontos`;
+                leaderboardEntry.onclick = function () {
+                    showPlayerProfile(player);
+                };
                 leaderboard.appendChild(leaderboardEntry);
             });
+        }
+
+        // Função para mostrar o perfil do jogador
+        function showPlayerProfile(player) {
+            const profileModal = document.getElementById("profile-modal");
+            const playerInfo = document.getElementById("player-info");
+            const playerCompletionsList = document.getElementById("player-completions-list");
+            const mostDifficultLevel = document.getElementById("most-difficult-level");
+
+            playerInfo.innerText = `Nome: ${player.name}`;
+            playerCompletionsList.innerHTML = "";
+            let maxPoints = 0;
+            let hardestLevel = "";
+            player.completions.forEach(completion => {
+                let listItem = document.createElement("li");
+                listItem.innerText = completion.levelName;
+                playerCompletionsList.appendChild(listItem);
+
+                const level = demonLevels.find(l => l.nome === completion.levelName);
+                if (level && level.pontos > maxPoints) {
+                    maxPoints = level.pontos;
+                    hardestLevel = completion.levelName;
+                }
+            });
+            mostDifficultLevel.innerText = hardestLevel;
+            profileModal.style.display = "flex";
+        }
+
+        // Função para fechar o perfil
+        function closeProfile() {
+            const profileModal = document.getElementById("profile-modal");
+            profileModal.style.display = "none";
         }
 
         // Função para alternar o tema
