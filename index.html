@@ -154,7 +154,6 @@
                 <tr>
                     <th>Posição</th>
                     <th>Nome do Nível</th>
-                    <th>Dificuldade</th>
                     <th>Pontos</th>
                     <th>Submeter Completion</th>
                 </tr>
@@ -170,14 +169,6 @@
         <form id="completion-form">
             <input type="text" id="player-name" placeholder="Seu Nome" required>
             <input type="text" id="level-name" placeholder="Nome do Nível" required>
-            <input type="number" id="difficulty" placeholder="Dificuldade (1 a 10)" required min="1" max="10">
-            <input type="number" id="points" placeholder="Pontuação (0 a 100)" required min="0" max="100">
-            
-            <div id="completion-option">
-                <label for="submit-completion">Submeter Completion?</label>
-                <input type="checkbox" id="submit-completion" value="sim">
-            </div>
-            
             <input type="url" id="youtube-link" placeholder="Link do YouTube (prova)" required>
             
             <button type="submit">Submeter</button>
@@ -210,22 +201,6 @@
         </ol>
     </section>
     
-    <section id="completions">
-        <h2>Completions Confirmadas</h2>
-        <table id="completion-table">
-            <thead>
-                <tr>
-                    <th>Nome do Nível</th>
-                    <th>Jogador</th>
-                    <th>Link do YouTube</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Completions confirmadas -->
-            </tbody>
-        </table>
-    </section>
-
     <section id="level-completions" style="display:none;">
         <h2>Completions do Nível</h2>
         <table id="level-completions-table">
@@ -243,9 +218,9 @@
 
     <script>
         let demonLevels = [
-            { nome: "The Hell Factory", dificuldade: 10, pontos: 100, completions: [] },
-            { nome: "Deadlocked", dificuldade: 9, pontos: 90, completions: [] },
-            { nome: "Clubstep", dificuldade: 8, pontos: 80, completions: [] }
+            { nome: "The Hell Factory", pontos: 100, completions: [] },
+            { nome: "Deadlocked", pontos: 90, completions: [] },
+            { nome: "Clubstep", pontos: 80, completions: [] }
         ];
 
         // Função para renderizar a tabela de Níveis Demon
@@ -253,14 +228,11 @@
             const tableBody = document.querySelector('#demon-table tbody');
             tableBody.innerHTML = '';
 
-            demonLevels.sort((a, b) => b.dificuldade - a.dificuldade);
-
             demonLevels.forEach((level, index) => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td>${index + 1}</td>
                     <td><a href="#" onclick="showLevelCompletions(${index})">${level.nome}</a></td>
-                    <td>${level.dificuldade}</td>
                     <td>${level.pontos}</td>
                     <td><button onclick="submitCompletion(${index})">Submeter Completion</button></td>
                 `;
@@ -274,10 +246,7 @@
 
             const playerName = document.querySelector('#player-name').value;
             const levelName = document.querySelector('#level-name').value;
-            const difficulty = document.querySelector('#difficulty').value;
-            const points = document.querySelector('#points').value;
             const youtubeLink = document.querySelector('#youtube-link').value;
-            const submitCompletion = document.querySelector('#submit-completion').checked;
 
             const newCompletion = {
                 playerName: playerName,
@@ -285,8 +254,9 @@
                 confirmed: false
             };
 
-            if (submitCompletion) {
-                const level = demonLevels.find(level => level.nome === levelName);
+            // Encontre o nível correspondente e adicione a completion
+            const level = demonLevels.find(level => level.nome === levelName);
+            if (level) {
                 level.completions.push(newCompletion);
                 addToModeration(newCompletion, levelName);
             }
@@ -303,7 +273,7 @@
                 <td>${completion.playerName}</td>
                 <td><a href="${completion.youtubeLink}" target="_blank">${completion.youtubeLink}</a></td>
                 <td class="pending">Pendente</td>
-                <td><button onclick="approveCompletion(${completion.playerName}, ${completion.youtubeLink})">Aprovar</button></td>
+                <td><button onclick="approveCompletion('${completion.playerName}', '${completion.youtubeLink}')">Aprovar</button></td>
             `;
             moderationTable.appendChild(row);
         }
@@ -311,22 +281,15 @@
         // Função para aprovar uma conclusão
         function approveCompletion(playerName, youtubeLink) {
             const row = event.target.closest('tr');
-            row.querySelector('td').classList.add('confirmed');
-            row.querySelector('td').classList.remove('pending');
+            row.querySelector('td:nth-child(4)').classList.add('confirmed');
+            row.querySelector('td:nth-child(4)').classList.remove('pending');
             row.querySelector('button').disabled = true;
 
-            const completion = {
-                playerName: playerName,
-                youtubeLink: youtubeLink
-            };
+            const completion = { playerName, youtubeLink };
+            const level = demonLevels.find(l => l.completions.some(c => c.playerName === playerName && c.youtubeLink === youtubeLink));
+            level.completions.find(c => c.playerName === playerName && c.youtubeLink === youtubeLink).confirmed = true;
 
-            const completionTable = document.querySelector('#completion-table tbody');
-            const newRow = document.createElement('tr');
-            newRow.innerHTML = `
-                <td>${completion.playerName}</td>
-                <td><a href="${completion.youtubeLink}" target="_blank">${completion.youtubeLink}</a></td>
-            `;
-            completionTable.appendChild(newRow);
+            renderDemonList(); // Re-renderiza a lista para mostrar as completions confirmadas
         }
 
         // Função para exibir completions de um nível específico
