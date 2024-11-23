@@ -18,7 +18,7 @@
             min-height: 100vh;
             text-align: center;
             transition: background-color 0.3s, color 0.3s;
-            padding-top: 50px; /* Para garantir que o conteúdo não sobreponha o cabeçalho */
+            padding-top: 50px;
         }
         body.dark-mode {
             background-color: #2b2b2b;
@@ -43,7 +43,7 @@
         .content {
             width: 100%;
             max-width: 1200px;
-            margin-top: 90px; /* Ajusta o conteúdo para não cobrir o cabeçalho fixo */
+            margin-top: 90px;
             padding: 0 20px;
             box-sizing: border-box;
         }
@@ -195,14 +195,18 @@
             { name: "vrdr", completions: ["Phobia", "Alpha Coronae"] },
             { name: "vitnz", completions: [
                 "Crumbling Caverns", "Mixtape", "Dedicacao", "Alpha Coronae", 
-                "cursed circles lmao", "Saas III", "Coolio", "Saas II", 
-                "Nem Fodendo", "Tudo Fodendo", "Invincible", "Renan Circles"
+                "cursed circles lmao", "Saas III", "Coolio", "Saas II", "Nem Fodendo", 
+                "Tudo Fodendo", "Invincible", "Renan Circles"
             ] },
-            { name: "vidashgd", completions: ["Dedicacao", "Obscuro"] },
-            { name: "Arepy", completions: ["Crumbling Caverns", "Invincible"] },
             { name: "JustusRL", completions: [
                 "cursed circles lmao", "Mixtape", "Renan Circles", "Alpha Coronae", 
                 "Coolio", "Tudo Fodendo", "Saas"
+            ] },
+            { name: "vidashgd", completions: [
+                "Dedicacao", "Obscuro", "Saas", "Mixtape"
+            ] },
+            { name: "Arepy", completions: [
+                "Invincible", "Crumbling Caverns"
             ] }
         ];
 
@@ -272,6 +276,7 @@
 
         function toggleTheme() {
             document.body.classList.toggle("dark-mode");
+            document.querySelector("header").classList.toggle("dark-mode");
         }
 
         populateDemonList();
