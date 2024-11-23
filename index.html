@@ -118,7 +118,7 @@
                     <tr><td>3</td><td>Phobia</td><td>vrdr</td><td>vrdr</td></tr>
                     <tr><td>4</td><td>Dedicacao</td><td>vidashgd</td><td>vidashgd</td></tr>
                     <tr><td>5</td><td>Alpha Coronae</td><td>vrdr</td><td>vrdr</td></tr>
-                    <tr><td>6</td><td>Saas III</td><td>vitnz</td><td>virnz</td></tr>
+                    <tr><td>6</td><td>Saas III</td><td>vitnz</td><td>vitnz</td></tr>
                     <tr><td>7</td><td>Saas II</td><td>vitnz</td><td>vitnz</td></tr>
                     <tr><td>8</td><td>Coolio</td><td>vitnz</td><td>vitnz</td></tr>
                     <tr><td>9</td><td>Nem Fodendo</td><td>vitnz</td><td>vitnz</td></tr>
@@ -152,29 +152,28 @@
     <script>
         // Process Leaderboard Points
         const demonData = [
-            { creator: 'vrdr', verifier: 'Hyfera' },
-            { creator: 'vitnz', verifier: 'Arepy' },
-            { creator: 'vrdr', verifier: 'vrdr' },
-            { creator: 'vidashgd', verifier: 'vidashgd' },
-            { creator: 'vrdr', verifier: 'vrdr' },
-            { creator: 'vitnz', verifier: 'virnz' },
-            { creator: 'vitnz', verifier: 'vitnz' },
-            { creator: 'vitnz', verifier: 'vitnz' },
-            { creator: 'vitnz', verifier: 'vitnz' },
-            { creator: 'vitnz', verifier: 'vitnz' },
-            { creator: 'JustusRL', verifier: 'JustusRL' },
-            { creator: 'vidashgd', verifier: 'vidashgd' },
-            { creator: 'vitnz', verifier: 'vitnz' },
-            { creator: 'Arepy', verifier: 'Arepy' },
-            { creator: 'JustusRL', verifier: 'JustusRL' },
-            { creator: 'JustusRL', verifier: 'JustusRL' }
+            { verifier: 'Hyfera' },
+            { verifier: 'Arepy' },
+            { verifier: 'vrdr' },
+            { verifier: 'vidashgd' },
+            { verifier: 'vrdr' },
+            { verifier: 'vitnz' },
+            { verifier: 'vitnz' },
+            { verifier: 'vitnz' },
+            { verifier: 'vitnz' },
+            { verifier: 'vitnz' },
+            { verifier: 'JustusRL' },
+            { verifier: 'vidashgd' },
+            { verifier: 'vitnz' },
+            { verifier: 'Arepy' },
+            { verifier: 'JustusRL' },
+            { verifier: 'JustusRL' }
         ];
 
         const scores = {};
         demonData.forEach((level, index) => {
             const points = 150 - index;
 
-            scores[level.creator] = (scores[level.creator] || 0) + points;
             scores[level.verifier] = (scores[level.verifier] || 0) + points;
         });
 
