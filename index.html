@@ -18,6 +18,7 @@
         .confirmed { background-color: #2ecc71; }
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); justify-content: center; align-items: center; }
         .modal-content { background-color: white; padding: 20px; border-radius: 8px; width: 80%; max-width: 800px; }
+        #profile-modal { width: 60%; }
     </style>
 </head>
 <body>
@@ -81,21 +82,17 @@
         </ol>
     </section>
     
-    <section id="level-completions" class="modal">
+    <section id="profile-modal" class="modal">
         <div class="modal-content">
-            <h2>Completions do Nível</h2>
-            <table id="level-completions-table">
-                <thead>
-                    <tr>
-                        <th>Jogador</th>
-                        <th>Link do YouTube</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Completions do nível selecionado -->
-                </tbody>
-            </table>
-            <button onclick="closeLevelCompletions()">Fechar</button>
+            <h2>Perfil do Jogador</h2>
+            <p id="player-info"></p>
+            <h3>Completions</h3>
+            <ul id="player-completions-list">
+                <!-- Completions do jogador -->
+            </ul>
+            <h3>Nível Mais Difícil Completado</h3>
+            <p id="most-difficult-level"></p>
+            <button onclick="closeProfile()">Fechar</button>
         </div>
     </section>
 
@@ -109,8 +106,8 @@
             { nome: "Clubstep", pontos: 60, completions: [] }
         ];
 
-        // Submissões pendentes
-        let pendingCompletions = [];
+        // Lista de jogadores e suas completions
+        let players = [];
 
         // Função para popular a lista de níveis demon
         function populateDemonList() {
@@ -146,12 +143,24 @@
                     youtubeLink,
                     device,
                     levelName,
+                    pontos: level.pontos,
                     status: 'pendente'
                 };
-                pendingCompletions.push(pendingCompletion);
+
+                // Verificar se o jogador já existe
+                let player = players.find(p => p.name === playerName);
+                if (!player) {
+                    player = { name: playerName, completions: [] };
+                    players.push(player);
+                }
+
+                // Adicionar a completion ao jogador
+                player.completions.push(pendingCompletion);
+
                 alert("Completion submetido com sucesso! Aguardando aprovação.");
                 populateDemonList();
                 populateModeration();
+                updateLeaderboard();
             }
         }
 
@@ -159,20 +168,24 @@
         function populateModeration() {
             const table = document.getElementById("moderation-table").getElementsByTagName("tbody")[0];
             table.innerHTML = "";
-            pendingCompletions.forEach(completion => {
-                let row = table.insertRow();
-                row.insertCell(0).innerText = completion.levelName;
-                row.insertCell(1).innerText = completion.playerName;
-                row.insertCell(2).innerHTML = `<a href="${completion.youtubeLink}" target="_blank">Link</a>`;
-                row.insertCell(3).innerText = completion.device;
-                row.insertCell(4).innerText = completion.status;
-                let actionCell = row.insertCell(5);
-                let acceptButton = document.createElement("button");
-                acceptButton.innerText = "Aceitar";
-                acceptButton.onclick = function () {
-                    acceptCompletion(completion);
-                };
-                actionCell.appendChild(acceptButton);
+            players.forEach(player => {
+                player.completions.forEach(completion => {
+                    if (completion.status === 'pendente') {
+                        let row = table.insertRow();
+                        row.insertCell(0).innerText = completion.levelName;
+                        row.insertCell(1).innerText = completion.playerName;
+                        row.insertCell(2).innerHTML = `<a href="${completion.youtubeLink}" target="_blank">Link</a>`;
+                        row.insertCell(3).innerText = completion.device;
+                        row.insertCell(4).innerText = completion.status;
+                        let actionCell = row.insertCell(5);
+                        let acceptButton = document.createElement("button");
+                        acceptButton.innerText = "Aceitar";
+                        acceptButton.onclick = function () {
+                            acceptCompletion(completion);
+                        };
+                        actionCell.appendChild(acceptButton);
+                    }
+                });
             });
         }
 
@@ -185,41 +198,61 @@
             let level = demonLevels.find(l => l.nome === completion.levelName);
             if (level) {
                 level.completions.push(completion);
-                updateLeaderboard(completion);
+                updateLeaderboard();
             }
         }
 
-        // Função para abrir a aba de completions de um nível
-        function openLevelCompletions(level) {
-            const modal = document.getElementById("level-completions");
-            const table = document.getElementById("level-completions-table").getElementsByTagName("tbody")[0];
-            table.innerHTML = "";
-            level.completions.forEach(completion => {
-                let row = table.insertRow();
-                row.insertCell(0).innerText = completion.playerName;
-                row.insertCell(1).innerHTML = `<a href="${completion.youtubeLink}" target="_blank">Link</a>`;
-            });
-            modal.style.display = "flex";
-        }
-
-        // Função para fechar a modal de completions do nível
-        function closeLevelCompletions() {
-            const modal = document.getElementById("level-completions");
-            modal.style.display = "none";
-        }
-
-        // Função para atualizar o leaderboard
-        function updateLeaderboard(completion) {
+        // Função para atualizar a leaderboard
+        function updateLeaderboard() {
             const leaderboard = document.getElementById("leaderboard-list");
-            let leaderboardEntry = document.createElement("li");
-            leaderboardEntry.innerText = `${completion.playerName} completou ${completion.levelName} com ${demonLevels.find(l => l.nome === completion.levelName).pontos} pontos.`;
-            leaderboard.appendChild(leaderboardEntry);
+            leaderboard.innerHTML = "";
+            players.forEach(player => {
+                let totalPoints = player.completions.reduce((sum, completion) => sum + demonLevels.find(level => level.nome === completion.levelName).pontos, 0);
+                let leaderboardEntry = document.createElement("li");
+                leaderboardEntry.innerText = `${player.name} - ${totalPoints} pontos`;
+                leaderboardEntry.onclick = function () {
+                    showPlayerProfile(player);
+                };
+                leaderboard.appendChild(leaderboardEntry);
+            });
+        }
+
+        // Função para mostrar o perfil do jogador
+        function showPlayerProfile(player) {
+            const profileModal = document.getElementById("profile-modal");
+            const playerInfo = document.getElementById("player-info");
+            const playerCompletionsList = document.getElementById("player-completions-list");
+            const mostDifficultLevel = document.getElementById("most-difficult-level");
+
+            playerInfo.innerText = `Nome: ${player.name}`;
+            playerCompletionsList.innerHTML = "";
+            let maxPoints = 0;
+            let hardestLevel = "";
+            player.completions.forEach(completion => {
+                let listItem = document.createElement("li");
+                listItem.innerText = completion.levelName;
+                playerCompletionsList.appendChild(listItem);
+
+                if (completion.pontos > maxPoints) {
+                    maxPoints = completion.pontos;
+                    hardestLevel = completion.levelName;
+                }
+            });
+            mostDifficultLevel.innerText = hardestLevel;
+            profileModal.style.display = "flex";
+        }
+
+        // Função para fechar o perfil
+        function closeProfile() {
+            const profileModal = document.getElementById("profile-modal");
+            profileModal.style.display = "none";
         }
 
         // Inicializar
         document.getElementById("completion-form").addEventListener("submit", submitCompletion);
         populateDemonList();
         populateModeration();
+        updateLeaderboard();
     </script>
 </body>
 </html>
