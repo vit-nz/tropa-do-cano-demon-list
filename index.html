@@ -143,6 +143,14 @@
             width: 20px;
             height: 20px;
         }
+        .level-name {
+            cursor: pointer;
+            color: #333;
+            font-weight: bold;
+        }
+        .level-name:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -238,17 +246,15 @@
             demonLevels.forEach((level, index) => {
                 let row = table.insertRow();
                 row.insertCell(0).innerText = index + 1;
-                row.insertCell(1).innerText = level.nome;
-                row.insertCell(2).innerText = level.pontos;
-
-                // Nome do nível agora é clicável
-                let levelButtonCell = row.insertCell(3);
-                let levelButton = document.createElement("button");
-                levelButton.innerText = level.nome;
-                levelButton.onclick = function () {
+                let levelNameCell = row.insertCell(1);
+                let levelName = document.createElement("span");
+                levelName.className = "level-name";
+                levelName.innerText = level.nome;
+                levelName.onclick = function () {
                     showLevelCompletions(level);
                 };
-                levelButtonCell.appendChild(levelButton);
+                levelNameCell.appendChild(levelName);
+                row.insertCell(2).innerText = level.pontos;
             });
         }
 
@@ -272,7 +278,7 @@
         // Função para submeter a completion
         function submitCompletion(event) {
             event.preventDefault();
-            
+
             const playerName = document.getElementById("player-name").value;
             const levelName = document.getElementById("level-name").value;
             const youtubeLink = document.getElementById("youtube-link").value;
