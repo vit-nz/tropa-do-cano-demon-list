@@ -140,7 +140,6 @@
         <h1>Tropa do Cano Demon List</h1>
         <p>Os mais difíceis e épicos níveis do Geometry Dash!</p>
         <a href="https://discord.gg/amjFUaywuw" target="_blank">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/a/a7/Discord_logo.svg" class="discord-logo" alt="Discord">
             <span class="discord-link">Junte-se ao Discord!</span>
         </a>
     </header>
@@ -157,7 +156,6 @@
                     <th>Posição</th>
                     <th>Nome do Nível</th>
                     <th>Pontos</th>
-                    <th>Submeter Completion</th>
                 </tr>
             </thead>
             <tbody>
@@ -238,19 +236,23 @@
                 row.insertCell(0).innerText = index + 1;
                 row.insertCell(1).innerText = level.nome;
                 row.insertCell(2).innerText = level.pontos;
-                let submitCell = row.insertCell(3);
-                let submitButton = document.createElement("button");
-                submitButton.innerText = "Submeter";
-                submitButton.onclick = function () {
-                    openLevelCompletionsForm(level.nome);
+                let levelCell = row.insertCell(3);
+                let levelButton = document.createElement("button");
+                levelButton.innerText = "Ver Completions";
+                levelButton.onclick = function () {
+                    showLevelCompletions(level.nome);
                 };
-                submitCell.appendChild(submitButton);
+                levelCell.appendChild(levelButton);
             });
         }
 
-        // Função para abrir o formulário de completion para o nível
-        function openLevelCompletionsForm(levelName) {
-            document.getElementById("level-name").value = levelName;
+        // Função para mostrar completions de um nível
+        function showLevelCompletions(levelName) {
+            const level = demonLevels.find(l => l.nome === levelName);
+            if (level) {
+                const playersList = level.completions.map(c => `<li>${c.playerName}</li>`).join('');
+                alert(`Completions de ${levelName}: ${playersList}`);
+            }
         }
 
         // Função para submeter a completion
