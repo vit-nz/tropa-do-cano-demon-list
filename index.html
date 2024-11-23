@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geometry Dash Demon List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+        h1 {
+            color: #ff6f61;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Top Demons do Geometry Dash</h1>
+    <p>Clique no botão abaixo para carregar a lista dos Demons.</p>
+    <button onclick="fetchDemons()">Carregar Lista</button>
+    <ul id="demonList"></ul>
+
+    <script>
+        async function fetchDemons() {
+            const apiUrl = "https://pointercrate.com/api/v2/demons/";
+            const demonList = document.getElementById('demonList');
+
+            // Limpa a lista antes de carregar novos dados
+            demonList.innerHTML = '<li>Carregando...</li>';
+
+            try {
+                const response = await fetch(apiUrl);
+                if (!response.ok) {
+                    throw new Error(`Erro: ${response.status}`);
+                }
+
+                const demons = await response.json();
+                demonList.innerHTML = ''; // Limpa o texto "Carregando..."
+
+                demons.forEach(demon => {
+                    const listItem = document.createElement('li');
+                    listItem.textContent = `${demon.position}. ${demon.name} - Criado por ${demon.verifier}`;
+                    demonList.appendChild(listItem);
+                });
+            } catch (error) {
+                demonList.innerHTML = `<li>Erro ao carregar a lista: ${error.message}</li>`;
+            }
+        }
+    </script>
+</body>
+</html>
+
