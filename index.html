@@ -129,6 +129,8 @@
                         <th>Posição</th>
                         <th>Nome do Nível</th>
                         <th>Pontos</th>
+                        <th>Criador</th>
+                        <th>Verificador</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -153,24 +155,32 @@
         </section>
     </div>
 
+    <div id="player-profile" style="display: none; position: fixed; top: 20%; left: 50%; transform: translateX(-50%); background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);">
+        <h3 id="profile-name"></h3>
+        <p><strong>Níveis Completados:</strong></p>
+        <ul id="profile-levels"></ul>
+        <p><strong>Nível mais Difícil Completado:</strong> <span id="profile-hardest-level"></span></p>
+        <button onclick="closeProfile()">Fechar</button>
+    </div>
+
     <script>
         let demonLevels = [
-            { nome: "Waka Waka Interface", pontos: 150, completions: [], verifier: "Hyfera" },
-            { nome: "Crumbling Caverns", pontos: 149, completions: [], verifier: "Arepy" },
-            { nome: "Phobia", pontos: 148, completions: [], verifier: "vrdr" },
-            { nome: "Dedicacao", pontos: 147, completions: [], verifier: "vidashgd" },
-            { nome: "Alpha Coronae", pontos: 146, completions: [], verifier: "vrdr" },
-            { nome: "Saas III", pontos: 145, completions: [], verifier: "vitnz" },
-            { nome: "Saas II", pontos: 144, completions: [], verifier: "vitnz" },
-            { nome: "Coolio", pontos: 143, completions: [], verifier: "vitnz" },
-            { nome: "Nem Fodendo", pontos: 142, completions: [], verifier: "vitnz" },
-            { nome: "Tudo Fodendo", pontos: 141, completions: [], verifier: "vitnz" },
-            { nome: "cursed circles lmao", pontos: 140, completions: [], verifier: "JustusRL" },
-            { nome: "Obscuro", pontos: 139, completions: [], verifier: "vidashgd" },
-            { nome: "Saas", pontos: 138, completions: [], verifier: "vitnz" },
-            { nome: "Invincible", pontos: 137, completions: [], verifier: "Arepy" },
-            { nome: "Mixtape", pontos: 136, completions: [], verifier: "JustusRL" },
-            { nome: "Renan Circles", pontos: 135, completions: [], verifier: "JustusRL" }
+            { nome: "Waka Waka Interface", pontos: 150, creator: "Hyfera", verifier: "Hyfera" },
+            { nome: "Crumbling Caverns", pontos: 149, creator: "Arepy", verifier: "Arepy" },
+            { nome: "Phobia", pontos: 148, creator: "vrdr", verifier: "vrdr" },
+            { nome: "Dedicacao", pontos: 147, creator: "vidashgd", verifier: "vidashgd" },
+            { nome: "Alpha Coronae", pontos: 146, creator: "vrdr", verifier: "vrdr" },
+            { nome: "Saas III", pontos: 145, creator: "vitnz", verifier: "vitnz" },
+            { nome: "Saas II", pontos: 144, creator: "vitnz", verifier: "vitnz" },
+            { nome: "Coolio", pontos: 143, creator: "vitnz", verifier: "vitnz" },
+            { nome: "Nem Fodendo", pontos: 142, creator: "vitnz", verifier: "vitnz" },
+            { nome: "Tudo Fodendo", pontos: 141, creator: "vitnz", verifier: "vitnz" },
+            { nome: "cursed circles lmao", pontos: 140, creator: "JustusRL", verifier: "JustusRL" },
+            { nome: "Obscuro", pontos: 139, creator: "vidashgd", verifier: "vidashgd" },
+            { nome: "Saas", pontos: 138, creator: "vitnz", verifier: "vitnz" },
+            { nome: "Invincible", pontos: 137, creator: "Arepy", verifier: "Arepy" },
+            { nome: "Mixtape", pontos: 136, creator: "JustusRL", verifier: "JustusRL" },
+            { nome: "Renan Circles", pontos: 135, creator: "JustusRL", verifier: "JustusRL" }
         ];
 
         let players = [
@@ -189,31 +199,69 @@
                 row.insertCell(0).innerText = index + 1; // Display the position
                 row.insertCell(1).innerText = level.nome; // Level name
                 row.insertCell(2).innerText = level.pontos; // Points
+                row.insertCell(3).innerText = level.creator; // Creator
+                row.insertCell(4).innerText = level.verifier; // Verifier
             });
         }
 
         function updateLeaderboard() {
             const leaderboardTable = document.getElementById("leaderboard-table").getElementsByTagName("tbody")[0];
             leaderboardTable.innerHTML = "";
-            players.forEach(player => {
-                let totalPoints = player.completions.reduce((sum, levelName) => {
-                    const level = demonLevels.find(l => l.nome === levelName);
-                    return level ? sum + level.pontos : sum;
-                }, 0);
 
-                let row = leaderboardTable.insertRow();
-                row.insertCell(0).innerText = player.name;
-                row.insertCell(1).innerText = totalPoints;
+            let playerScores = players.map(player => {
+                let points = 0;
+                player.completions.forEach(levelName => {
+                    let level = demonLevels.find(d => d.nome === levelName);
+                    if (level) points += level.pontos;
+                });
+                return { name: player.name, points };
             });
+
+            playerScores.sort((a, b) => b.points - a.points); // Sort players by points
+
+            playerScores.forEach(player => {
+                let row = leaderboardTable.insertRow();
+                let playerCell = row.insertCell(0);
+                playerCell.innerText = player.name;
+                playerCell.style.cursor = 'pointer';
+                playerCell.onclick = () => showPlayerProfile(player.name);
+                row.insertCell(1).innerText = player.points;
+            });
+        }
+
+        function showPlayerProfile(playerName) {
+            const player = players.find(p => p.name === playerName);
+            const profileName = document.getElementById("profile-name");
+            const profileLevels = document.getElementById("profile-levels");
+            const profileHardestLevel = document.getElementById("profile-hardest-level");
+
+            profileName.innerText = player.name;
+            profileLevels.innerHTML = "";
+            player.completions.forEach(level => {
+                let li = document.createElement("li");
+                li.innerText = level;
+                profileLevels.appendChild(li);
+            });
+
+            const hardestLevel = player.completions.reduce((max, levelName) => {
+                let level = demonLevels.find(l => l.nome === levelName);
+                return level.pontos > max.pontos ? level : max;
+            }, { pontos: 0 });
+
+            profileHardestLevel.innerText = hardestLevel.nome;
+            document.getElementById("player-profile").style.display = "block";
+        }
+
+        function closeProfile() {
+            document.getElementById("player-profile").style.display = "none";
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle("dark-mode");
         }
 
         populateDemonList();
         updateLeaderboard();
-
-        function toggleTheme() {
-            document.body.classList.toggle('dark-mode');
-            document.querySelector('header').classList.toggle('dark-mode');
-        }
     </script>
 </body>
 </html>
