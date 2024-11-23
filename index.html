@@ -220,6 +220,16 @@
         </ol>
     </section>
 
+    <section id="profile-modal" class="modal">
+        <div class="modal-content">
+            <h2>Perfil do Jogador</h2>
+            <div id="player-profile"></div>
+            <h3>Níveis Completados</h3>
+            <ul id="player-completions-list"></ul>
+            <button onclick="closeProfileModal()">Fechar</button>
+        </div>
+    </section>
+
     <section id="level-completions-modal" class="modal">
         <div class="modal-content">
             <h2>Completions do Nível</h2>
@@ -229,7 +239,6 @@
     </section>
 
     <script>
-        // Variáveis globais
         let demonLevels = [
             { nome: "The Hell Factory", pontos: 100, completions: [] },
             { nome: "Theory of Everything 2", pontos: 90, completions: [] },
@@ -237,9 +246,9 @@
             { nome: "Electrodynamix", pontos: 70, completions: [] },
             { nome: "Clubstep", pontos: 60, completions: [] }
         ];
+
         let players = [];
 
-        // Função para popular a lista de níveis demon
         function populateDemonList() {
             const table = document.getElementById("demon-table").getElementsByTagName("tbody")[0];
             table.innerHTML = "";
@@ -258,7 +267,6 @@
             });
         }
 
-        // Função para mostrar completions de um nível
         function showLevelCompletions(level) {
             const levelCompletionsList = document.getElementById("level-completions-list");
             levelCompletionsList.innerHTML = "";
@@ -270,12 +278,10 @@
             document.getElementById("level-completions-modal").style.display = "flex";
         }
 
-        // Função para fechar o modal de completions de nível
         function closeLevelCompletions() {
             document.getElementById("level-completions-modal").style.display = "none";
         }
 
-        // Função para submeter a completion
         function submitCompletion(event) {
             event.preventDefault();
 
@@ -305,7 +311,6 @@
             }
         }
 
-        // Função para mostrar níveis pendentes de moderação
         function updateModeration() {
             const table = document.getElementById("moderation-table").getElementsByTagName("tbody")[0];
             table.innerHTML = "";
@@ -333,7 +338,6 @@
             });
         }
 
-        // Função para mover a completion para a lista do nível após confirmação
         function moveCompletionToLevel(levelName, completion) {
             const level = demonLevels.find(l => l.nome === levelName);
             if (level) {
@@ -342,7 +346,6 @@
             }
         }
 
-        // Função para atualizar a leaderboard
         function updateLeaderboard() {
             const leaderboard = document.getElementById("leaderboard-list");
             leaderboard.innerHTML = "";
@@ -354,17 +357,42 @@
 
                 let leaderboardEntry = document.createElement("li");
                 leaderboardEntry.innerText = `${player.name} - ${totalPoints} pontos`;
+                leaderboardEntry.onclick = function () {
+                    showPlayerProfile(player);
+                };
                 leaderboard.appendChild(leaderboardEntry);
             });
         }
 
-        // Função para alternar o tema
+        function showPlayerProfile(player) {
+            const profileModal = document.getElementById("profile-modal");
+            const playerProfile = document.getElementById("player-profile");
+            const completionsList = document.getElementById("player-completions-list");
+
+            playerProfile.innerHTML = `<strong>${player.name}</strong> completou os seguintes níveis:`;
+            completionsList.innerHTML = "";
+
+            player.completions.forEach(completion => {
+                const level = demonLevels.find(l => l.nome === completion.levelName);
+                if (level) {
+                    let listItem = document.createElement("li");
+                    listItem.innerText = level.nome;
+                    completionsList.appendChild(listItem);
+                }
+            });
+
+            profileModal.style.display = "flex";
+        }
+
+        function closeProfileModal() {
+            document.getElementById("profile-modal").style.display = "none";
+        }
+
         function toggleTheme() {
             document.body.classList.toggle("dark-mode");
             document.querySelector("header").classList.toggle("dark-mode");
         }
 
-        // Inicialização
         document.getElementById("completion-form").addEventListener("submit", submitCompletion);
         populateDemonList();
         updateModeration();
