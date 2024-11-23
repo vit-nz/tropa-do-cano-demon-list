@@ -78,7 +78,7 @@
     </style>
 </head>
 <body>
-    <h1>Minha Lista de Extreme Demons</h1>
+    <h1>Tropa do Cano Demon List</h1>
     <!-- Aqui vai o conteúdo da página -->
 </body>
 </html>
@@ -206,7 +206,6 @@
     <p class="error" id="errorMessage"></p>
 </body>
 </html>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -242,5 +241,44 @@
         function addLevel() {
             // Referências aos campos de input
             const name = document.getElementById("levelName").value;
-            const creator = document.getElementById("crea
+            const creator = document.getElementById("creator").value;
+            const verifier = document.getElementById("verifier").value;
+            const rating = document.getElementById("rating").value;
+            const tableBody = document.getElementById("demonTable");
 
+            // Verifica se os campos estão preenchidos
+            if (!name || !creator || !verifier || !rating) {
+                alert("Por favor, preencha todos os campos!");
+                return;
+            }
+
+            // Insere o novo nível no topo da tabela
+            const newRow = document.createElement("tr");
+            newRow.innerHTML = `
+                <td>1</td>
+                <td>${name}</td>
+                <td>${creator}</td>
+                <td>${verifier}</td>
+            `;
+            tableBody.prepend(newRow);
+
+            // Atualiza automaticamente as posições dos níveis abaixo
+            updatePositions();
+
+            // Limpa os campos de input
+            document.getElementById("levelName").value = "";
+            document.getElementById("creator").value = "";
+            document.getElementById("verifier").value = "";
+            document.getElementById("rating").value = "";
+        }
+
+        function updatePositions() {
+            const rows = document.querySelectorAll("#demonTable tr");
+            rows.forEach((row, index) => {
+                const positionCell = row.children[0]; // A primeira célula é a posição
+                positionCell.textContent = index + 1; // Atualiza a posição com base no índice
+            });
+        }
+    </script>
+</body>
+</html>
