@@ -310,6 +310,7 @@
                 moderationTable.appendChild(row);
             }
 
+            // Limpar o formulário
             document.querySelector('#completion-form').reset();
         });
 
@@ -389,7 +390,7 @@
             window.open('https://discord.gg/amjFUaywuw', '_blank');
         }
 
-        // Popula a tabela de Demon List e Leaderboard
+        // Popula a tabela de Demon List
         function populateDemonList() {
             const tableBody = document.querySelector('#demon-table tbody');
             demonLevels.forEach((level, index) => {
