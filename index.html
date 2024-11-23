@@ -62,6 +62,10 @@
         button:hover {
             background-color: #555;
         }
+
+        #completion-option {
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -96,6 +100,12 @@
             <input type="text" id="level-name" placeholder="Nome do Nível" required>
             <input type="number" id="difficulty" placeholder="Dificuldade (1 a 10)" required min="1" max="10">
             <input type="number" id="points" placeholder="Pontuação (0 a 100)" required min="0" max="100">
+            
+            <div id="completion-option">
+                <label for="submit-completion">Submeter Completion?</label>
+                <input type="checkbox" id="submit-completion" value="sim">
+            </div>
+            
             <button type="submit">Submeter</button>
         </form>
     </section>
@@ -145,17 +155,20 @@
             const levelName = document.querySelector('#level-name').value;
             const difficulty = document.querySelector('#difficulty').value;
             const points = document.querySelector('#points').value;
+            const submitCompletion = document.querySelector('#submit-completion').checked;
 
             const newLevel = {
                 nome: levelName,
                 dificuldade: parseInt(difficulty),
                 pontos: parseInt(points),
-                comentarios: "Novo nível completado!"
+                comentarios: submitCompletion ? "Novo nível completado e enviado!" : "Novo nível completado, mas não enviado."
             };
 
             demonLevels.push(newLevel); // Adiciona o novo nível
             renderDemonList(); // Re-renderiza a tabela
-            updateLeaderboard(newLevel); // Atualiza o leaderboard
+            if (submitCompletion) {
+                updateLeaderboard(newLevel); // Atualiza o leaderboard se completado
+            }
 
             document.querySelector('#completion-form').reset(); // Reseta o formulário
         });
