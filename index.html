@@ -12,10 +12,12 @@
             background-color: #f5f5f5;
             color: #333;
             display: flex;
+            justify-content: center;
+            align-items: flex-start;
             flex-direction: column;
-            align-items: center;
             min-height: 100vh;
             text-align: center;
+            transition: background-color 0.3s, color 0.3s;
         }
         body.dark-mode {
             background-color: #2b2b2b;
@@ -42,6 +44,17 @@
             font-weight: 600;
             margin-bottom: 15px;
         }
+        #demon-list, #leaderboard {
+            background-color: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        body.dark-mode #demon-list,
+        body.dark-mode #leaderboard {
+            background-color: #333;
+        }
         table {
             width: 100%;
             border-collapse: collapse;
@@ -60,11 +73,27 @@
         body.dark-mode th {
             background-color: #1e1e1e;
         }
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
+        .level-name {
+            font-weight: bold;
         }
-        body.dark-mode tr:nth-child(even) {
-            background-color: #3b3b3b;
+        input, button {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+        button {
+            background-color: #0078D4;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #0056a1;
         }
         .theme-toggle {
             position: fixed;
@@ -81,44 +110,6 @@
         .theme-toggle:hover {
             background-color: #0056a1;
         }
-        .modal {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            z-index: 1000;
-            width: 60%;
-            max-width: 600px;
-        }
-        .modal.dark-mode {
-            background-color: #333;
-            color: white;
-        }
-        .modal-header {
-            font-size: 20px;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-        .modal-body {
-            font-size: 16px;
-            margin-bottom: 20px;
-        }
-        .modal-close {
-            padding: 10px 20px;
-            background-color: #0078D4;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .modal-close:hover {
-            background-color: #0056a1;
-        }
     </style>
 </head>
 <body>
@@ -130,25 +121,22 @@
     <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
 
     <div class="content">
-        <!-- Lista de Níveis Demon -->
-        <section id="demon-levels">
+        <section id="demon-list">
             <h2 class="section-title">Lista de Níveis Demon</h2>
-            <table id="demon-levels-table">
+            <table id="demon-table">
                 <thead>
                     <tr>
-                        <th>Nível</th>
-                        <th>Criador</th>
-                        <th>Verificador</th>
-                        <th>Dificuldade</th>
+                        <th>Posição</th>
+                        <th>Nome do Nível</th>
+                        <th>Pontos</th>
                     </tr>
                 </thead>
-                <tbody id="demon-levels-body">
-                    <!-- Demon Levels will be populated here -->
+                <tbody>
+                    <!-- Demon list will be dynamically populated -->
                 </tbody>
             </table>
         </section>
 
-        <!-- Leaderboard -->
         <section id="leaderboard">
             <h2 class="section-title">Leaderboard</h2>
             <table id="leaderboard-table">
@@ -158,109 +146,73 @@
                         <th>Pontos</th>
                     </tr>
                 </thead>
-                <tbody id="leaderboard-body">
+                <tbody>
+                    <!-- Leaderboard will be dynamically populated -->
                 </tbody>
             </table>
         </section>
     </div>
 
-    <!-- Modal -->
-    <div class="modal" id="modal">
-        <div class="modal-header" id="modal-header"></div>
-        <div class="modal-body" id="modal-body"></div>
-        <button class="modal-close" onclick="closeModal()">Fechar</button>
-    </div>
-
     <script>
-        // Data for Demon Levels and their Verifiers
-        const demonData = [
-            { level: 'WakaWaka Interface', creator: 'vrdr', verifier: 'Hyfera', difficulty: 150 },
-            { level: 'Crumbling Caverns', creator: 'vitnz', verifier: 'Arepy', difficulty: 149 },
-            { level: 'Phobia', creator: 'vrdr', verifier: 'vrdr', difficulty: 148 },
-            { level: 'Dedicacao', creator: 'vidashgd', verifier: 'vidashgd', difficulty: 147 },
-            { level: 'Alpha Coronae', creator: 'vrdr', verifier: 'vrdr', difficulty: 146 },
-            { level: 'Saas III', creator: 'vitnz', verifier: 'vitnz', difficulty: 145 },
-            { level: 'Saas II', creator: 'vitnz', verifier: 'vitnz', difficulty: 144 },
-            { level: 'Coolio', creator: 'vitnz', verifier: 'vitnz', difficulty: 143 },
-            { level: 'Nem Fodendo', creator: 'vitnz', verifier: 'vitnz', difficulty: 142 },
-            { level: 'Tudo Fodendo', creator: 'vitnz', verifier: 'vitnz', difficulty: 141 },
-            { level: 'cursed circles lmao', creator: 'JustusRL', verifier: 'JustusRL', difficulty: 140 },
-            { level: 'Obscuro', creator: 'vidashgd', verifier: 'vidashgd', difficulty: 139 },
-            { level: 'Saas', creator: 'vitnz', verifier: 'vitnz', difficulty: 138 },
-            { level: 'Invincible', creator: 'Arepy', verifier: 'Arepy', difficulty: 137 },
-            { level: 'Mixtape', creator: 'JustusRL', verifier: 'JustusRL', difficulty: 136 },
-            { level: 'Renan Circles', creator: 'JustusRL', verifier: 'JustusRL', difficulty: 135 }
+        let demonLevels = [
+            { nome: "Waka Waka Interface", pontos: 150, completions: [], verifier: "Hyfera" },
+            { nome: "Crumbling Caverns", pontos: 149, completions: [], verifier: "Arepy" },
+            { nome: "Phobia", pontos: 148, completions: [], verifier: "vrdr" },
+            { nome: "Dedicacao", pontos: 147, completions: [], verifier: "vidashgd" },
+            { nome: "Alpha Coronae", pontos: 146, completions: [], verifier: "vrdr" },
+            { nome: "Saas III", pontos: 145, completions: [], verifier: "vitnz" },
+            { nome: "Saas II", pontos: 144, completions: [], verifier: "vitnz" },
+            { nome: "Coolio", pontos: 143, completions: [], verifier: "vitnz" },
+            { nome: "Nem Fodendo", pontos: 142, completions: [], verifier: "vitnz" },
+            { nome: "Tudo Fodendo", pontos: 141, completions: [], verifier: "vitnz" },
+            { nome: "cursed circles lmao", pontos: 140, completions: [], verifier: "JustusRL" },
+            { nome: "Obscuro", pontos: 139, completions: [], verifier: "vidashgd" },
+            { nome: "Saas", pontos: 138, completions: [], verifier: "vitnz" },
+            { nome: "Invincible", pontos: 137, completions: [], verifier: "Arepy" },
+            { nome: "Mixtape", pontos: 136, completions: [], verifier: "JustusRL" },
+            { nome: "Renan Circles", pontos: 135, completions: [], verifier: "JustusRL" }
         ];
 
-        // Process Leaderboard Points
-        const scores = {};
-        const playerLevels = {};
-        demonData.forEach((level, index) => {
-            const points = 150 - index;
+        let players = [
+            { name: "vrdr", completions: ["Phobia", "Alpha Coronae"] },
+            { name: "vitnz", completions: ["Saas III", "Coolio", "Saas II", "Nem Fodendo", "Tudo Fodendo"] },
+            { name: "vidashgd", completions: ["Dedicacao", "Obscuro"] },
+            { name: "Arepy", completions: ["Crumbling Caverns", "Invincible"] },
+            { name: "JustusRL", completions: ["cursed circles lmao", "Mixtape", "Renan Circles"] }
+        ];
 
-            // Verifier points
-            scores[level.verifier] = (scores[level.verifier] || 0) + points;
-
-            // Track levels each player has passed
-            if (!playerLevels[level.verifier]) {
-                playerLevels[level.verifier] = [];
-            }
-            playerLevels[level.verifier].push(level);
-        });
-
-        const leaderboardBody = document.getElementById('leaderboard-body');
-        const sortedScores = Object.entries(scores).sort((a, b) => b[1] - a[1]);
-
-        sortedScores.forEach(([player, points]) => {
-            const row = document.createElement('tr');
-            row.innerHTML = `<td><a href="#" onclick="showPlayerInfo('${player}')">${player}</a></td><td>${points}</td>`;
-            leaderboardBody.appendChild(row);
-        });
-
-        // Populate Demon Levels Table
-        const demonLevelsBody = document.getElementById('demon-levels-body');
-        demonData.forEach((level) => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>${level.level}</td>
-                <td>${level.creator}</td>
-                <td>${level.verifier}</td>
-                <td>${level.difficulty}</td>
-            `;
-            demonLevelsBody.appendChild(row);
-        });
-
-        function showPlayerInfo(player) {
-            const levels = playerLevels[player];
-            const hardestLevel = levels.reduce((max, level) => (level.difficulty > max.difficulty ? level : max), levels[0]);
-            
-            const modalHeader = document.getElementById('modal-header');
-            const modalBody = document.getElementById('modal-body');
-            
-            modalHeader.innerText = `${player}'s Information`;
-            modalBody.innerHTML = `
-                <p><strong>Níveis completados:</strong></p>
-                <ul>
-                    ${levels.map(level => `<li>${level.level} (Dificuldade: ${level.difficulty})</li>`).join('')}
-                </ul>
-                <p><strong>Nível mais difícil completado:</strong> ${hardestLevel.level} (Dificuldade: ${hardestLevel.difficulty})</p>
-            `;
-            
-            openModal();
+        function populateDemonList() {
+            const table = document.getElementById("demon-table").getElementsByTagName("tbody")[0];
+            table.innerHTML = "";
+            demonLevels.forEach((level, index) => {
+                let row = table.insertRow();
+                row.insertCell(0).innerText = index + 1; // Display the position
+                row.insertCell(1).innerText = level.nome; // Level name
+                row.insertCell(2).innerText = level.pontos; // Points
+            });
         }
 
-        function openModal() {
-            document.getElementById('modal').style.display = 'block';
+        function updateLeaderboard() {
+            const leaderboardTable = document.getElementById("leaderboard-table").getElementsByTagName("tbody")[0];
+            leaderboardTable.innerHTML = "";
+            players.forEach(player => {
+                let totalPoints = player.completions.reduce((sum, levelName) => {
+                    const level = demonLevels.find(l => l.nome === levelName);
+                    return level ? sum + level.pontos : sum;
+                }, 0);
+
+                let row = leaderboardTable.insertRow();
+                row.insertCell(0).innerText = player.name;
+                row.insertCell(1).innerText = totalPoints;
+            });
         }
 
-        function closeModal() {
-            document.getElementById('modal').style.display = 'none';
-        }
+        populateDemonList();
+        updateLeaderboard();
 
         function toggleTheme() {
             document.body.classList.toggle('dark-mode');
             document.querySelector('header').classList.toggle('dark-mode');
-            document.querySelectorAll('.modal').forEach(modal => modal.classList.toggle('dark-mode'));
         }
     </script>
 </body>
