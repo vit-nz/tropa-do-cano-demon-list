@@ -18,6 +18,7 @@
             min-height: 100vh;
             text-align: center;
             transition: background-color 0.3s, color 0.3s;
+            padding-bottom: 20px;
         }
         body.dark-mode {
             background-color: #2b2b2b;
@@ -30,14 +31,15 @@
             width: 100%;
             text-align: center;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
         }
         header.dark-mode {
             background-color: #1e1e1e;
         }
         .content {
-            width: 80%;
+            width: 90%;
             max-width: 1200px;
-            margin: 30px 0;
+            margin: 0 auto;
         }
         .section-title {
             font-size: 24px;
@@ -50,6 +52,7 @@
             border-radius: 12px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             margin-bottom: 20px;
+            text-align: left;
         }
         body.dark-mode #demon-list,
         body.dark-mode #submit-completion,
@@ -272,158 +275,102 @@
     <script>
         let demonLevels = [
             { nome: "The Hell Factory", pontos: 100, completions: [] },
-            { nome: "Theory of Everything 2", pontos: 80, completions: [] },
-            { nome: "Deadlocked", pontos: 90, completions: [] },
+            { nome: "Theory of Everything 2", pontos: 120, completions: [] },
+            // Continue com os outros níveis...
         ];
 
         let players = [];
 
-        function populateDemonList() {
-            const table = document.getElementById("demon-table").getElementsByTagName("tbody")[0];
-            table.innerHTML = "";
-            demonLevels.forEach((level, index) => {
-                let row = table.insertRow();
-                row.insertCell(0).innerText = index + 1;
-                let levelNameCell = row.insertCell(1);
-                let levelName = document.createElement("span");
-                levelName.innerText = level.nome;
-                levelName.classList.add("level-name");
-                levelName.onclick = () => showLevelCompletions(level);
-                levelNameCell.appendChild(levelName);
-                row.insertCell(2).innerText = level.pontos;
-            });
-        }
-
-        function showLevelCompletions(level) {
-            const levelCompletionsList = document.getElementById("level-completions-list");
-            levelCompletionsList.innerHTML = "";
-            level.completions.forEach(completion => {
-                let listItem = document.createElement("li");
-                listItem.innerText = completion.playerName;
-                levelCompletionsList.appendChild(listItem);
-            });
-            document.getElementById("level-completions-modal").style.display = "flex";
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
         }
 
         function closeLevelCompletions() {
-            document.getElementById("level-completions-modal").style.display = "none";
-        }
-
-        function submitCompletion(event) {
-            event.preventDefault();
-
-            const playerName = document.getElementById("player-name").value;
-            const levelName = document.getElementById("level-name").value;
-            const youtubeLink = document.getElementById("youtube-link").value;
-            const device = document.getElementById("device").value;
-
-            let player = players.find(p => p.name === playerName);
-            if (!player) {
-                player = { name: playerName, completions: [] };
-                players.push(player);
-            }
-
-            const level = demonLevels.find(l => l.nome === levelName);
-            if (level) {
-                let completion = {
-                    playerName: playerName,
-                    levelName: levelName,
-                    youtubeLink: youtubeLink,
-                    device: device,
-                    status: "pending"
-                };
-                level.completions.push(completion);
-                alert("Sua completion foi enviada para moderação.");
-                updateModeration();
-            }
-        }
-
-        function updateModeration() {
-            const table = document.getElementById("moderation-table").getElementsByTagName("tbody")[0];
-            table.innerHTML = "";
-            demonLevels.forEach(level => {
-                level.completions.forEach(completion => {
-                    if (completion.status === "pending") {
-                        let row = table.insertRow();
-                        row.insertCell(0).innerText = level.nome;
-                        row.insertCell(1).innerText = completion.playerName;
-                        row.insertCell(2).innerText = completion.youtubeLink;
-                        row.insertCell(3).innerText = completion.device;
-                        row.insertCell(4).innerText = completion.status;
-                        let actionCell = row.insertCell(5);
-                        let approveButton = document.createElement("button");
-                        approveButton.innerText = "Aprovar";
-                        approveButton.onclick = function () {
-                            completion.status = "confirmed";
-                            updateLeaderboard();
-                            updateModeration();
-                            moveCompletionToLevel(level.nome, completion);
-                        };
-                        actionCell.appendChild(approveButton);
-                    }
-                });
-            });
-        }
-
-        function moveCompletionToLevel(levelName, completion) {
-            const level = demonLevels.find(l => l.nome === levelName);
-            if (level) {
-                level.completions = level.completions.filter(c => c !== completion);
-                level.completions.push(completion);
-            }
-        }
-
-        function updateLeaderboard() {
-            const leaderboard = document.getElementById("leaderboard-list");
-            leaderboard.innerHTML = "";
-            players.forEach(player => {
-                let totalPoints = player.completions.reduce((sum, completion) => {
-                    const level = demonLevels.find(level => level.nome === completion.levelName);
-                    return level ? sum + level.pontos : sum;
-                }, 0);
-
-                let leaderboardEntry = document.createElement("li");
-                leaderboardEntry.innerText = `${player.name} - ${totalPoints} pontos`;
-                leaderboardEntry.onclick = function () {
-                    showPlayerProfile(player);
-                };
-                leaderboard.appendChild(leaderboardEntry);
-            });
-        }
-
-        function showPlayerProfile(player) {
-            const profileModal = document.getElementById("profile-modal");
-            const playerProfile = document.getElementById("player-profile");
-            const completionsList = document.getElementById("player-completions-list");
-
-            playerProfile.innerHTML = `<strong>${player.name}</strong> completou os seguintes níveis:`;
-            completionsList.innerHTML = "";
-
-            player.completions.forEach(completion => {
-                const level = demonLevels.find(l => l.nome === completion.levelName);
-                if (level) {
-                    let listItem = document.createElement("li");
-                    listItem.innerText = level.nome;
-                    completionsList.appendChild(listItem);
-                }
-            });
-
-            profileModal.style.display = "flex";
+            document.getElementById('level-completions-modal').style.display = 'none';
         }
 
         function closeProfileModal() {
-            document.getElementById("profile-modal").style.display = "none";
+            document.getElementById('profile-modal').style.display = 'none';
         }
 
-        function toggleTheme() {
-            document.body.classList.toggle("dark-mode");
-            document.querySelector("header").classList.toggle("dark-mode");
+        function showLevelCompletions(levelName) {
+            const level = demonLevels.find(l => l.nome === levelName);
+            const completionsList = document.getElementById('level-completions-list');
+            completionsList.innerHTML = '';
+            level.completions.forEach(completion => {
+                const li = document.createElement('li');
+                li.textContent = `${completion.nome} (Dispositivo: ${completion.dispositivo})`;
+                completionsList.appendChild(li);
+            });
+            document.getElementById('level-completions-modal').style.display = 'flex';
         }
 
-        document.getElementById("completion-form").addEventListener("submit", submitCompletion);
-        populateDemonList();
-        updateModeration();
+        function showPlayerProfile(playerName) {
+            const player = players.find(p => p.nome === playerName);
+            const playerProfile = document.getElementById('player-profile');
+            const playerCompletionsList = document.getElementById('player-completions-list');
+
+            playerProfile.innerHTML = `<strong>Nome:</strong> ${player.nome}<br><strong>Pontos:</strong> ${player.pontos}`;
+            playerCompletionsList.innerHTML = '';
+            player.completions.forEach(completion => {
+                const li = document.createElement('li');
+                li.textContent = completion.nome;
+                playerCompletionsList.appendChild(li);
+            });
+
+            document.getElementById('profile-modal').style.display = 'flex';
+        }
+
+        document.getElementById('completion-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const nomeJogador = document.getElementById('player-name').value;
+            const nomeNivel = document.getElementById('level-name').value;
+            const linkYouTube = document.getElementById('youtube-link').value;
+            const dispositivo = document.getElementById('device').value;
+
+            const level = demonLevels.find(l => l.nome === nomeNivel);
+
+            if (level) {
+                level.completions.push({ nome: nomeJogador, link: linkYouTube, dispositivo: dispositivo });
+
+                if (!players.some(p => p.nome === nomeJogador)) {
+                    players.push({ nome: nomeJogador, pontos: level.pontos, completions: [{ nome: nomeNivel }] });
+                } else {
+                    const player = players.find(p => p.nome === nomeJogador);
+                    player.completions.push({ nome: nomeNivel });
+                    player.pontos += level.pontos;
+                }
+
+                alert('Completion enviada com sucesso!');
+                updateLeaderboard();
+                updateDemonList();
+            }
+        });
+
+        function updateLeaderboard() {
+            const leaderboardList = document.getElementById('leaderboard-list');
+            leaderboardList.innerHTML = '';
+            players.forEach(player => {
+                const li = document.createElement('li');
+                li.textContent = `${player.nome} - ${player.pontos} pontos`;
+                li.onclick = () => showPlayerProfile(player.nome);
+                leaderboardList.appendChild(li);
+            });
+        }
+
+        function updateDemonList() {
+            const demonTable = document.getElementById('demon-table').getElementsByTagName('tbody')[0];
+            demonTable.innerHTML = '';
+            demonLevels.forEach((level, index) => {
+                const row = demonTable.insertRow();
+                row.innerHTML = `<td>${index + 1}</td><td class="level-name" onclick="showLevelCompletions('${level.nome}')">${level.nome}</td><td>${level.pontos}</td>`;
+            });
+        }
+
+        // Inicialização
         updateLeaderboard();
+        updateDemonList();
     </script>
 </body>
 </html>
