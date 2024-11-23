@@ -246,10 +246,27 @@
             });
         }
 
-        // Função para mostrar completions de um nível
-        function showLevelCompletions(level) {
-            const completionsList = level.completions.map(c => `<li>${c.playerName}</li>`).join('');
-            alert(`Completions de ${level.nome}: ${completionsList}`);
+      // Exibir completions ao clicar no nome do nível
+        function showLevelCompletions(index) {
+            const level = demonLevels[index];
+            const completionTable = document.querySelector('#level-completions-table tbody');
+            completionTable.innerHTML = '';
+
+            level.completions.forEach(completion => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${completion.playerName}</td>
+                    <td><a href="${completion.youtubeLink}" target="_blank">${completion.youtubeLink}</a></td>
+                `;
+                completionTable.appendChild(row);
+            });
+
+            document.getElementById('level-completions').style.display = 'block';
+        }
+
+        function closeLevelCompletions() {
+            document.getElementById('level-completions').style.display = 'none';
+        }
         }
 
         // Função para submeter a completion
