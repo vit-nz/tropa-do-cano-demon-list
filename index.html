@@ -138,13 +138,64 @@
         .dark-theme button:hover {
             background-color: #777;
         }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding-top: 60px;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 8px;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        #theme-toggle-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        #theme-toggle-btn img {
+            width: 24px;
+            height: 24px;
+        }
     </style>
 </head>
 <body class="light-theme">
     <header>
         <h1>Tropa do Cano Demon List</h1>
         <p>Os mais difíceis e épicos níveis do Geometry Dash!</p>
-        <button onclick="toggleTheme()">Trocar Tema</button>
+        <button id="theme-toggle-btn" onclick="toggleTheme()">
+            <img src="https://img.icons8.com/ios-filled/50/000000/sun.png" id="theme-icon" alt="Tema Claro">
+        </button>
     </header>
     
     <section id="demon-list">
@@ -201,19 +252,22 @@
         </ol>
     </section>
     
-    <section id="level-completions" style="display:none;">
-        <h2>Completions do Nível</h2>
-        <table id="level-completions-table">
-            <thead>
-                <tr>
-                    <th>Jogador</th>
-                    <th>Link do YouTube</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Completions do nível selecionado -->
-            </tbody>
-        </table>
+    <section id="level-completions" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeLevelCompletions()">&times;</span>
+            <h2>Completions do Nível</h2>
+            <table id="level-completions-table">
+                <thead>
+                    <tr>
+                        <th>Jogador</th>
+                        <th>Link do YouTube</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Completions do nível selecionado -->
+                </tbody>
+            </table>
+        </div>
     </section>
 
     <script>
@@ -248,59 +302,23 @@
             const levelName = document.querySelector('#level-name').value;
             const youtubeLink = document.querySelector('#youtube-link').value;
 
-            const newCompletion = {
-                playerName: playerName,
-                youtubeLink: youtubeLink,
-                confirmed: false
-            };
-
-            // Encontre o nível correspondente e adicione a completion
-            const level = demonLevels.find(level => level.nome === levelName);
+            const newCompletion = { playerName, youtubeLink, confirmed: false };
+            const level = demonLevels.find(l => l.nome === levelName);
             if (level) {
                 level.completions.push(newCompletion);
-                addToModeration(newCompletion, levelName);
+                renderDemonList();
             }
 
-            renderDemonList();
+            document.querySelector('#completion-form').reset();
         });
-
-        // Função para adicionar completions à tabela de moderação
-        function addToModeration(completion, levelName) {
-            const moderationTable = document.querySelector('#moderation-table tbody');
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>${levelName}</td>
-                <td>${completion.playerName}</td>
-                <td><a href="${completion.youtubeLink}" target="_blank">${completion.youtubeLink}</a></td>
-                <td class="pending">Pendente</td>
-                <td><button onclick="approveCompletion('${completion.playerName}', '${completion.youtubeLink}')">Aprovar</button></td>
-            `;
-            moderationTable.appendChild(row);
-        }
-
-        // Função para aprovar uma conclusão
-        function approveCompletion(playerName, youtubeLink) {
-            const row = event.target.closest('tr');
-            row.querySelector('td:nth-child(4)').classList.add('confirmed');
-            row.querySelector('td:nth-child(4)').classList.remove('pending');
-            row.querySelector('button').disabled = true;
-
-            const completion = { playerName, youtubeLink };
-            const level = demonLevels.find(l => l.completions.some(c => c.playerName === playerName && c.youtubeLink === youtubeLink));
-            level.completions.find(c => c.playerName === playerName && c.youtubeLink === youtubeLink).confirmed = true;
-
-            renderDemonList(); // Re-renderiza a lista para mostrar as completions confirmadas
-        }
 
         // Função para exibir completions de um nível específico
         function showLevelCompletions(index) {
             const level = demonLevels[index];
-            const levelCompletions = level.completions.filter(c => c.confirmed);
-
             const completionTable = document.querySelector('#level-completions-table tbody');
             completionTable.innerHTML = '';
 
-            levelCompletions.forEach(completion => {
+            level.completions.forEach(completion => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td>${completion.playerName}</td>
@@ -312,13 +330,24 @@
             document.getElementById('level-completions').style.display = 'block';
         }
 
+        // Função para fechar a modal de completions
+        function closeLevelCompletions() {
+            document.getElementById('level-completions').style.display = 'none';
+        }
+
         // Função para alternar entre tema claro e escuro
         function toggleTheme() {
             document.body.classList.toggle('dark-theme');
             document.body.classList.toggle('light-theme');
+            const themeIcon = document.getElementById('theme-icon');
+            if (document.body.classList.contains('dark-theme')) {
+                themeIcon.src = 'https://img.icons8.com/ios-filled/50/000000/moon.png';
+            } else {
+                themeIcon.src = 'https://img.icons8.com/ios-filled/50/000000/sun.png';
+            }
         }
 
-        // Chama a renderização inicial da lista de Níveis Demon
+        // Inicializa a lista
         renderDemonList();
     </script>
 </body>
