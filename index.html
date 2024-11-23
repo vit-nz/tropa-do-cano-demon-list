@@ -204,6 +204,20 @@
             width: 40px;
             height: 40px;
         }
+
+        /* Moderação */
+        #moderation-table td button {
+            padding: 5px 10px;
+            background-color: #f39c12;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        #moderation-table td button:hover {
+            background-color: #e67e22;
+        }
     </style>
 </head>
 <body class="light-theme">
@@ -238,7 +252,6 @@
             <input type="text" id="player-name" placeholder="Seu Nome" required>
             <input type="text" id="level-name" placeholder="Nome do Nível" required>
             <input type="url" id="youtube-link" placeholder="Link do YouTube (prova)" required>
-            <input type="number" id="fps" placeholder="FPS" required>
             <select id="device">
                 <option value="pc">PC</option>
                 <option value="mobile">Mobile</option>
@@ -256,7 +269,6 @@
                     <th>Nome do Nível</th>
                     <th>Nome do Jogador</th>
                     <th>Link do YouTube</th>
-                    <th>FPS</th>
                     <th>Dispositivo</th>
                     <th>Status</th>
                     <th>Ação</th>
@@ -301,13 +313,14 @@
     <script>
         let demonLevels = [
             { nome: "The Hell Factory", pontos: 100, completions: [] },
-            { nome: "Deadlocked", pontos: 90, completions: [] },
-            { nome: "Clubstep", pontos: 80, completions: [] },
-            { nome: "Theory of Everything 2", pontos: 95, completions: [] },
-            { nome: "Finger Dash", pontos: 85, completions: [] }
+            { nome: "Theory of Everything 2", pontos: 90, completions: [] },
+            { nome: "Deadlocked", pontos: 80, completions: [] },
+            { nome: "Electrodynamix", pontos: 70, completions: [] },
+            { nome: "Clubstep", pontos: 60, completions: [] },
+            // Adicione outros níveis conforme necessário
         ];
 
-        let completions = [];
+        let pendingCompletions = [];
 
         function populateDemonList() {
             const table = document.getElementById("demon-table").getElementsByTagName("tbody")[0];
@@ -348,23 +361,53 @@
             const playerName = document.getElementById("player-name").value;
             const levelName = document.getElementById("level-name").value;
             const youtubeLink = document.getElementById("youtube-link").value;
-            const fps = document.getElementById("fps").value;
             const device = document.getElementById("device").value;
 
             let level = demonLevels.find(l => l.nome === levelName);
             if (level) {
-                level.completions.push({
+                const pendingCompletion = {
                     playerName,
                     youtubeLink,
-                    fps,
-                    device
-                });
-                alert("Completion submetido com sucesso!");
+                    device,
+                    levelName,
+                    status: 'pendente'
+                };
+                pendingCompletions.push(pendingCompletion);
+                alert("Completion submetido com sucesso! Aguardando aprovação.");
                 populateDemonList();
+                populateModeration();
             }
         }
 
-        document.getElementById("completion-form").addEventListener("submit", submitCompletion);
+        function populateModeration() {
+            const table = document.getElementById("moderation-table").getElementsByTagName("tbody")[0];
+            table.innerHTML = "";
+            pendingCompletions.forEach(completion => {
+                let row = table.insertRow();
+                row.insertCell(0).innerText = completion.levelName;
+                row.insertCell(1).innerText = completion.playerName;
+                row.insertCell(2).innerHTML = `<a href="${completion.youtubeLink}" target="_blank">Link</a>`;
+                row.insertCell(3).innerText = completion.device;
+                row.insertCell(4).innerText = completion.status;
+                let actionCell = row.insertCell(5);
+                let acceptButton = document.createElement("button");
+                acceptButton.innerText = "Aceitar";
+                acceptButton.onclick = function () {
+                    acceptCompletion(completion);
+                };
+                actionCell.appendChild(acceptButton);
+            });
+        }
+
+        function acceptCompletion(completion) {
+            completion.status = 'confirmado';
+            populateModeration();
+            // Mover a completion para o nível correspondente
+            let level = demonLevels.find(l => l.nome === completion.levelName);
+            if (level) {
+                level.completions.push(completion);
+            }
+        }
 
         function toggleTheme() {
             const body = document.body;
@@ -386,6 +429,7 @@
 
         // Inicialização
         populateDemonList();
+        populateModeration();
     </script>
 </body>
 </html>
