@@ -6,127 +6,215 @@
     <title>Tropa do Cano Demon List</title>
     <style>
         body {
-                       padding: 20px;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        header {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        #demon-list, #submit-completion, #leaderboard, #moderation, #completions, #level-completions {
+            padding: 20px;
             margin: 20px;
             background-color: white;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-        body.dark-mode #demon-list,
-        body.dark-mode #submit-completion,
-        body.dark-mode #leaderboard,
-        body.dark-mode #moderation,
-        body.dark-mode #completions {
-            background-color: #333;
-        }
+
         table {
             width: 100%;
             border-collapse: collapse;
         }
+
         th, td {
             padding: 10px;
             text-align: center;
             border: 1px solid #ddd;
         }
+
         th {
             background-color: #333;
             color: white;
         }
-        body.dark-mode th {
-            background-color: #444;
-        }
-        input, button {
+
+        input {
             padding: 8px;
             margin: 10px 5px;
             border-radius: 4px;
             border: 1px solid #ccc;
         }
+
         button {
+            padding: 10px 20px;
             background-color: #333;
             color: white;
             border: none;
             cursor: pointer;
+            border-radius: 4px;
         }
+
         button:hover {
             background-color: #555;
         }
+
+        #completion-option {
+            margin-top: 10px;
+        }
+
+        #moderation {
+            background-color: #f9f9f9;
+        }
+
         .pending {
             background-color: #f1c40f;
         }
+
         .confirmed {
             background-color: #2ecc71;
         }
+
+        /* Tema Claro */
+        .light-theme body {
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        .light-theme header {
+            background-color: #333;
+        }
+
+        .light-theme #demon-list, .light-theme #submit-completion, .light-theme #leaderboard, .light-theme #moderation, .light-theme #completions, .light-theme #level-completions {
+            background-color: white;
+        }
+
+        .light-theme table {
+            background-color: #fff;
+        }
+
+        .light-theme th {
+            background-color: #333;
+        }
+
+        .light-theme button {
+            background-color: #333;
+        }
+
+        .light-theme button:hover {
+            background-color: #555;
+        }
+
+        /* Tema Escuro */
+        .dark-theme body {
+            background-color: #121212;
+            color: white;
+        }
+
+        .dark-theme header {
+            background-color: #1e1e1e;
+        }
+
+        .dark-theme #demon-list, .dark-theme #submit-completion, .dark-theme #leaderboard, .dark-theme #moderation, .dark-theme #completions, .dark-theme #level-completions {
+            background-color: #333;
+        }
+
+        .dark-theme table {
+            background-color: #222;
+        }
+
+        .dark-theme th {
+            background-color: #444;
+        }
+
+        .dark-theme button {
+            background-color: #555;
+        }
+
+        .dark-theme button:hover {
+            background-color: #777;
+        }
+
+        /* Modal */
         .modal {
             display: none;
             position: fixed;
-            top: 0;
+            z-index: 1;
             left: 0;
+            top: 0;
             width: 100%;
             height: 100%;
+            overflow: auto;
             background-color: rgba(0, 0, 0, 0.5);
-            justify-content: center;
-            align-items: center;
+            padding-top: 60px;
         }
+
         .modal-content {
-            background-color: white;
+            background-color: #fff;
+            margin: 5% auto;
             padding: 20px;
-            border-radius: 8px;
+            border: 1px solid #888;
             width: 80%;
-            max-width: 800px;
-            text-align: center;
+            max-width: 500px;
+            border-radius: 8px;
         }
-        body.dark-mode .modal-content {
-            background-color: #444;
-        }
-        #profile-modal {
-            width: 60%;
-        }
-        .discord-logo {
-            width: 40px;
-            height: 40px;
-            vertical-align: middle;
-        }
-        .discord-link {
-            color: #7289da;
-            text-decoration: none;
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
             font-weight: bold;
         }
-        .discord-link:hover {
-            text-decoration: underline;
-        }
-        .theme-toggle {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background-color: #333;
-            color: white;
-            border: none;
-            padding: 10px;
-            border-radius: 5px;
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
             cursor: pointer;
         }
-        .theme-toggle:hover {
-            background-color: #555;
+
+        #theme-toggle-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
         }
-        .theme-icon {
-            width: 20px;
-            height: 20px;
+
+        #theme-toggle-btn img {
+            width: 24px;
+            height: 24px;
+        }
+
+        /* Discord Box */
+        #discord-box {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background-color: #7289da;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+        }
+
+        #discord-box img {
+            width: 40px;
+            height: 40px;
         }
     </style>
 </head>
-<body>
+<body class="light-theme">
     <header>
         <h1>Tropa do Cano Demon List</h1>
         <p>Os mais difíceis e épicos níveis do Geometry Dash!</p>
-        <a href="https://discord.gg/amjFUaywuw" target="_blank">
-            <span class="discord-link">Junte-se ao Discord!</span>
-        </a>
+        <button id="theme-toggle-btn" onclick="toggleTheme()">
+            <img src="https://img.icons8.com/ios-filled/50/000000/sun.png" id="theme-icon" alt="Tema Claro">
+        </button>
     </header>
-
-    <button class="theme-toggle" onclick="toggleTheme()">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Font_Awesome_5_solid_moon.svg/1024px-Font_Awesome_5_solid_moon.svg.png" alt="Trocar Tema" class="theme-icon">
-    </button>
-
+    
     <section id="demon-list">
         <h2>Lista de Níveis Demon</h2>
         <table id="demon-table">
@@ -135,6 +223,7 @@
                     <th>Posição</th>
                     <th>Nome do Nível</th>
                     <th>Pontos</th>
+                    <th>Submeter Completion</th>
                 </tr>
             </thead>
             <tbody>
@@ -149,7 +238,7 @@
             <input type="text" id="player-name" placeholder="Seu Nome" required>
             <input type="text" id="level-name" placeholder="Nome do Nível" required>
             <input type="url" id="youtube-link" placeholder="Link do YouTube (prova)" required>
-            <input type="text" id="device" placeholder="Dispositivo (PC/Mobile)" required>
+            
             <button type="submit">Submeter</button>
         </form>
     </section>
@@ -163,7 +252,6 @@
                     <th>Nome do Nível</th>
                     <th>Nome do Jogador</th>
                     <th>Link do YouTube</th>
-                    <th>Dispositivo</th>
                     <th>Status</th>
                     <th>Ação</th>
                 </tr>
@@ -181,51 +269,93 @@
         </ol>
     </section>
     
-    <section id="profile-modal" class="modal">
+    <section id="level-completions" class="modal">
         <div class="modal-content">
-            <h2>Perfil do Jogador</h2>
-            <p id="player-info"></p>
-            <h3>Completions</h3>
-            <ul id="player-completions-list">
-                <!-- Completions do jogador -->
-            </ul>
-            <h3>Nível Mais Difícil Completado</h3>
-            <p id="most-difficult-level"></p>
-            <button onclick="closeProfile()">Fechar</button>
+            <span class="close" onclick="closeLevelCompletions()">&times;</span>
+            <h2>Completions do Nível</h2>
+            <table id="level-completions-table">
+                <thead>
+                    <tr>
+                        <th>Jogador</th>
+                        <th>Link do YouTube</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Completions do nível selecionado -->
+                </tbody>
+            </table>
         </div>
     </section>
 
+    <!-- Caixa de Discord -->
+    <div id="discord-box" onclick="openDiscord()">
+        <img src="https://img.icons8.com/ios-filled/50/000000/discord-logo.png" alt="Discord">
+    </div>
+
     <script>
-        // Variáveis globais
         let demonLevels = [
             { nome: "The Hell Factory", pontos: 100, completions: [] },
-            { nome: "Theory of Everything 2", pontos: 90, completions: [] },
-            { nome: "Deadlocked", pontos: 80, completions: [] },
-            { nome: "Electrodynamix", pontos: 70, completions: [] },
-            { nome: "Clubstep", pontos: 60, completions: [] }
+            { nome: "Deadlocked", pontos: 90, completions: [] },
+            { nome: "Clubstep", pontos: 80, completions: [] }
         ];
-        let players = [];
 
-        // Função para popular a lista de níveis demon
-        function populateDemonList() {
-            const table = document.getElementById("demon-table").getElementsByTagName("tbody")[0];
-            table.innerHTML = "";
-            demonLevels.forEach((level, index) => {
-                let row = table.insertRow();
-                row.insertCell(0).innerText = index + 1;
-                row.insertCell(1).innerText = level.nome;
-                row.insertCell(2).innerText = level.pontos;
-                let levelCell = row.insertCell(3);
-                let levelButton = document.createElement("button");
-                levelButton.innerText = level.nome;
-                levelButton.onclick = function () {
-                    showLevelCompletions(level);
-                };
-                levelCell.appendChild(levelButton);
-            });
+        // Submissão de Completion com moderação
+        document.querySelector('#completion-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const playerName = document.querySelector('#player-name').value;
+            const levelName = document.querySelector('#level-name').value;
+            const youtubeLink = document.querySelector('#youtube-link').value;
+
+            const level = demonLevels.find(l => l.nome === levelName);
+
+            if (level) {
+                // Adiciona à moderação com status 'Pendente'
+                const moderationTable = document.querySelector('#moderation-table tbody');
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${levelName}</td>
+                    <td>${playerName}</td>
+                    <td><a href="${youtubeLink}" target="_blank">${youtubeLink}</a></td>
+                    <td class="pending">Pendente</td>
+                    <td><button onclick="approveCompletion(${demonLevels.indexOf(level)}, ${moderationTable.rows.length})">Aprovar</button></td>
+                `;
+                moderationTable.appendChild(row);
+            }
+
+            document.querySelector('#completion-form').reset();
+        });
+
+        // Função para aprovar a completion
+        function approveCompletion(levelIndex, completionIndex) {
+            const level = demonLevels[levelIndex];
+            const moderationTable = document.querySelector('#moderation-table tbody');
+            const row = moderationTable.rows[completionIndex];
+
+            const completion = {
+                playerName: row.cells[1].textContent,
+                youtubeLink: row.cells[2].textContent
+            };
+
+            // Mover a completion para o nível específico
+            level.completions.push(completion);
+
+            // Atualiza a tabela de completions no nível
+            const levelCompletionsTable = document.querySelector('#level-completions-table tbody');
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = `
+                <td>${completion.playerName}</td>
+                <td><a href="${completion.youtubeLink}" target="_blank">${completion.youtubeLink}</a></td>
+            `;
+            levelCompletionsTable.appendChild(newRow);
+
+            // Atualiza a moderação para "Confirmado"
+            row.cells[3].textContent = 'Confirmado';
+            row.cells[3].classList.add('confirmed');
+            row.querySelector('button').disabled = true;
         }
 
-      // Exibir completions ao clicar no nome do nível
+        // Exibir completions ao clicar no nome do nível
         function showLevelCompletions(index) {
             const level = demonLevels[index];
             const completionTable = document.querySelector('#level-completions-table tbody');
@@ -246,137 +376,42 @@
         function closeLevelCompletions() {
             document.getElementById('level-completions').style.display = 'none';
         }
-        }
 
-        // Função para submeter a completion
-        function submitCompletion(event) {
-            event.preventDefault();
-
-            const playerName = document.getElementById("player-name").value;
-            const levelName = document.getElementById("level-name").value;
-            const youtubeLink = document.getElementById("youtube-link").value;
-            const device = document.getElementById("device").value;
-
-            let player = players.find(p => p.name === playerName);
-            if (!player) {
-                player = { name: playerName, completions: [] };
-                players.push(player);
-            }
-
-            const level = demonLevels.find(l => l.nome === levelName);
-            if (level) {
-                let completion = {
-                    playerName: playerName,
-                    levelName: levelName,
-                    youtubeLink: youtubeLink,
-                    device: device,
-                    status: "pending"
-                };
-                level.completions.push(completion);
-                alert("Sua completion foi enviada para moderação.");
-                updateModeration();
-            }
-        }
-
-        // Função para mostrar níveis pendentes de moderação
-        function updateModeration() {
-            const table = document.getElementById("moderation-table").getElementsByTagName("tbody")[0];
-            table.innerHTML = "";
-            demonLevels.forEach(level => {
-                level.completions.forEach(completion => {
-                    if (completion.status === "pending") {
-                        let row = table.insertRow();
-                        row.insertCell(0).innerText = level.nome;
-                        row.insertCell(1).innerText = completion.playerName;
-                        row.insertCell(2).innerText = completion.youtubeLink;
-                        row.insertCell(3).innerText = completion.device;
-                        row.insertCell(4).innerText = completion.status;
-                        let actionCell = row.insertCell(5);
-                        let approveButton = document.createElement("button");
-                        approveButton.innerText = "Aprovar";
-                        approveButton.onclick = function () {
-                            completion.status = "confirmed";
-                            updateLeaderboard();
-                            updateModeration();
-                            moveCompletionToLevel(level.nome, completion);
-                        };
-                        actionCell.appendChild(approveButton);
-                    }
-                });
-            });
-        }
-
-        // Função para mover a completion para a lista do nível após confirmação
-        function moveCompletionToLevel(levelName, completion) {
-            const level = demonLevels.find(l => l.nome === levelName);
-            if (level) {
-                level.completions = level.completions.filter(c => c !== completion);
-                level.completions.push(completion);
-            }
-        }
-
-        // Função para atualizar a leaderboard
-        function updateLeaderboard() {
-            const leaderboard = document.getElementById("leaderboard-list");
-            leaderboard.innerHTML = "";
-            players.forEach(player => {
-                let totalPoints = player.completions.reduce((sum, completion) => {
-                    const level = demonLevels.find(level => level.nome === completion.levelName);
-                    return level ? sum + level.pontos : sum;
-                }, 0);
-
-                let leaderboardEntry = document.createElement("li");
-                leaderboardEntry.innerText = `${player.name} - ${totalPoints} pontos`;
-                leaderboardEntry.onclick = function () {
-                    showPlayerProfile(player);
-                };
-                leaderboard.appendChild(leaderboardEntry);
-            });
-        }
-
-        // Função para mostrar o perfil do jogador
-        function showPlayerProfile(player) {
-            const profileModal = document.getElementById("profile-modal");
-            const playerInfo = document.getElementById("player-info");
-            const playerCompletionsList = document.getElementById("player-completions-list");
-            const mostDifficultLevel = document.getElementById("most-difficult-level");
-
-            playerInfo.innerText = `Nome: ${player.name}`;
-            playerCompletionsList.innerHTML = "";
-            let maxPoints = 0;
-            let hardestLevel = "";
-            player.completions.forEach(completion => {
-                let listItem = document.createElement("li");
-                listItem.innerText = completion.levelName;
-                playerCompletionsList.appendChild(listItem);
-
-                const level = demonLevels.find(l => l.nome === completion.levelName);
-                if (level && level.pontos > maxPoints) {
-                    maxPoints = level.pontos;
-                    hardestLevel = completion.levelName;
-                }
-            });
-            mostDifficultLevel.innerText = hardestLevel;
-            profileModal.style.display = "flex";
-        }
-
-        // Função para fechar o perfil
-        function closeProfile() {
-            const profileModal = document.getElementById("profile-modal");
-            profileModal.style.display = "none";
-        }
-
-        // Função para alternar o tema
+        // Função para alternar entre tema claro e escuro
         function toggleTheme() {
-            document.body.classList.toggle("dark-mode");
-            document.querySelector("header").classList.toggle("dark-mode");
+            document.body.classList.toggle('dark-theme');
+            document.body.classList.toggle('light-theme');
+            const themeIcon = document.getElementById('theme-icon');
+            if (document.body.classList.contains('dark-theme')) {
+                themeIcon.src = 'https://img.icons8.com/ios-filled/50/000000/moon.png';
+            } else {
+                themeIcon.src = 'https://img.icons8.com/ios-filled/50/000000/sun.png';
+            }
         }
 
-        // Inicialização
-        document.getElementById("completion-form").addEventListener("submit", submitCompletion);
-        populateDemonList();
-        updateModeration();
-        updateLeaderboard();
+        // Função para abrir o Discord
+        function openDiscord() {
+            window.open('https://discord.gg/amjFUaywuw', '_blank');
+        }
+
+        // Renderizar lista de Demon Levels
+        function renderDemonList() {
+            const tableBody = document.querySelector('#demon-table tbody');
+            tableBody.innerHTML = ''; // Limpa a tabela
+
+            demonLevels.forEach((level, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td onclick="showLevelCompletions(${index})">${level.nome}</td>
+                    <td>${level.pontos}</td>
+                    <td><button onclick="submitCompletion(${index})">Submeter Completion</button></td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        renderDemonList();
     </script>
 </body>
 </html>
