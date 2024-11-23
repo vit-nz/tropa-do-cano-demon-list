@@ -128,9 +128,9 @@
                     <tr>
                         <th>Posição</th>
                         <th>Nome do Nível</th>
-                        <th>Pontos</th>
                         <th>Criador</th>
                         <th>Verificador</th>
+                        <th>Pontos</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -165,22 +165,22 @@
 
     <script>
         let demonLevels = [
-            { nome: "Waka Waka Interface", pontos: 150, creator: "Hyfera", verifier: "Hyfera" },
-            { nome: "Crumbling Caverns", pontos: 149, creator: "Arepy", verifier: "Arepy" },
-            { nome: "Phobia", pontos: 148, creator: "vrdr", verifier: "vrdr" },
-            { nome: "Dedicacao", pontos: 147, creator: "vidashgd", verifier: "vidashgd" },
-            { nome: "Alpha Coronae", pontos: 146, creator: "vrdr", verifier: "vrdr" },
-            { nome: "Saas III", pontos: 145, creator: "vitnz", verifier: "vitnz" },
-            { nome: "Saas II", pontos: 144, creator: "vitnz", verifier: "vitnz" },
-            { nome: "Coolio", pontos: 143, creator: "vitnz", verifier: "vitnz" },
-            { nome: "Nem Fodendo", pontos: 142, creator: "vitnz", verifier: "vitnz" },
-            { nome: "Tudo Fodendo", pontos: 141, creator: "vitnz", verifier: "vitnz" },
-            { nome: "cursed circles lmao", pontos: 140, creator: "JustusRL", verifier: "JustusRL" },
-            { nome: "Obscuro", pontos: 139, creator: "vidashgd", verifier: "vidashgd" },
-            { nome: "Saas", pontos: 138, creator: "vitnz", verifier: "vitnz" },
-            { nome: "Invincible", pontos: 137, creator: "Arepy", verifier: "Arepy" },
-            { nome: "Mixtape", pontos: 136, creator: "JustusRL", verifier: "JustusRL" },
-            { nome: "Renan Circles", pontos: 135, creator: "JustusRL", verifier: "JustusRL" }
+            { nome: "Waka Waka Interface", creator: "Hyfera", verifier: "Hyfera", pontos: 150 },
+            { nome: "Crumbling Caverns", creator: "Arepy", verifier: "Arepy", pontos: 149 },
+            { nome: "Phobia", creator: "vrdr", verifier: "vrdr", pontos: 148 },
+            { nome: "Dedicacao", creator: "vidashgd", verifier: "vidashgd", pontos: 147 },
+            { nome: "Alpha Coronae", creator: "vrdr", verifier: "vrdr", pontos: 146 },
+            { nome: "Saas III", creator: "vitnz", verifier: "vitnz", pontos: 145 },
+            { nome: "Saas II", creator: "vitnz", verifier: "vitnz", pontos: 144 },
+            { nome: "Coolio", creator: "vitnz", verifier: "vitnz", pontos: 143 },
+            { nome: "Nem Fodendo", creator: "vitnz", verifier: "vitnz", pontos: 142 },
+            { nome: "Tudo Fodendo", creator: "vitnz", verifier: "vitnz", pontos: 141 },
+            { nome: "cursed circles lmao", creator: "JustusRL", verifier: "JustusRL", pontos: 140 },
+            { nome: "Obscuro", creator: "vidashgd", verifier: "vidashgd", pontos: 139 },
+            { nome: "Saas", creator: "vitnz", verifier: "vitnz", pontos: 138 },
+            { nome: "Invincible", creator: "Arepy", verifier: "Arepy", pontos: 137 },
+            { nome: "Mixtape", creator: "JustusRL", verifier: "JustusRL", pontos: 136 },
+            { nome: "Renan Circles", creator: "JustusRL", verifier: "JustusRL", pontos: 135 }
         ];
 
         let players = [
@@ -196,11 +196,11 @@
             table.innerHTML = "";
             demonLevels.forEach((level, index) => {
                 let row = table.insertRow();
-                row.insertCell(0).innerText = index + 1; // Display the position
-                row.insertCell(1).innerText = level.nome; // Level name
-                row.insertCell(2).innerText = level.pontos; // Points
-                row.insertCell(3).innerText = level.creator; // Creator
-                row.insertCell(4).innerText = level.verifier; // Verifier
+                row.insertCell(0).innerText = index + 1; // Posição
+                row.insertCell(1).innerText = level.nome; // Nome do nível
+                row.insertCell(2).innerText = level.creator; // Criador
+                row.insertCell(3).innerText = level.verifier; // Verificador
+                row.insertCell(4).innerText = level.pontos; // Pontos
             });
         }
 
