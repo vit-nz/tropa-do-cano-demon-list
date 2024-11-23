@@ -19,7 +19,7 @@
             padding: 20px 0;
         }
 
-        #demon-list, #submit-completion, #leaderboard, #moderation, #completions {
+        #demon-list, #submit-completion, #leaderboard, #moderation, #completions, #level-completions {
             padding: 20px;
             margin: 20px;
             background-color: white;
@@ -89,7 +89,7 @@
             background-color: #333;
         }
 
-        .light-theme #demon-list, .light-theme #submit-completion, .light-theme #leaderboard, .light-theme #moderation, .light-theme #completions {
+        .light-theme #demon-list, .light-theme #submit-completion, .light-theme #leaderboard, .light-theme #moderation, .light-theme #completions, .light-theme #level-completions {
             background-color: white;
         }
 
@@ -119,7 +119,7 @@
             background-color: #1e1e1e;
         }
 
-        .dark-theme #demon-list, .dark-theme #submit-completion, .dark-theme #leaderboard, .dark-theme #moderation, .dark-theme #completions {
+        .dark-theme #demon-list, .dark-theme #submit-completion, .dark-theme #leaderboard, .dark-theme #moderation, .dark-theme #completions, .dark-theme #level-completions {
             background-color: #333;
         }
 
@@ -225,7 +225,22 @@
             </tbody>
         </table>
     </section>
-    
+
+    <section id="level-completions" style="display:none;">
+        <h2>Completions do Nível</h2>
+        <table id="level-completions-table">
+            <thead>
+                <tr>
+                    <th>Jogador</th>
+                    <th>Link do YouTube</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Completions do nível selecionado -->
+            </tbody>
+        </table>
+    </section>
+
     <script>
         let demonLevels = [
             { nome: "The Hell Factory", dificuldade: 10, pontos: 100, completions: [] },
@@ -244,7 +259,7 @@
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td>${index + 1}</td>
-                    <td><a href="#" onclick="showCompletion(${index})">${level.nome}</a></td>
+                    <td><a href="#" onclick="showLevelCompletions(${index})">${level.nome}</a></td>
                     <td>${level.dificuldade}</td>
                     <td>${level.pontos}</td>
                     <td><button onclick="submitCompletion(${index})">Submeter Completion</button></td>
@@ -261,25 +276,22 @@
             const levelName = document.querySelector('#level-name').value;
             const difficulty = document.querySelector('#difficulty').value;
             const points = document.querySelector('#points').value;
-            const submitCompletion = document.querySelector('#submit-completion').checked;
             const youtubeLink = document.querySelector('#youtube-link').value;
+            const submitCompletion = document.querySelector('#submit-completion').checked;
 
             const newCompletion = {
                 playerName: playerName,
                 youtubeLink: youtubeLink,
-                confirmed: false,
-                submitCompletion: submitCompletion
+                confirmed: false
             };
 
-            const level = demonLevels.find(level => level.nome === levelName);
-
-            if (level) {
+            if (submitCompletion) {
+                const level = demonLevels.find(level => level.nome === levelName);
                 level.completions.push(newCompletion);
+                addToModeration(newCompletion, levelName);
             }
 
             renderDemonList();
-            addToModeration(newCompletion, levelName);
-            document.querySelector('#completion-form').reset();
         });
 
         // Função para adicionar completions à tabela de moderação
@@ -298,17 +310,16 @@
 
         // Função para aprovar uma conclusão
         function approveCompletion(playerName, youtubeLink) {
-            // Marcar a completion como confirmada
             const row = event.target.closest('tr');
             row.querySelector('td').classList.add('confirmed');
             row.querySelector('td').classList.remove('pending');
             row.querySelector('button').disabled = true;
 
-            // Movendo a completion confirmada para a aba de completions
             const completion = {
                 playerName: playerName,
                 youtubeLink: youtubeLink
             };
+
             const completionTable = document.querySelector('#completion-table tbody');
             const newRow = document.createElement('tr');
             newRow.innerHTML = `
@@ -318,15 +329,15 @@
             completionTable.appendChild(newRow);
         }
 
-        // Função para exibir completions confirmadas
-        function showCompletion(index) {
+        // Função para exibir completions de um nível específico
+        function showLevelCompletions(index) {
             const level = demonLevels[index];
-            const completions = level.completions.filter(c => c.confirmed);
+            const levelCompletions = level.completions.filter(c => c.confirmed);
 
-            const completionTable = document.querySelector('#completion-table tbody');
-            completionTable.innerHTML = ''; // Limpa as completions
+            const completionTable = document.querySelector('#level-completions-table tbody');
+            completionTable.innerHTML = '';
 
-            completions.forEach(completion => {
+            levelCompletions.forEach(completion => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td>${completion.playerName}</td>
@@ -334,6 +345,8 @@
                 `;
                 completionTable.appendChild(row);
             });
+
+            document.getElementById('level-completions').style.display = 'block';
         }
 
         // Função para alternar entre tema claro e escuro
@@ -342,7 +355,7 @@
             document.body.classList.toggle('light-theme');
         }
 
-        // Renderizar a lista de demon levels
+        // Chama a renderização inicial da lista de Níveis Demon
         renderDemonList();
     </script>
 </body>
