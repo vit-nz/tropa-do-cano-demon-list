@@ -3,58 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Geometry Dash Demon List</title>
+    <title>AREDl-Style Demon List</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            text-align: center;
             margin: 20px;
+            background-color: #121212;
+            color: #ffffff;
+            text-align: center;
         }
         h1 {
             color: #ff6f61;
         }
-        ul {
-            list-style-type: none;
-            padding: 0;
+        table {
+            margin: 0 auto;
+            width: 80%;
+            border-collapse: collapse;
         }
-        li {
-            margin: 10px 0;
+        th, td {
+            border: 1px solid #444;
+            padding: 10px;
+            text-align: center;
         }
-    </style>
-</head>
-<body>
-    <h1>Top Demons do Geometry Dash</h1>
-    <p>Clique no botão abaixo para carregar a lista dos Demons.</p>
-    <button onclick="fetchDemons()">Carregar Lista</button>
-    <ul id="demonList"></ul>
-
-    <script>
-        async function fetchDemons() {
-            const apiUrl = "https://pointercrate.com/api/v2/demons/";
-            const demonList = document.getElementById('demonList');
-
-            // Limpa a lista antes de carregar novos dados
-            demonList.innerHTML = '<li>Carregando...</li>';
-
-            try {
-                const response = await fetch(apiUrl);
-                if (!response.ok) {
-                    throw new Error(`Erro: ${response.status}`);
-                }
-
-                const demons = await response.json();
-                demonList.innerHTML = ''; // Limpa o texto "Carregando..."
-
-                demons.forEach(demon => {
-                    const listItem = document.createElement('li');
-                    listItem.textContent = `${demon.position}. ${demon.name} - Criado por ${demon.verifier}`;
-                    demonList.appendChild(listItem);
-                });
-            } catch (error) {
-                demonList.innerHTML = `<li>Erro ao carregar a lista: ${error.message}</li>`;
-            }
+        th {
+            background-color: #333;
+            color: #ff6f61;
+            font-weight: bold;
         }
-    </script>
-</body>
-</html>
-
+        tr:nth-child(even) {
+            background-color: #222;
+        }
+        tr:nth-child(odd) {
+            background-color: #1a1a1a;
+        }
+        button {
+            margin: 20px 0;
+            padding: 10px 20px;
+            font-size: 16px;
+      
