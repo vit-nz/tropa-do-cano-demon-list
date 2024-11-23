@@ -326,7 +326,8 @@
             leaderboard.innerHTML = "";
             players.forEach(player => {
                 let totalPoints = player.completions.reduce((sum, completion) => {
-                    return sum + demonLevels.find(level => level.nome === completion.levelName).pontos;
+                    const level = demonLevels.find(level => level.nome === completion.levelName);
+                    return level ? sum + level.pontos : sum;
                 }, 0);
 
                 let leaderboardEntry = document.createElement("li");
@@ -354,8 +355,9 @@
                 listItem.innerText = completion.levelName;
                 playerCompletionsList.appendChild(listItem);
 
-                if (completion.pontos > maxPoints) {
-                    maxPoints = completion.pontos;
+                const level = demonLevels.find(l => l.nome === completion.levelName);
+                if (level && level.pontos > maxPoints) {
+                    maxPoints = level.pontos;
                     hardestLevel = completion.levelName;
                 }
             });
