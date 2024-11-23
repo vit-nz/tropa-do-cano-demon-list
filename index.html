@@ -1,174 +1,31 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tropa do Cano Demon List</title>
-    <style>
-        /* Estilos como já definidos no código original */
-    </style>
+    <title>Demon List - Geometry Dash</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header>
-        <h1>Tropa do Cano Demon List</h1>
-        <p>Os mais difíceis e épicos níveis do Geometry Dash!</p>
-        <a href="https://discord.gg/amjFUaywuw" target="_blank">
-            <span class="discord-link">Junte-se ao Discord!</span>
-        </a>
+        <h1>Demon List de Geometry Dash</h1>
     </header>
 
-    <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+    <section class="demon-list">
+        <div class="demon-item">
+            <h2>Bloodbath</h2>
+            <p><strong>Dificuldade:</strong> Extreme Demon</p>
+            <p><strong>Descrição:</strong> Um dos demônios mais difíceis e populares do jogo.</p>
+            <a href="video_link" target="_blank">Ver vídeo</a>
+            <button class="vote-button">Curtir</button>
+        </div>
 
-    <div class="content">
-        <!-- Demon List -->
-        <section id="demon-list">
-            <h2 class="section-title">Lista de Níveis Demon</h2>
-            <table id="demon-table">
-                <thead>
-                    <tr>
-                        <th>Posição</th>
-                        <th>Nome do Nível</th>
-                        <th>Pontos</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Demon list will be dynamically populated -->
-                </tbody>
-            </table>
-        </section>
+        <!-- Adicione mais demônios aqui -->
+    </section>
 
-        <!-- Submissão de Completion -->
-        <section id="submit-completion">
-            <h2 class="section-title">Submeter Completion</h2>
-            <form id="completion-form">
-                <input type="text" id="player-name" placeholder="Seu Nome" required>
-                <input type="text" id="level-name" placeholder="Nome do Nível" required>
-                <input type="url" id="youtube-link" placeholder="Link do YouTube (prova)" required>
-                <input type="text" id="device" placeholder="Dispositivo (PC/Mobile)" required>
-                <button type="submit">Submeter</button>
-            </form>
-        </section>
-
-        <!-- Moderação -->
-        <section id="moderation">
-            <h2 class="section-title">Moderação</h2>
-            <table id="moderation-table">
-                <thead>
-                    <tr>
-                        <th>Nome do Nível</th>
-                        <th>Nome do Jogador</th>
-                        <th>Link do YouTube</th>
-                        <th>Dispositivo</th>
-                        <th>Status</th>
-                        <th>Ação</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Pendentes de moderação -->
-                </tbody>
-            </table>
-        </section>
-
-        <!-- Leaderboard -->
-        <section id="leaderboard">
-            <h2 class="section-title">Leaderboard</h2>
-            <ul id="leaderboard-list">
-                <!-- Leaderboard will be dynamically populated -->
-            </ul>
-        </section>
-
-        <!-- Modal para Perfil do Jogador -->
-        <section id="profile-modal" class="modal">
-            <div class="modal-content">
-                <h2>Perfil do Jogador</h2>
-                <div id="player-profile"></div>
-                <h3>Níveis Completados</h3>
-                <ul id="player-completions-list"></ul>
-                <button onclick="closeProfileModal()">Fechar</button>
-            </div>
-        </section>
-
-        <!-- Modal para Completions de Nível -->
-        <section id="level-completions-modal" class="modal">
-            <div class="modal-content level-completions-modal">
-                <h2>Completions do Nível</h2>
-                <ul id="level-completions-list"></ul>
-                <button onclick="closeLevelCompletions()">Fechar</button>
-            </div>
-        </section>
-    </div>
-
-    <script>
-        let demonLevels = [
-            { nome: "The Hell Factory", pontos: 100, completions: [] },
-            { nome: "Theory of Everything 2", pontos: 80, completions: [] },
-            { nome: "Deadlocked", pontos: 90, completions: [] },
-        ];
-
-        let players = [];
-
-        // Função para popular a lista de demon levels
-        function populateDemonList() {
-            const table = document.getElementById("demon-table").getElementsByTagName("tbody")[0];
-            table.innerHTML = "";
-            demonLevels.forEach((level, index) => {
-                let row = table.insertRow();
-                row.insertCell(0).innerText = index + 1;
-                let levelNameCell = row.insertCell(1);
-                let levelName = document.createElement("span");
-                levelName.innerText = level.nome;
-                levelName.classList.add("level-name");
-                levelName.onclick = () => showLevelCompletions(level);
-                levelNameCell.appendChild(levelName);
-                row.insertCell(2).innerText = level.pontos;
-            });
-        }
-
-        // Exibe completions de nível
-        function showLevelCompletions(level) {
-            const levelCompletionsList = document.getElementById("level-completions-list");
-            levelCompletionsList.innerHTML = "";
-            level.completions.forEach(completion => {
-                let listItem = document.createElement("li");
-                listItem.innerText = completion.playerName;
-                levelCompletionsList.appendChild(listItem);
-            });
-            document.getElementById("level-completions-modal").style.display = "flex";
-        }
-
-        // Fechar modal de completions de nível
-        function closeLevelCompletions() {
-            document.getElementById("level-completions-modal").style.display = "none";
-        }
-
-        // Função para processar submissão de completion
-        function submitCompletion(event) {
-            event.preventDefault();
-
-            const playerName = document.getElementById("player-name").value;
-            const levelName = document.getElementById("level-name").value;
-            const youtubeLink = document.getElementById("youtube-link").value;
-            const device = document.getElementById("device").value;
-
-            const level = demonLevels.find(l => l.nome === levelName);
-
-            if (level) {
-                level.completions.push({ playerName, levelName, youtubeLink, device });
-                alert("Sua completation foi enviada para moderação!");
-            } else {
-                alert("Nível não encontrado!");
-            }
-
-            populateDemonList();
-        }
-
-        // Inicia a lista de demon levels
-        populateDemonList();
-
-        // Tema escuro
-        function toggleTheme() {
-            document.body.classList.toggle("dark");
-        }
-    </script>
+    <footer>
+        <p>&copy; 2024 Demon List - Geometry Dash</p>
+    </footer>
 </body>
 </html>
+
