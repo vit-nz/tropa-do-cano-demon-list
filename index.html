@@ -227,6 +227,15 @@
             </form>
         </section>
 
+        <section id="submit-level">
+            <h2 class="section-title">Submeter Nível</h2>
+            <form id="level-form">
+                <input type="text" id="new-level-name" placeholder="Nome do Novo Nível" required>
+                <input type="number" id="new-level-points" placeholder="Pontos do Nível" required>
+                <button type="submit">Submeter Nível</button>
+            </form>
+        </section>
+
         <section id="moderation">
             <h2 class="section-title">Moderação</h2>
             <table id="moderation-table">
@@ -236,12 +245,11 @@
                         <th>Nome do Jogador</th>
                         <th>Link do YouTube</th>
                         <th>Dispositivo</th>
-                        <th>Status</th>
-                        <th>Ação</th>
+                        <th>Ações</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- Pendentes de moderação -->
+                    <!-- Moderation list will be dynamically populated -->
                 </tbody>
             </table>
         </section>
@@ -249,37 +257,21 @@
         <section id="leaderboard">
             <h2 class="section-title">Leaderboard</h2>
             <ul id="leaderboard-list">
-                <!-- Leaderboard will be dynamically populated -->
+                <!-- Leaderboard list will be dynamically populated -->
             </ul>
         </section>
 
-        <section id="profile-modal" class="modal">
-            <div class="modal-content">
-                <h2>Perfil do Jogador</h2>
-                <div id="player-profile"></div>
-                <h3>Níveis Completados</h3>
-                <ul id="player-completions-list"></ul>
-                <button onclick="closeProfileModal()">Fechar</button>
-            </div>
-        </section>
-
-        <section id="level-completions-modal" class="modal">
-            <div class="modal-content level-completions-modal">
-                <h2>Completions do Nível</h2>
-                <ul id="level-completions-list"></ul>
-                <button onclick="closeLevelCompletions()">Fechar</button>
-            </div>
-        </section>
     </div>
 
     <script>
         let demonLevels = [
             { nome: "The Hell Factory", pontos: 100, completions: [] },
             { nome: "Theory of Everything 2", pontos: 120, completions: [] },
-            // Continue com os outros níveis...
+            // Outros níveis podem ser adicionados aqui
         ];
 
         let players = [];
+        let pendingLevels = [];
 
         function toggleTheme() {
             document.body.classList.toggle('dark-mode');
@@ -291,34 +283,6 @@
 
         function closeProfileModal() {
             document.getElementById('profile-modal').style.display = 'none';
-        }
-
-        function showLevelCompletions(levelName) {
-            const level = demonLevels.find(l => l.nome === levelName);
-            const completionsList = document.getElementById('level-completions-list');
-            completionsList.innerHTML = '';
-            level.completions.forEach(completion => {
-                const li = document.createElement('li');
-                li.textContent = `${completion.nome} (Dispositivo: ${completion.dispositivo})`;
-                completionsList.appendChild(li);
-            });
-            document.getElementById('level-completions-modal').style.display = 'flex';
-        }
-
-        function showPlayerProfile(playerName) {
-            const player = players.find(p => p.nome === playerName);
-            const playerProfile = document.getElementById('player-profile');
-            const playerCompletionsList = document.getElementById('player-completions-list');
-
-            playerProfile.innerHTML = `<strong>Nome:</strong> ${player.nome}<br><strong>Pontos:</strong> ${player.pontos}`;
-            playerCompletionsList.innerHTML = '';
-            player.completions.forEach(completion => {
-                const li = document.createElement('li');
-                li.textContent = completion.nome;
-                playerCompletionsList.appendChild(li);
-            });
-
-            document.getElementById('profile-modal').style.display = 'flex';
         }
 
         document.getElementById('completion-form').addEventListener('submit', function (e) {
@@ -348,13 +312,26 @@
             }
         });
 
+        document.getElementById('level-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const nomeNivel = document.getElementById('new-level-name').value;
+            const pontosNivel = document.getElementById('new-level-points').value;
+
+            if (nomeNivel && pontosNivel) {
+                // Adiciona o novo nível à lista de pendentes
+                pendingLevels.push({ nome: nomeNivel, pontos: pontosNivel });
+                alert('Nível enviado para moderação!');
+                updateModerationList();
+            }
+        });
+
         function updateLeaderboard() {
             const leaderboardList = document.getElementById('leaderboard-list');
             leaderboardList.innerHTML = '';
             players.forEach(player => {
                 const li = document.createElement('li');
                 li.textContent = `${player.nome} - ${player.pontos} pontos`;
-                li.onclick = () => showPlayerProfile(player.nome);
                 leaderboardList.appendChild(li);
             });
         }
@@ -368,9 +345,27 @@
             });
         }
 
+        function updateModerationList() {
+            const moderationTable = document.getElementById('moderation-table').getElementsByTagName('tbody')[0];
+            moderationTable.innerHTML = '';
+            pendingLevels.forEach((level, index) => {
+                const row = moderationTable.insertRow();
+                row.innerHTML = `<td>${level.nome}</td><td>Jogador Exemplo</td><td>Link do YouTube</td><td>PC</td><td><button onclick="approveLevel(${index})">Aprovar</button></td>`;
+            });
+        }
+
+        function approveLevel(index) {
+            const level = pendingLevels.splice(index, 1)[0];
+            demonLevels.push(level);
+            updateModerationList();
+            updateDemonList();
+            alert('Nível aprovado!');
+        }
+
         // Inicialização
         updateLeaderboard();
         updateDemonList();
+        updateModerationList();
     </script>
 </body>
 </html>
