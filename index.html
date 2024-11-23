@@ -5,230 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tropa do Cano Demon List</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            transition: background-color 0.3s, color 0.3s;
-        }
-
-        header {
-            background-color: #333;
-            color: white;
-            text-align: center;
-            padding: 20px 0;
-        }
-
-        #demon-list, #submit-completion, #leaderboard, #moderation, #completions, #level-completions {
-            padding: 20px;
-            margin: 20px;
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        th, td {
-            padding: 10px;
-            text-align: center;
-            border: 1px solid #ddd;
-        }
-
-        th {
-            background-color: #333;
-            color: white;
-        }
-
-        input {
-            padding: 8px;
-            margin: 10px 5px;
-            border-radius: 4px;
-            border: 1px solid #ccc;
-        }
-
-        button {
-            padding: 10px 20px;
-            background-color: #333;
-            color: white;
-            border: none;
-            cursor: pointer;
-            border-radius: 4px;
-        }
-
-        button:hover {
-            background-color: #555;
-        }
-
-        #completion-option {
-            margin-top: 10px;
-        }
-
-        #moderation {
-            background-color: #f9f9f9;
-        }
-
-        .pending {
-            background-color: #f1c40f;
-        }
-
-        .confirmed {
-            background-color: #2ecc71;
-        }
-
-        /* Tema Claro */
-        .light-theme body {
-            background-color: #f4f4f4;
-            color: #333;
-        }
-
-        .light-theme header {
-            background-color: #333;
-        }
-
-        .light-theme #demon-list, .light-theme #submit-completion, .light-theme #leaderboard, .light-theme #moderation, .light-theme #completions, .light-theme #level-completions {
-            background-color: white;
-        }
-
-        .light-theme table {
-            background-color: #fff;
-        }
-
-        .light-theme th {
-            background-color: #333;
-        }
-
-        .light-theme button {
-            background-color: #333;
-        }
-
-        .light-theme button:hover {
-            background-color: #555;
-        }
-
-        /* Tema Escuro */
-        .dark-theme body {
-            background-color: #121212;
-            color: white;
-        }
-
-        .dark-theme header {
-            background-color: #1e1e1e;
-        }
-
-        .dark-theme #demon-list, .dark-theme #submit-completion, .dark-theme #leaderboard, .dark-theme #moderation, .dark-theme #completions, .dark-theme #level-completions {
-            background-color: #333;
-        }
-
-        .dark-theme table {
-            background-color: #222;
-        }
-
-        .dark-theme th {
-            background-color: #444;
-        }
-
-        .dark-theme button {
-            background-color: #555;
-        }
-
-        .dark-theme button:hover {
-            background-color: #777;
-        }
-
-        /* Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0, 0, 0, 0.5);
-            padding-top: 60px;
-        }
-
-        .modal-content {
-            background-color: #fff;
-            margin: 5% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%;
-            max-width: 500px;
-            border-radius: 8px;
-        }
-
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-        }
-
-        .close:hover,
-        .close:focus {
-            color: black;
-            text-decoration: none;
-            cursor: pointer;
-        }
-
-        #theme-toggle-btn {
-            background: none;
-            border: none;
-            cursor: pointer;
-        }
-
-        #theme-toggle-btn img {
-            width: 24px;
-            height: 24px;
-        }
-
-        /* Discord Box */
-        #discord-box {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            background-color: #7289da;
-            padding: 10px;
-            border-radius: 5px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
-            cursor: pointer;
-        }
-
-        #discord-box img {
-            width: 40px;
-            height: 40px;
-        }
-
-        /* Moderação */
-        #moderation-table td button {
-            padding: 5px 10px;
-            background-color: #f39c12;
-            color: white;
-            border: none;
-            cursor: pointer;
-            border-radius: 4px;
-        }
-
-        #moderation-table td button:hover {
-            background-color: #e67e22;
-        }
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
+        header { background-color: #333; color: white; text-align: center; padding: 20px 0; }
+        #demon-list, #submit-completion, #leaderboard, #moderation, #completions { padding: 20px; margin: 20px; background-color: white; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 10px; text-align: center; border: 1px solid #ddd; }
+        th { background-color: #333; color: white; }
+        input, button { padding: 8px; margin: 10px 5px; border-radius: 4px; border: 1px solid #ccc; }
+        button { background-color: #333; color: white; border: none; cursor: pointer; }
+        button:hover { background-color: #555; }
+        .pending { background-color: #f1c40f; }
+        .confirmed { background-color: #2ecc71; }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); justify-content: center; align-items: center; }
+        .modal-content { background-color: white; padding: 20px; border-radius: 8px; width: 80%; max-width: 800px; }
     </style>
 </head>
-<body class="light-theme">
+<body>
     <header>
         <h1>Tropa do Cano Demon List</h1>
         <p>Os mais difíceis e épicos níveis do Geometry Dash!</p>
-        <button id="theme-toggle-btn" onclick="toggleTheme()">
-            <img src="https://img.icons8.com/ios-filled/50/000000/sun.png" id="theme-icon" alt="Tema Claro">
-        </button>
     </header>
-    
+
     <section id="demon-list">
         <h2>Lista de Níveis Demon</h2>
         <table id="demon-table">
@@ -252,10 +49,7 @@
             <input type="text" id="player-name" placeholder="Seu Nome" required>
             <input type="text" id="level-name" placeholder="Nome do Nível" required>
             <input type="url" id="youtube-link" placeholder="Link do YouTube (prova)" required>
-            <select id="device">
-                <option value="pc">PC</option>
-                <option value="mobile">Mobile</option>
-            </select>
+            <input type="text" id="device" placeholder="Dispositivo (PC/Mobile)" required>
             <button type="submit">Submeter</button>
         </form>
     </section>
@@ -289,7 +83,6 @@
     
     <section id="level-completions" class="modal">
         <div class="modal-content">
-            <span class="close" onclick="closeLevelCompletions()">&times;</span>
             <h2>Completions do Nível</h2>
             <table id="level-completions-table">
                 <thead>
@@ -302,26 +95,24 @@
                     <!-- Completions do nível selecionado -->
                 </tbody>
             </table>
+            <button onclick="closeLevelCompletions()">Fechar</button>
         </div>
     </section>
 
-    <!-- Caixa de Discord -->
-    <div id="discord-box" onclick="openDiscord()">
-        <img src="https://img.icons8.com/ios-filled/50/000000/discord-logo.png" alt="Discord">
-    </div>
-
     <script>
+        // Lista de níveis demon
         let demonLevels = [
             { nome: "The Hell Factory", pontos: 100, completions: [] },
             { nome: "Theory of Everything 2", pontos: 90, completions: [] },
             { nome: "Deadlocked", pontos: 80, completions: [] },
             { nome: "Electrodynamix", pontos: 70, completions: [] },
-            { nome: "Clubstep", pontos: 60, completions: [] },
-            // Adicione outros níveis conforme necessário
+            { nome: "Clubstep", pontos: 60, completions: [] }
         ];
 
+        // Submissões pendentes
         let pendingCompletions = [];
 
+        // Função para popular a lista de níveis demon
         function populateDemonList() {
             const table = document.getElementById("demon-table").getElementsByTagName("tbody")[0];
             table.innerHTML = "";
@@ -340,22 +131,7 @@
             });
         }
 
-        function openLevelCompletions(level) {
-            const modal = document.getElementById("level-completions");
-            const table = document.getElementById("level-completions-table").getElementsByTagName("tbody")[0];
-            table.innerHTML = "";
-            level.completions.forEach(completion => {
-                let row = table.insertRow();
-                row.insertCell(0).innerText = completion.playerName;
-                row.insertCell(1).innerHTML = `<a href="${completion.youtubeLink}" target="_blank">Link</a>`;
-            });
-            modal.style.display = "block";
-        }
-
-        function closeLevelCompletions() {
-            document.getElementById("level-completions").style.display = "none";
-        }
-
+        // Função para submeter completion
         function submitCompletion(event) {
             event.preventDefault();
             const playerName = document.getElementById("player-name").value;
@@ -379,6 +155,7 @@
             }
         }
 
+        // Função para popular a tabela de moderação
         function populateModeration() {
             const table = document.getElementById("moderation-table").getElementsByTagName("tbody")[0];
             table.innerHTML = "";
@@ -399,35 +176,48 @@
             });
         }
 
+        // Função para aceitar a submission
         function acceptCompletion(completion) {
             completion.status = 'confirmado';
             populateModeration();
+
             // Mover a completion para o nível correspondente
             let level = demonLevels.find(l => l.nome === completion.levelName);
             if (level) {
                 level.completions.push(completion);
+                updateLeaderboard(completion);
             }
         }
 
-        function toggleTheme() {
-            const body = document.body;
-            const themeIcon = document.getElementById("theme-icon");
-            if (body.classList.contains("light-theme")) {
-                body.classList.remove("light-theme");
-                body.classList.add("dark-theme");
-                themeIcon.src = "https://img.icons8.com/ios-filled/50/000000/moon.png";
-            } else {
-                body.classList.remove("dark-theme");
-                body.classList.add("light-theme");
-                themeIcon.src = "https://img.icons8.com/ios-filled/50/000000/sun.png";
-            }
+        // Função para abrir a aba de completions de um nível
+        function openLevelCompletions(level) {
+            const modal = document.getElementById("level-completions");
+            const table = document.getElementById("level-completions-table").getElementsByTagName("tbody")[0];
+            table.innerHTML = "";
+            level.completions.forEach(completion => {
+                let row = table.insertRow();
+                row.insertCell(0).innerText = completion.playerName;
+                row.insertCell(1).innerHTML = `<a href="${completion.youtubeLink}" target="_blank">Link</a>`;
+            });
+            modal.style.display = "flex";
         }
 
-        function openDiscord() {
-            window.open("https://discord.com", "_blank");
+        // Função para fechar a modal de completions do nível
+        function closeLevelCompletions() {
+            const modal = document.getElementById("level-completions");
+            modal.style.display = "none";
         }
 
-        // Inicialização
+        // Função para atualizar o leaderboard
+        function updateLeaderboard(completion) {
+            const leaderboard = document.getElementById("leaderboard-list");
+            let leaderboardEntry = document.createElement("li");
+            leaderboardEntry.innerText = `${completion.playerName} completou ${completion.levelName} com ${demonLevels.find(l => l.nome === completion.levelName).pontos} pontos.`;
+            leaderboard.appendChild(leaderboardEntry);
+        }
+
+        // Inicializar
+        document.getElementById("completion-form").addEventListener("submit", submitCompletion);
         populateDemonList();
         populateModeration();
     </script>
