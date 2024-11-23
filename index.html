@@ -1,1 +1,171 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tropa do Cano Demon List</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Tropa do Cano Demon List</h1>
+        <p>A lista definitiva dos demônios mais difíceis do mundo!</p>
+    </header>
+    
+    <section id="demon-list">
+        <h2>Lista de Demon Slayer</h2>
+        <table id="demon-table">
+            <thead>
+                <tr>
+                    <th>Posição</th>
+                    <th>Nome</th>
+                    <th>Nível</th>
+                    <th>Comentários</th>
+                    <th>Pontos</th>
+                    <th>Submeter Completion</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Demon list will be dynamically populated -->
+            </tbody>
+        </table>
+    </section>
+    
+    <section id="submit-completion">
+        <h2>Submeter Completion</h2>
+        <form id="completion-form">
+            <input type="text" id="name" placeholder="Seu Nome" required>
+            <input type="number" id="level" placeholder="Nível Completo" required min="1">
+            <input type="number" id="points" placeholder="Pontuação" required min="0">
+            <button type="submit">Submeter</button>
+        </form>
+    </section>
+    
+    <section id="leaderboard">
+        <h2>Leaderboard</h2>
+        <ol id="leaderboard-list">
+            <!-- Leaderboard will be dynamically populated -->
+        </ol>
+    </section>
+    
+    <script src="script.js"></script>
+</body>
+</html>
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 20px 0;
+}
+
+#demon-list, #submit-completion, #leaderboard {
+    padding: 20px;
+    margin: 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #ddd;
+}
+
+th {
+    background-color: #333;
+    color: white;
+}
+
+input {
+    padding: 8px;
+    margin: 10px 5px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #333;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+button:hover {
+    background-color: #555;
+}
+// Array de Demon Slayers com informações (inicialmente vazio)
+let demonList = [
+    { nome: "Demon Slayer 1", nivel: "S+", pontos: 100, comentarios: "Muito forte!" },
+    { nome: "Demon Slayer 2", nivel: "A", pontos: 80, comentarios: "Habilidoso, mas com falhas." },
+    { nome: "Demon Slayer 3", nivel: "B", pontos: 60, comentarios: "Bom, mas precisa de melhorias." }
+];
+
+// Função para renderizar a tabela de Demon Slayers
+function renderDemonList() {
+    const tableBody = document.querySelector('#demon-table tbody');
+    tableBody.innerHTML = ''; // Limpar a tabela
+
+    demonList.sort((a, b) => b.pontos - a.pontos); // Ordena pela pontuação (maior para menor)
+
+    demonList.forEach((demon, index) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${index + 1}</td>
+            <td>${demon.nome}</td>
+            <td>${demon.nivel}</td>
+            <td>${demon.comentarios}</td>
+            <td>${demon.pontos}</td>
+            <td><button onclick="submitCompletion(${index})">Submeter Completion</button></td>
+        `;
+        tableBody.appendChild(row);
+    });
+}
+
+// Função para submeter um novo demon completion
+document.querySelector('#completion-form').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    const nome = document.querySelector('#name').value;
+    const nivel = document.querySelector('#level').value;
+    const pontos = document.querySelector('#points').value;
+
+    const newDemon = {
+        nome: nome,
+        nivel: nivel,
+        pontos: parseInt(pontos),
+        comentarios: "Novo Slayer Completo!"
+    };
+
+    demonList.push(newDemon); // Adiciona o novo demon
+    renderDemonList(); // Re-renderiza a lista
+    updateLeaderboard(newDemon); // Atualiza o leaderboard
+
+    document.querySelector('#completion-form').reset(); // Reseta o formulário
+});
+
+// Função para atualizar o leaderboard
+function updateLeaderboard(demon) {
+    const leaderboardList = document.querySelector('#leaderboard-list');
+    const newEntry = document.createElement('li');
+    newEntry.textContent = `${demon.nome} - ${demon.pontos} pontos`;
+    leaderboardList.appendChild(newEntry);
+}
+
+// Chama a renderização inicial da lista de demon slayers
+renderDemonList();
 
