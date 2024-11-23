@@ -193,7 +193,11 @@
 
         let players = [
             { name: "vrdr", completions: ["Phobia", "Alpha Coronae"] },
-            { name: "vitnz", completions: ["Crumbling Caverns", "Mixtape", "Dedicacao", "Alpha Coronae", "cursed circles lmao", "Saas III", "Coolio", "Saas II", "Nem Fodendo", "Tudo Fodendo" "Invincible", "Renan Circles"] },
+            { name: "vitnz", completions: [
+                "Crumbling Caverns", "Mixtape", "Dedicacao", "Alpha Coronae", 
+                "cursed circles lmao", "Saas III", "Coolio", "Saas II", 
+                "Nem Fodendo", "Tudo Fodendo", "Invincible", "Renan Circles"
+            ] },
             { name: "vidashgd", completions: ["Dedicacao", "Obscuro"] },
             { name: "Arepy", completions: ["Crumbling Caverns", "Invincible"] },
             { name: "JustusRL", completions: ["cursed circles lmao", "Mixtape", "Renan Circles"] }
@@ -205,7 +209,7 @@
             demonLevels.forEach((level, index) => {
                 let row = table.insertRow();
                 row.insertCell(0).innerText = index + 1; // Posição
-                row.insertCell(1).innerText = level.nome; // Nome do Nível
+                row.insertCell(1).innerText = level.nome; // Nome do nível
                 row.insertCell(2).innerText = level.creator; // Criador
                 row.insertCell(3).innerText = level.verifier; // Verificador
                 row.insertCell(4).innerText = level.pontos; // Pontos
