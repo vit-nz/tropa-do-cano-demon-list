@@ -187,6 +187,23 @@
             width: 24px;
             height: 24px;
         }
+
+        /* Discord Box */
+        #discord-box {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background-color: #7289da;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+        }
+
+        #discord-box img {
+            width: 40px;
+            height: 40px;
+        }
     </style>
 </head>
 <body class="light-theme">
@@ -270,6 +287,11 @@
         </div>
     </section>
 
+    <!-- Caixa de Discord -->
+    <div id="discord-box" onclick="openDiscord()">
+        <img src="https://img.icons8.com/ios-filled/50/000000/discord-logo.png" alt="Discord">
+    </div>
+
     <script>
         let demonLevels = [
             { nome: "The Hell Factory", pontos: 100, completions: [] },
@@ -285,11 +307,10 @@
             const levelName = document.querySelector('#level-name').value;
             const youtubeLink = document.querySelector('#youtube-link').value;
 
-            // Aguardando moderação para aprovação
-            const newCompletion = { playerName, youtubeLink, confirmed: false };
             const level = demonLevels.find(l => l.nome === levelName);
+
             if (level) {
-                // Envia para moderação
+                // Adiciona à moderação com status 'Pendente'
                 const moderationTable = document.querySelector('#moderation-table tbody');
                 const row = document.createElement('tr');
                 row.innerHTML = `
@@ -297,7 +318,7 @@
                     <td>${playerName}</td>
                     <td><a href="${youtubeLink}" target="_blank">${youtubeLink}</a></td>
                     <td class="pending">Pendente</td>
-                    <td><button onclick="approveCompletion(${demonLevels.indexOf(level)}, ${moderationTable.rows.length - 1})">Aprovar</button></td>
+                    <td><button onclick="approveCompletion(${demonLevels.indexOf(level)}, ${moderationTable.rows.length})">Aprovar</button></td>
                 `;
                 moderationTable.appendChild(row);
             }
@@ -305,28 +326,33 @@
             document.querySelector('#completion-form').reset();
         });
 
-        // Função para aprovar uma completion
+        // Função para aprovar a completion
         function approveCompletion(levelIndex, completionIndex) {
             const level = demonLevels[levelIndex];
-            const completion = level.completions[completionIndex];
+            const moderationTable = document.querySelector('#moderation-table tbody');
+            const row = moderationTable.rows[completionIndex];
 
-            // Aprovar a completion
-            completion.confirmed = true;
+            const completion = {
+                playerName: row.cells[1].textContent,
+                youtubeLink: row.cells[2].textContent
+            };
 
-            // Atualiza a tabela de completions
-            const completionTable = document.querySelector('#level-completions-table tbody');
-            const row = document.createElement('tr');
-            row.innerHTML = `
+            // Mover a completion para o nível específico
+            level.completions.push(completion);
+
+            // Atualiza a tabela de completions no nível
+            const levelCompletionsTable = document.querySelector('#level-completions-table tbody');
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = `
                 <td>${completion.playerName}</td>
                 <td><a href="${completion.youtubeLink}" target="_blank">${completion.youtubeLink}</a></td>
             `;
-            completionTable.appendChild(row);
+            levelCompletionsTable.appendChild(newRow);
 
-            // Marca como confirmado na tabela de moderação
-            const moderationRow = document.querySelector(`#moderation-table tbody tr:nth-child(${completionIndex + 1})`);
-            moderationRow.cells[3].textContent = 'Confirmado';
-            moderationRow.cells[3].classList.add('confirmed');
-            moderationRow.querySelector('button').disabled = true;
+            // Atualiza a moderação para "Confirmado"
+            row.cells[3].textContent = 'Confirmado';
+            row.cells[3].classList.add('confirmed');
+            row.querySelector('button').disabled = true;
         }
 
         // Exibir completions ao clicar no nome do nível
@@ -363,7 +389,12 @@
             }
         }
 
-        // Função para renderizar a lista de Demon Levels
+        // Função para abrir o Discord
+        function openDiscord() {
+            window.open('https://discord.gg/amjFUaywuw', '_blank');
+        }
+
+        // Renderizar lista de Demon Levels
         function renderDemonList() {
             const tableBody = document.querySelector('#demon-table tbody');
             tableBody.innerHTML = ''; // Limpa a tabela
