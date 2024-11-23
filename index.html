@@ -89,6 +89,44 @@
         .theme-toggle:hover {
             background-color: #0056a1;
         }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            width: 60%;
+            max-width: 600px;
+        }
+        .modal.dark-mode {
+            background-color: #333;
+            color: white;
+        }
+        .modal-header {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .modal-body {
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        .modal-close {
+            padding: 10px 20px;
+            background-color: #0078D4;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .modal-close:hover {
+            background-color: #0056a1;
+        }
     </style>
 </head>
 <body>
@@ -100,39 +138,6 @@
     <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
 
     <div class="content">
-        <!-- Demon List -->
-        <section id="demon-list">
-            <h2 class="section-title">Lista de Níveis Demon</h2>
-            <table id="demon-table">
-                <thead>
-                    <tr>
-                        <th>Posição</th>
-                        <th>Nome do Nível</th>
-                        <th>Criador</th>
-                        <th>Verificador</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr><td>1</td><td>WakaWaka Interface</td><td>vrdr</td><td>Hyfera</td></tr>
-                    <tr><td>2</td><td>Crumbling Caverns</td><td>vitnz</td><td>Arepy</td></tr>
-                    <tr><td>3</td><td>Phobia</td><td>vrdr</td><td>vrdr</td></tr>
-                    <tr><td>4</td><td>Dedicacao</td><td>vidashgd</td><td>vidashgd</td></tr>
-                    <tr><td>5</td><td>Alpha Coronae</td><td>vrdr</td><td>vrdr</td></tr>
-                    <tr><td>6</td><td>Saas III</td><td>vitnz</td><td>vitnz</td></tr>
-                    <tr><td>7</td><td>Saas II</td><td>vitnz</td><td>vitnz</td></tr>
-                    <tr><td>8</td><td>Coolio</td><td>vitnz</td><td>vitnz</td></tr>
-                    <tr><td>9</td><td>Nem Fodendo</td><td>vitnz</td><td>vitnz</td></tr>
-                    <tr><td>10</td><td>Tudo Fodendo</td><td>vitnz</td><td>vitnz</td></tr>
-                    <tr><td>11</td><td>cursed circles lmao</td><td>JustusRL</td><td>JustusRL</td></tr>
-                    <tr><td>12</td><td>Obscuro</td><td>vidashgd</td><td>vidashgd</td></tr>
-                    <tr><td>13</td><td>Saas</td><td>vitnz</td><td>vitnz</td></tr>
-                    <tr><td>14</td><td>Invincible</td><td>Arepy</td><td>Arepy</td></tr>
-                    <tr><td>15</td><td>Mixtape</td><td>JustusRL</td><td>JustusRL</td></tr>
-                    <tr><td>16</td><td>Renan Circles</td><td>JustusRL</td><td>JustusRL</td></tr>
-                </tbody>
-            </table>
-        </section>
-
         <!-- Leaderboard -->
         <section id="leaderboard">
             <h2 class="section-title">Leaderboard</h2>
@@ -147,34 +152,67 @@
                 </tbody>
             </table>
         </section>
+
+        <!-- Lista de Níveis Demon -->
+        <section id="demon-levels">
+            <h2 class="section-title">Lista de Níveis Demon</h2>
+            <table id="demon-levels-table">
+                <thead>
+                    <tr>
+                        <th>Nível</th>
+                        <th>Verificador</th>
+                        <th>Dificuldade</th>
+                    </tr>
+                </thead>
+                <tbody id="demon-levels-body">
+                    <!-- Demon Levels will be populated here -->
+                </tbody>
+            </table>
+        </section>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal" id="modal">
+        <div class="modal-header" id="modal-header"></div>
+        <div class="modal-body" id="modal-body"></div>
+        <button class="modal-close" onclick="closeModal()">Fechar</button>
     </div>
 
     <script>
-        // Process Leaderboard Points
+        // Data for Demon Levels and their Verifiers
         const demonData = [
-            { verifier: 'Hyfera' },
-            { verifier: 'Arepy' },
-            { verifier: 'vrdr' },
-            { verifier: 'vidashgd' },
-            { verifier: 'vrdr' },
-            { verifier: 'vitnz' },
-            { verifier: 'vitnz' },
-            { verifier: 'vitnz' },
-            { verifier: 'vitnz' },
-            { verifier: 'vitnz' },
-            { verifier: 'JustusRL' },
-            { verifier: 'vidashgd' },
-            { verifier: 'vitnz' },
-            { verifier: 'Arepy' },
-            { verifier: 'JustusRL' },
-            { verifier: 'JustusRL' }
+            { level: 'WakaWaka Interface', verifier: 'Hyfera', difficulty: 150 },
+            { level: 'Crumbling Caverns', verifier: 'Arepy', difficulty: 149 },
+            { level: 'Phobia', verifier: 'vrdr', difficulty: 148 },
+            { level: 'Dedicacao', verifier: 'vidashgd', difficulty: 147 },
+            { level: 'Alpha Coronae', verifier: 'vrdr', difficulty: 146 },
+            { level: 'Saas III', verifier: 'vitnz', difficulty: 145 },
+            { level: 'Saas II', verifier: 'vitnz', difficulty: 144 },
+            { level: 'Coolio', verifier: 'vitnz', difficulty: 143 },
+            { level: 'Nem Fodendo', verifier: 'vitnz', difficulty: 142 },
+            { level: 'Tudo Fodendo', verifier: 'vitnz', difficulty: 141 },
+            { level: 'cursed circles lmao', verifier: 'JustusRL', difficulty: 140 },
+            { level: 'Obscuro', verifier: 'vidashgd', difficulty: 139 },
+            { level: 'Saas', verifier: 'vitnz', difficulty: 138 },
+            { level: 'Invincible', verifier: 'Arepy', difficulty: 137 },
+            { level: 'Mixtape', verifier: 'JustusRL', difficulty: 136 },
+            { level: 'Renan Circles', verifier: 'JustusRL', difficulty: 135 }
         ];
 
+        // Process Leaderboard Points
         const scores = {};
+        const playerLevels = {};
         demonData.forEach((level, index) => {
             const points = 150 - index;
 
+            // Verifier points
             scores[level.verifier] = (scores[level.verifier] || 0) + points;
+
+            // Track levels each player has passed
+            if (!playerLevels[level.verifier]) {
+                playerLevels[level.verifier] = [];
+            }
+            playerLevels[level.verifier].push(level);
         });
 
         const leaderboardBody = document.getElementById('leaderboard-body');
@@ -182,13 +220,58 @@
 
         sortedScores.forEach(([player, points]) => {
             const row = document.createElement('tr');
-            row.innerHTML = `<td>${player}</td><td>${points}</td>`;
+            row.innerHTML = `<td><a href="#" onclick="showPlayerInfo('${player}')">${player}</a></td><td>${points}</td>`;
             leaderboardBody.appendChild(row);
         });
 
+        // Populate Demon Levels Table
+        const demonLevelsBody = document.getElementById('demon-levels-body');
+        demonData.forEach((level) => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td><a href="#" class="level-name" onclick="showLevelInfo('${level.level}')">${level.level}</a></td>
+                <td>${level.verifier}</td>
+                <td>${level.difficulty}</td>
+            `;
+            demonLevelsBody.appendChild(row);
+        });
+
+        function showPlayerInfo(player) {
+            const levels = playerLevels[player];
+            const hardestLevel = levels.reduce((max, level) => (level.difficulty > max.difficulty ? level : max), levels[0]);
+            
+            const modalHeader = document.getElementById('modal-header');
+            const modalBody = document.getElementById('modal-body');
+            
+            modalHeader.textContent = `${player} - Níveis Verificados`;
+            
+            modalBody.innerHTML = `
+                <p><strong>Níveis Passados/Verificados:</strong></p>
+                <ul>
+                    ${levels.map(level => `<li>${level.level}</li>`).join('')}
+                </ul>
+                <p><strong>Nível mais difícil completado:</strong> ${hardestLevel.level} (Dificuldade: ${hardestLevel.difficulty})</p>
+            `;
+            
+            openModal();
+        }
+
+        function showLevelInfo(levelName) {
+            alert(`Você clicou no nível: ${levelName}`);
+        }
+
+        function openModal() {
+            document.getElementById('modal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('modal').style.display = 'none';
+        }
+
         function toggleTheme() {
-            document.body.classList.toggle("dark-mode");
-            document.querySelector("header").classList.toggle("dark-mode");
+            document.body.classList.toggle('dark-mode');
+            document.querySelector('header').classList.toggle('dark-mode');
+            document.querySelectorAll('.modal').forEach(modal => modal.classList.toggle('dark-mode'));
         }
     </script>
 </body>
