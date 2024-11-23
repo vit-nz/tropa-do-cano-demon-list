@@ -204,6 +204,12 @@
             width: 40px;
             height: 40px;
         }
+
+        /* Adicionado para os campos FPS e Dispositivo na moderação */
+        #moderation td input {
+            width: 100px;
+            margin-top: 5px;
+        }
     </style>
 </head>
 <body class="light-theme">
@@ -238,7 +244,6 @@
             <input type="text" id="player-name" placeholder="Seu Nome" required>
             <input type="text" id="level-name" placeholder="Nome do Nível" required>
             <input type="url" id="youtube-link" placeholder="Link do YouTube (prova)" required>
-            
             <button type="submit">Submeter</button>
         </form>
     </section>
@@ -252,6 +257,8 @@
                     <th>Nome do Nível</th>
                     <th>Nome do Jogador</th>
                     <th>Link do YouTube</th>
+                    <th>FPS</th>
+                    <th>Dispositivo</th>
                     <th>Status</th>
                     <th>Ação</th>
                 </tr>
@@ -278,6 +285,8 @@
                     <tr>
                         <th>Jogador</th>
                         <th>Link do YouTube</th>
+                        <th>FPS</th>
+                        <th>Dispositivo</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -307,111 +316,110 @@
             const levelName = document.querySelector('#level-name').value;
             const youtubeLink = document.querySelector('#youtube-link').value;
 
-            const level = demonLevels.find(l => l.nome === levelName);
-
-            if (level) {
-                // Adiciona à moderação com status 'Pendente'
-                const moderationTable = document.querySelector('#moderation-table tbody');
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${levelName}</td>
-                    <td>${playerName}</td>
-                    <td><a href="${youtubeLink}" target="_blank">${youtubeLink}</a></td>
-                    <td class="pending">Pendente</td>
-                    <td><button onclick="approveCompletion(${demonLevels.indexOf(level)}, ${moderationTable.rows.length})">Aprovar</button></td>
-                `;
-                moderationTable.appendChild(row);
-            }
-
-            document.querySelector('#completion-form').reset();
-        });
-
-        // Função para aprovar a completion
-        function approveCompletion(levelIndex, completionIndex) {
-            const level = demonLevels[levelIndex];
-            const moderationTable = document.querySelector('#moderation-table tbody');
-            const row = moderationTable.rows[completionIndex];
-
-            const completion = {
-                playerName: row.cells[1].textContent,
-                youtubeLink: row.cells[2].textContent
+            const newCompletion = {
+                nomeJogador: playerName,
+                linkYoutube: youtubeLink,
+                status: 'Pendente',
+                fps: '',
+                dispositivo: ''
             };
 
-            // Mover a completion para o nível específico
-            level.completions.push(completion);
-
-            // Atualiza a tabela de completions no nível
-            const levelCompletionsTable = document.querySelector('#level-completions-table tbody');
-            const newRow = document.createElement('tr');
-            newRow.innerHTML = `
-                <td>${completion.playerName}</td>
-                <td><a href="${completion.youtubeLink}" target="_blank">${completion.youtubeLink}</a></td>
-            `;
-            levelCompletionsTable.appendChild(newRow);
-
-            // Atualiza a moderação para "Confirmado"
-            row.cells[3].textContent = 'Confirmado';
-            row.cells[3].classList.add('confirmed');
-            row.querySelector('button').disabled = true;
-        }
-
-        // Exibir completions ao clicar no nome do nível
-        function showLevelCompletions(index) {
-            const level = demonLevels[index];
-            const completionTable = document.querySelector('#level-completions-table tbody');
-            completionTable.innerHTML = '';
-
-            level.completions.forEach(completion => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${completion.playerName}</td>
-                    <td><a href="${completion.youtubeLink}" target="_blank">${completion.youtubeLink}</a></td>
-                `;
-                completionTable.appendChild(row);
-            });
-
-            document.getElementById('level-completions').style.display = 'block';
-        }
-
-        function closeLevelCompletions() {
-            document.getElementById('level-completions').style.display = 'none';
-        }
-
-        // Função para alternar entre tema claro e escuro
-        function toggleTheme() {
-            document.body.classList.toggle('dark-theme');
-            document.body.classList.toggle('light-theme');
-            const themeIcon = document.getElementById('theme-icon');
-            if (document.body.classList.contains('dark-theme')) {
-                themeIcon.src = 'https://img.icons8.com/ios-filled/50/000000/moon.png';
+            const level = demonLevels.find(level => level.nome === levelName);
+            if (level) {
+                level.completions.push(newCompletion);
+                alert('Completion submetida com sucesso!');
+                document.querySelector('#completion-form').reset();
+                updateModerationTable();
             } else {
-                themeIcon.src = 'https://img.icons8.com/ios-filled/50/000000/sun.png';
+                alert('Nível não encontrado.');
+            }
+        });
+
+        // Função para atualizar a tabela de moderação
+        function updateModerationTable() {
+            const tableBody = document.querySelector('#moderation-table tbody');
+            tableBody.innerHTML = '';
+
+            demonLevels.forEach(level => {
+                level.completions.forEach(completion => {
+                    if (completion.status === 'Pendente') {
+                        const row = document.createElement('tr');
+                        row.classList.add('pending');
+
+                        row.innerHTML = `
+                            <td>${level.nome}</td>
+                            <td>${completion.nomeJogador}</td>
+                            <td><a href="${completion.linkYoutube}" target="_blank">Link</a></td>
+                            <td><input type="text" class="fps-input" placeholder="FPS"></td>
+                            <td>
+                                <select class="device-input">
+                                    <option value="PC">PC</option>
+                                    <option value="Mobile">Mobile</option>
+                                </select>
+                            </td>
+                            <td>${completion.status}</td>
+                            <td>
+                                <button onclick="approveCompletion('${level.nome}', '${completion.nomeJogador}')">Aprovar</button>
+                                <button onclick="rejectCompletion('${level.nome}', '${completion.nomeJogador}')">Rejeitar</button>
+                            </td>
+                        `;
+                        tableBody.appendChild(row);
+                    }
+                });
+            });
+        }
+
+        // Função de aprovação da conclusão
+        function approveCompletion(levelName, playerName) {
+            const level = demonLevels.find(level => level.nome === levelName);
+            const completion = level.completions.find(completion => completion.nomeJogador === playerName);
+
+            if (completion) {
+                const fps = document.querySelector('.fps-input').value;
+                const device = document.querySelector('.device-input').value;
+
+                completion.fps = fps;
+                completion.dispositivo = device;
+                completion.status = 'Confirmado';
+
+                updateModerationTable();
             }
         }
 
-        // Função para abrir o Discord
+        // Função de rejeição da conclusão
+        function rejectCompletion(levelName, playerName) {
+            const level = demonLevels.find(level => level.nome === levelName);
+            const completion = level.completions.find(completion => completion.nomeJogador === playerName);
+
+            if (completion) {
+                completion.status = 'Rejeitado';
+                updateModerationTable();
+            }
+        }
+
+        // Alterando tema
+        function toggleTheme() {
+            const body = document.body;
+            body.classList.toggle('dark-theme');
+            body.classList.toggle('light-theme');
+            
+            const themeIcon = document.getElementById('theme-icon');
+            if (body.classList.contains('dark-theme')) {
+                themeIcon.src = "https://img.icons8.com/ios-filled/50/ffffff/moon.png";
+                themeIcon.alt = "Tema Escuro";
+            } else {
+                themeIcon.src = "https://img.icons8.com/ios-filled/50/000000/sun.png";
+                themeIcon.alt = "Tema Claro";
+            }
+        }
+
+        // Função para abrir a caixa do Discord
         function openDiscord() {
-            window.open('https://discord.gg/amjFUaywuw', '_blank');
+            window.open("https://discord.gg/TropaDoCano", "_blank");
         }
 
-        // Renderizar lista de Demon Levels
-        function renderDemonList() {
-            const tableBody = document.querySelector('#demon-table tbody');
-            tableBody.innerHTML = ''; // Limpa a tabela
-
-            demonLevels.forEach((level, index) => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${index + 1}</td>
-                    <td onclick="showLevelCompletions(${index})">${level.nome}</td>
-                    <td>${level.pontos}</td>
-                    <td><button onclick="submitCompletion(${index})">Submeter Completion</button></td>
-                `;
-                tableBody.appendChild(row);
-            });
-        }
-
-        renderDemonList();
+        // Inicializa a tabela de moderação com dados iniciais
+        updateModerationTable();
     </script>
 </body>
 </html>
