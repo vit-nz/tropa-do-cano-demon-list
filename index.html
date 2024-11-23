@@ -202,6 +202,18 @@
             width: 40px;
             height: 40px;
         }
+
+        #demon-list {
+            margin: auto;
+            width: 80%;
+            max-width: 900px;
+        }
+
+        .level-completions-btn {
+            color: #007bff;
+            text-decoration: underline;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body class="light-theme">
@@ -297,20 +309,17 @@
             const level = demonLevels.find(l => l.nome === levelName);
 
             if (level) {
-                // Adiciona à moderação com status 'Pendente'
-                const moderationTable = document.querySelector('#moderation-table tbody');
                 const row = document.createElement('tr');
                 row.innerHTML = `
-                    <td>${levelName}</td>
+                    <td>${level.nome}</td>
                     <td>${playerName}</td>
-                    <td><a href="${youtubeLink}" target="_blank">${youtubeLink}</a></td>
+                    <td><a href="${youtubeLink}" target="_blank">Link</a></td>
                     <td class="pending">Pendente</td>
-                    <td><button onclick="approveCompletion(${demonLevels.indexOf(level)}, ${moderationTable.rows.length})">Aprovar</button></td>
+                    <td><button onclick="approveCompletion(${demonLevels.indexOf(level)}, ${document.querySelector('#moderation-table tbody').rows.length})">Confirmar</button></td>
                 `;
-                moderationTable.appendChild(row);
+                document.querySelector('#moderation-table tbody').appendChild(row);
             }
 
-            // Limpar o formulário
             document.querySelector('#completion-form').reset();
         });
 
@@ -319,7 +328,6 @@
             const level = demonLevels[levelIndex];
             const playerName = document.querySelector('#moderation-table tbody').rows[rowIndex].cells[1].textContent;
 
-            // Adiciona à lista de completions do nível
             level.completions.push(playerName);
 
             // Atualiza status
@@ -327,7 +335,7 @@
             document.querySelector('#moderation-table tbody').rows[rowIndex].cells[3].classList.add('confirmed');
             document.querySelector('#moderation-table tbody').rows[rowIndex].cells[4].disabled = true;
 
-            // Adiciona à leaderboard
+            // Atualiza a leaderboard
             leaderboard.push({ nome: playerName, pontos: level.pontos });
             updateLeaderboard();
 
@@ -358,7 +366,6 @@
                 levelCompletionsTable.appendChild(tr);
             });
 
-            // Exibe a modal
             const modal = document.querySelector('#level-completions');
             modal.style.display = "block";
         }
