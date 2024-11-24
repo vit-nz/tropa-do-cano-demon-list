@@ -225,7 +225,9 @@
             { name: "vrdr", completions: ["Waka Waka Interface", "Phobia", "Alpha Coronae"] },
             { name: "vitnz", completions: ["Crumbling Caverns", "Saas III", "Saas II", "Coolio", "Nem Fodendo", "Tudo Fodendo", "Saas", "Mixtape", "Dedicacao", "Alpha Coronae", "Invincible", "Renan Circles"] },
             { name: "JustusRL", completions: ["cursed circles lmao", "Mixtape", "Renan Circles", "Alpha Coronae", "Coolio", "Tudo Fodendo", "Saas"] },
-            { name: "Arepy", completions: ["Invincible"] }
+            { name: "Arepy", completions: ["Invincible"] },
+            { name: "Vidash", completions: ["Deidcacao", "Obscuro"] },
+            { name: "Hyfera", completions: ["Waka Waka Interface"] }
         ];
 
         function populateDemonList() {
@@ -250,10 +252,19 @@
                     let level = demonLevels.find(d => d.nome === levelName);
                     if (level) points += level.pontos;
                 });
+
+                // Adicionando pontos para verificadores também
+                playerScores.forEach(player => {
+                    let verifierLevels = demonLevels.filter(d => d.verifier === player.name);
+                    verifierLevels.forEach(level => {
+                        points += level.pontos;
+                    });
+                });
+
                 return { name: player.name, points };
             });
 
-            playerScores.sort((a, b) => b.points - a.points); // Sort players by points
+            playerScores.sort((a, b) => b.points - a.points); // Ordena os jogadores pelos pontos
 
             playerScores.forEach(player => {
                 let row = leaderboardTable.insertRow();
