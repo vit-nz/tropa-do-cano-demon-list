@@ -223,49 +223,63 @@
 
         let players = [
             { name: "vrdr", completions: ["Waka Waka Interface", "Phobia", "Alpha Coronae"] },
-            { name: "vitnz", completions: ["Crumbling Caverns", "Saas III", "Saas II", "Coolio", "Nem Fodendo", "Tudo Fodendo", "Saas", "Mixtape", "Dedicacao", "Alpha Coronae", "Invincible", "Renan Circles"] },
-            { name: "JustusRL", completions: ["cursed circles lmao", "Mixtape", "Renan Circles", "Alpha Coronae", "Coolio", "Tudo Fodendo", "Saas"] },
-            { name: "Arepy", completions: ["Invincible"] },
-            { name: "Vidash", completions: ["Deidcacao", "Obscuro"] },
-            { name: "Hyfera", completions: ["Waka Waka Interface"] }
+            { name: "vitnz", completions: ["Crumbling Caverns", "Saas III", "Saas II", "Coolio", "Nem Fodendo", "Tudo Fodendo"] },
+            { name: "JustusRL", completions: ["Crumbling Caverns", "cursed circles lmao", "Mixtape", "Renan Circles"] },
+            { name: "vidashgd", completions: ["Dedicacao", "Obscuro"] },
+            { name: "Arepy", completions: ["Saas", "Invincible"] }
         ];
 
-        function populateDemonList() {
-            const demonTable = document.getElementById("demon-table").getElementsByTagName("tbody")[0];
-            demonLevels.forEach((level, index) => {
-                let row = demonTable.insertRow();
-                row.insertCell(0).innerText = index + 1; // Posição
-                row.insertCell(1).innerText = level.nome; // Nome do nível
-                row.insertCell(2).innerText = level.creator; // Criador
-                row.insertCell(3).innerText = level.verifier; // Verificador
-                row.insertCell(4).innerText = level.pontos; // Pontos
-            });
+        function toggleTheme() {
+            document.body.classList.toggle("dark-mode");
+            document.querySelector("header").classList.toggle("dark-mode");
+            let icon = document.querySelector(".theme-toggle");
+            icon.innerHTML = icon.innerHTML === "🌙" ? "🌞" : "🌙";
+        }
+
+        function showPlayerProfile(playerName) {
+            const player = players.find(p => p.name === playerName);
+            if (player) {
+                document.getElementById("profile-name").innerText = player.name;
+                document.getElementById("profile-levels").innerHTML = player.completions.map(level => `<li>${level}</li>`).join('');
+                document.getElementById("profile-hardest-level").innerText = player.completions.reduce((hardest, level) => {
+                    const levelDetails = demonLevels.find(d => d.nome === level);
+                    return levelDetails.pontos > (hardest.pontos || 0) ? levelDetails : hardest;
+                }).nome;
+                document.getElementById("player-profile").style.display = "block";
+            }
+        }
+
+        function closeProfile() {
+            document.getElementById("player-profile").style.display = "none";
         }
 
         function updateLeaderboard() {
             const leaderboardTable = document.getElementById("leaderboard-table").getElementsByTagName("tbody")[0];
-            leaderboardTable.innerHTML = "";
+            leaderboardTable.innerHTML = ""; // Limpar a tabela antes de atualizar
 
             let playerScores = players.map(player => {
                 let points = 0;
+
+                // Contabiliza os pontos dos níveis completados
                 player.completions.forEach(levelName => {
                     let level = demonLevels.find(d => d.nome === levelName);
                     if (level) points += level.pontos;
                 });
 
                 // Adicionando pontos para verificadores também
-                playerScores.forEach(player => {
-                    let verifierLevels = demonLevels.filter(d => d.verifier === player.name);
-                    verifierLevels.forEach(level => {
+                demonLevels.forEach(level => {
+                    if (level.verifier === player.name) {
                         points += level.pontos;
-                    });
+                    }
                 });
 
                 return { name: player.name, points };
             });
 
-            playerScores.sort((a, b) => b.points - a.points); // Ordena os jogadores pelos pontos
+            // Ordena os jogadores pela pontuação em ordem decrescente
+            playerScores.sort((a, b) => b.points - a.points);
 
+            // Preenche a tabela da leaderboard com os dados dos jogadores
             playerScores.forEach(player => {
                 let row = leaderboardTable.insertRow();
                 let playerCell = row.insertCell(0);
@@ -276,39 +290,22 @@
             });
         }
 
-        function showPlayerProfile(playerName) {
-            const player = players.find(p => p.name === playerName);
-            const profileName = document.getElementById("profile-name");
-            const profileLevels = document.getElementById("profile-levels");
-            const profileHardestLevel = document.getElementById("profile-hardest-level");
+        function updateDemonList() {
+            const demonTableBody = document.getElementById("demon-table").getElementsByTagName("tbody")[0];
+            demonTableBody.innerHTML = ""; // Limpar a tabela antes de atualizar
 
-            profileName.innerText = player.name;
-            profileLevels.innerHTML = "";
-            player.completions.forEach(level => {
-                let li = document.createElement("li");
-                li.innerText = level;
-                profileLevels.appendChild(li);
+            demonLevels.forEach((level, index) => {
+                let row = demonTableBody.insertRow();
+                row.insertCell(0).innerText = index + 1;
+                row.insertCell(1).innerText = level.nome;
+                row.insertCell(2).innerText = level.creator;
+                row.insertCell(3).innerText = level.verifier;
+                row.insertCell(4).innerText = level.pontos;
             });
-
-            const hardestLevel = player.completions.reduce((max, levelName) => {
-                let level = demonLevels.find(l => l.nome === levelName);
-                return level.pontos > max.pontos ? level : max;
-            }, { pontos: 0 });
-
-            profileHardestLevel.innerText = hardestLevel.nome;
-            document.getElementById("player-profile").style.display = "block";
         }
 
-        function closeProfile() {
-            document.getElementById("player-profile").style.display = "none";
-        }
-
-        function toggleTheme() {
-            document.body.classList.toggle("dark-mode");
-            document.querySelector("header").classList.toggle("dark-mode");
-        }
-
-        populateDemonList();
+        // Inicialização
+        updateDemonList();
         updateLeaderboard();
     </script>
 </body>
