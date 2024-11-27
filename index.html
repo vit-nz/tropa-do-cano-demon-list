@@ -266,6 +266,11 @@
         document.getElementById('list-points-text').innerText = "List points: ";
         document.getElementById('list-points').innerText = points;
     }
+           // Exibe o vídeo dependendo do nível
+    if (nome === "Crumbling Caverns") {
+        const videoContainer = document.getElementById('video-container');
+        videoContainer.innerHTML = `<iframe src="https://www.youtube.com/embed/g30LCGq1cDE?start=495" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+    } 
 
     // Exemplo de como atualizar os pontos
     setLevelPoints("Crumbling Caverns", 150);
