@@ -46,7 +46,11 @@
 
         #main {
             width: 75%;
-            padding: 20px;
+            padding: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
         }
 
         .level-name {
@@ -69,68 +73,27 @@
             border-color: #0056a1;
         }
 
-        .leaderboard-button {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background-color: #0078D4;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-
-        .leaderboard-button:hover {
-            background-color: #0056a1;
-        }
-
-        #leaderboard-modal {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: white;
-            color: black;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-            z-index: 2000;
-            max-width: 600px;
-            width: 80%;
-        }
-
-        #leaderboard-modal table {
+        /* Estilo da área que agrupa as informações */
+        .info-container {
+            background-color: #1e1e1e;
+            border-radius: 12px;
+            padding: 30px;
             width: 100%;
-            border-collapse: collapse;
+            max-width: 600px; /* Limita o tamanho para não ficar largo */
+            box-sizing: border-box;
+            text-align: center;
             margin: 20px 0;
         }
 
-        #leaderboard-modal th, #leaderboard-modal td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
+        .info-container strong {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 20px;
         }
 
-        #leaderboard-modal th {
-            background-color: #0078D4;
-            color: white;
-        }
-
-        #close-leaderboard {
-            background-color: #ff4d4d;
-            color: white;
-            border: none;
-            padding: 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            float: right;
-        }
-
-        #close-leaderboard:hover {
-            background-color: #d13333;
+        .info-container p {
+            margin: 5px 0;
+            font-size: 16px;
         }
 
         .video-container {
@@ -148,10 +111,9 @@
 <body>
     <header>
         Tropa do Cano Demon List
-        <button class="leaderboard-button" onclick="toggleLeaderboard()">Leaderboard</button>
     </header>
 
-    < <div class="content">
+    <div class="content">
         <div id="sidebar">
             <ul>
                 <li class="level-name" onclick="showLevelInfo('WakaWaka Interface', 'vrdr', '105437840', 'Hyfera')">Waka Waka Interface</li>
@@ -161,10 +123,16 @@
         </div>
         <div id="main">
             <h2>Informações do Nível</h2>
-            <p><strong>Nome:</strong> <span id="level-name">Clique em um nível</span></p>
-            <p><strong>Criador:</strong> <span id="level-creator">---</span></p>
-            <p><strong>ID:</strong> <span id="level-id">---</span></p>
-            <p><strong>Verifier:</strong> <span id="level-verifier">---</span></p>
+            <div class="info-container">
+                <strong>Nome:</strong>
+                <p id="level-name">Clique em um nível</p>
+                <strong>Criador:</strong>
+                <p id="level-creator">---</p>
+                <strong>ID:</strong>
+                <p id="level-id">---</p>
+                <strong>Verifier:</strong>
+                <p id="level-verifier">---</p>
+            </div>
             
             <div class="video-container" id="video-container">
                 <!-- Embed do vídeo será adicionado aqui -->
@@ -172,39 +140,15 @@
         </div>
     </div>
 
-    <div id="leaderboard-modal">
-        <button id="close-leaderboard" onclick="toggleLeaderboard()">Fechar</button>
-        <h2>Leaderboard</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Jogador</th>
-                    <th>Pontos</th>
-                </tr>
-            </thead>
-            <tbody id="leaderboard-data">
-                <!-- Dados do leaderboard serão adicionados dinamicamente -->
-            </tbody>
-        </table>
-    </div>
-
     <script>
-        // Dados fictícios do leaderboard
-        const leaderboard = [
-            { jogador: "Player1", pontos: 150 },
-            { jogador: "Player2", pontos: 140 },
-            { jogador: "Player3", pontos: 130 },
-        ];
-
-        // Mostra as informações de um nível no painel principal
-function showLevelInfo(nome, criador, id, verifier) {
+        function showLevelInfo(nome, criador, id, verifier) {
             // Atualiza as informações do nível
             document.getElementById('level-name').innerText = nome;
             document.getElementById('level-creator').innerText = criador;
             document.getElementById('level-id').innerText = id;
             document.getElementById('level-verifier').innerText = verifier;
 
-  // Exibe o vídeo dependendo do nome do nível
+            // Exibe o vídeo dependendo do nome do nível
             const videoContainer = document.getElementById('video-container');
             if (nome === "Crumbling Caverns") {
                 console.log("Carregando vídeo para Crumbling Caverns..."); // Log para depuração
@@ -215,31 +159,6 @@ function showLevelInfo(nome, criador, id, verifier) {
             } else {
                 console.log("Nenhum vídeo para este nível"); // Log para depuração
                 videoContainer.innerHTML = ''; // Limpa o vídeo para outros níveis
-    }
-}
-    
-    console.log("Nenhum vídeo para este nível"); // Log para depuração
-    // Limpa o conteúdo do vídeo para outros níveis
-    document.getElementById('video-container').innerHTML = '';
-}
-
-
-        // Mostra ou oculta o modal do leaderboard
-        function toggleLeaderboard() {
-            const modal = document.getElementById('leaderboard-modal');
-            modal.style.display = modal.style.display === 'block' ? 'none' : 'block';
-
-            // Popula a tabela do leaderboard se necessário
-            if (modal.style.display === 'block') {
-                const tbody = document.getElementById('leaderboard-data');
-                tbody.innerHTML = ""; // Limpa os dados antigos
-                leaderboard.forEach(player => {
-                    const row = `<tr>
-                        <td>${player.jogador}</td>
-                        <td>${player.pontos}</td>
-                    </tr>`;
-                    tbody.innerHTML += row;
-                });
             }
         }
     </script>
@@ -247,46 +166,31 @@ function showLevelInfo(nome, criador, id, verifier) {
 </html>
 
       <script>
-    // Objeto global que armazena os pontos de cada nível
-    let levelPoints = {
-        "Crumbling Caverns": 150,
-        // Outros níveis podem ser adicionados aqui
-    };
+// Objeto global que armazena os pontos de cada nível
+let levelPoints = {
+    "Crumbling Caverns": 150,
+    // Outros níveis podem ser adicionados aqui
+};
 
-    // Função para atualizar os pontos de um nível
-    function setLevelPoints(nome, pontos) {
-        // Verifica se o nível já existe e atualiza os pontos
-        if (levelPoints.hasOwnProperty(nome)) {
-            levelPoints[nome] = pontos;
-        } else {
-            // Se o nível não existe, cria uma nova entrada
-            levelPoints[nome] = pontos;
-        }
-        console.log(`Pontos do nível "${nome}" atualizados para ${pontos}`);
+// Função para atualizar os pontos de um nível
+function setLevelPoints(nome, pontos) {
+    // Verifica se o nível já existe e atualiza os pontos
+    if (levelPoints.hasOwnProperty(nome)) {
+        levelPoints[nome] = pontos;
+    } else {
+        // Se o nível não existe, cria uma nova entrada
+        levelPoints[nome] = pontos;
     }
+    console.log(`Pontos do nível "${nome}" atualizados para ${pontos}`);
+}
 
-    // Atualize a função showLevelInfo para utilizar os pontos do objeto global
-    function showLevelInfo(nome, criador, id, verifier) {
-        document.getElementById('level-name').innerText = nome;
-        document.getElementById('level-creator').innerText = criador;
-        document.getElementById('level-id').innerText = id;
-        document.getElementById('level-verifier').innerText = verifier;
 
-        // Exibe os pontos para o nível Crumbling Caverns
-        const pointsContainer = document.getElementById('points-container');
-        const points = levelPoints[nome]; // Obtém os pontos dinamicamente do objeto
-        document.getElementById('list-points-text').innerText = "List points: ";
-        document.getElementById('list-points').innerText = points;
-    }
-           // Exibe o vídeo dependendo do nível
-    if (nome === "Crumbling Caverns") {
-        const videoContainer = document.getElementById('video-container');
-        videoContainer.innerHTML = `<iframe src="https://www.youtube.com/embed/g30LCGq1cDE?start=495" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
-    } 
-
-    // Exemplo de como atualizar os pontos
+// Exemplo de como atualizar os pontos
     setLevelPoints("Crumbling Caverns", 150);
-</script>
+     </script>
+
+
+
 
 
 
