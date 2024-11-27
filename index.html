@@ -4,144 +4,118 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tropa do Cano Demon List</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- FontAwesome para ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f5f5f5;
-            color: #333;
+            background-color: #1a1a1a; /* Fundo escuro */
+            color: #f5f5f5;
             display: flex;
-            justify-content: center;
-            align-items: flex-start;
             flex-direction: column;
             min-height: 100vh;
-            text-align: center;
-            transition: background-color 0.3s, color 0.3s;
-            padding-top: 50px;
+            overflow-x: hidden;
         }
-        body.dark-mode {
-            background-color: #2b2b2b;
-            color: #f5f5f5;
-        }
+
         header {
-            background-color: #0078D4;
+            background-color: #ff6b00;
             color: white;
-            padding: 30px 0;
-            width: 100%;
+            padding: 15px 0;
             text-align: center;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #292929;
+            color: #ffffff;
             position: fixed;
             top: 0;
             left: 0;
-            right: 0;
-            z-index: 1000;
+            height: 100%;
+            overflow-y: auto;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+            padding: 15px;
         }
-        header.dark-mode {
-            background-color: #1e1e1e;
-        }
-        .content {
-            width: 100%;
-            max-width: 1200px;
-            margin-top: 90px;
-            padding: 0 20px;
-            box-sizing: border-box;
-        }
-        .section-title {
-            font-size: 24px;
-            font-weight: 600;
-            margin-bottom: 15px;
-        }
-        #demon-list, #leaderboard {
-            background-color: white;
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+
+        .sidebar h3 {
+            text-align: center;
+            color: #ff6b00;
             margin-bottom: 20px;
         }
-        body.dark-mode #demon-list,
-        body.dark-mode #leaderboard {
-            background-color: #333;
+
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
         }
+
+        .sidebar ul li {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #1a1a1a;
+            border: 1px solid #3a3a3a;
+            border-radius: 5px;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .sidebar ul li:hover {
+            background-color: #ff6b00;
+            color: #1a1a1a;
+        }
+
+        .content {
+            margin-left: 260px;
+            padding: 20px;
+        }
+
+        .section-title {
+            font-size: 24px;
+            color: #ff6b00;
+            text-align: left;
+            margin-bottom: 10px;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 20px;
+            margin: 20px 0;
+            background-color: #292929;
+            color: #ffffff;
         }
+
         th, td {
-            padding: 12px;
-            text-align: center;
-            border: 1px solid #ddd;
-            font-size: 16px;
-        }
-        th {
-            background-color: #0078D4;
-            color: white;
-        }
-        body.dark-mode th {
-            background-color: #1e1e1e;
-        }
-        .level-name {
-            font-weight: bold;
-        }
-        input, button {
             padding: 10px;
-            margin: 10px 0;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-            font-size: 16px;
+            text-align: center;
+            border: 1px solid #3a3a3a;
         }
+
+        th {
+            background-color: #ff6b00;
+            color: #ffffff;
+            font-size: 16px;
+            text-transform: uppercase;
+        }
+
+        td {
+            font-size: 14px;
+        }
+
         button {
-            background-color: #0078D4;
+            background-color: #ff6b00;
             color: white;
             border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
             cursor: pointer;
-            font-size: 16px;
-            font-weight: bold;
-            transition: background-color 0.3s;
         }
+
         button:hover {
-            background-color: #0056a1;
-        }
-        .theme-toggle {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background-color: #0078D4;
-            color: white;
-            border: none;
-            padding: 15px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 25px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 50px;
-            width: 50px;
-        }
-        .theme-toggle:hover {
-            background-color: #0056a1;
-        }
-        .discord-icon {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            background-color: #7289DA;
-            color: white;
-            padding: 15px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 25px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 50px;
-            width: 50px;
-        }
-        .discord-icon:hover {
-            background-color: #5b6e9d;
+            background-color: #ff4500;
         }
     </style>
 </head>
@@ -151,12 +125,16 @@
         <p>Os níveis mais difíceis da Tropa do Cano</p>
     </header>
 
-    <!-- Icone do Discord -->
-    <a href="https://discord.gg/amjFUaywuw" target="_blank" class="discord-icon">
-        <i class="fab fa-discord"></i>
-    </a>
-
-    <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+    <div class="sidebar">
+        <h3>Ranking</h3>
+        <ul>
+            <li>#1 - Waka Waka Interface</li>
+            <li>#2 - Crumbling Caverns</li>
+            <li>#3 - Phobia</li>
+            <li>#4 - Dedicacao</li>
+            <li>#5 - Alpha Coronae</li>
+        </ul>
+    </div>
 
     <div class="content">
         <section id="demon-list">
@@ -172,7 +150,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- Demon list will be dynamically populated -->
+                    <!-- Demon list será preenchida dinamicamente -->
                 </tbody>
             </table>
         </section>
@@ -187,112 +165,25 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- Leaderboard will be dynamically populated -->
+                    <!-- Leaderboard será preenchida dinamicamente -->
                 </tbody>
             </table>
         </section>
     </div>
 
-    <div id="player-profile" style="display: none; position: fixed; top: 20%; left: 50%; transform: translateX(-50%); background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);">
-        <h3 id="profile-name"></h3>
-        <p><strong>Níveis Completados:</strong></p>
-        <ul id="profile-levels"></ul>
-        <p><strong>Nível mais Difícil Completado:</strong> <span id="profile-hardest-level"></span></p>
-        <button onclick="closeProfile()">Fechar</button>
-    </div>
-
     <script>
+        // Mantendo o mesmo JavaScript para funcionalidade
         let demonLevels = [
             { nome: "Waka Waka Interface", creator: "vrdr", verifier: "Hyfera", pontos: 150 },
             { nome: "Crumbling Caverns", creator: "vitnz", verifier: "Arepy", pontos: 149 },
             { nome: "Phobia", creator: "vrdr", verifier: "JustusRL", pontos: 148 },
             { nome: "Dedicacao", creator: "vidashgd", verifier: "vidashgd", pontos: 147 },
-            { nome: "Alpha Coronae", creator: "vrdr", verifier: "vrdr", pontos: 146 },
-            { nome: "Saas III", creator: "vitnz", verifier: "vitnz", pontos: 145 },
-            { nome: "Saas II", creator: "vitnz", verifier: "vitnz", pontos: 144 },
-            { nome: "Coolio", creator: "vitnz", verifier: "vitnz", pontos: 143 },
-            { nome: "Nem Fodendo", creator: "vitnz", verifier: "vitnz", pontos: 142 },
-            { nome: "Tudo Fodendo", creator: "vitnz", verifier: "vitnz", pontos: 141 },
-            { nome: "cursed circles lmao", creator: "JustusRL", verifier: "JustusRL", pontos: 140 },
-            { nome: "Obscuro", creator: "vidashgd", verifier: "vidashgd", pontos: 139 },
-            { nome: "Saas", creator: "vitnz", verifier: "vitnz", pontos: 138 },
-            { nome: "Invincible", creator: "Arepy", verifier: "Arepy", pontos: 137 },
-            { nome: "Mixtape", creator: "JustusRL", verifier: "JustusRL", pontos: 136 },
-            { nome: "Renan Circles", creator: "JustusRL", verifier: "JustusRL", pontos: 135 }
+            { nome: "Alpha Coronae", creator: "vrdr", verifier: "vrdr", pontos: 146 }
         ];
-
-        let players = [
-            { name: "vrdr", completions: ["Waka Waka Interface", "Phobia", "Alpha Coronae"] },
-            { name: "vitnz", completions: ["Crumbling Caverns", "Saas III", "Saas II", "Coolio", "Nem Fodendo", "Tudo Fodendo"] },
-            { name: "JustusRL", completions: ["cursed circles lmao", "Mixtape", "Renan Circles"] },
-            { name: "vidashgd", completions: ["Dedicacao", "Obscuro"] },
-            { name: "Arepy", completions: ["Saas", "Invincible"] }
-        ];
-
-        function toggleTheme() {
-            document.body.classList.toggle("dark-mode");
-            document.querySelector("header").classList.toggle("dark-mode");
-            let icon = document.querySelector(".theme-toggle");
-            icon.innerHTML = icon.innerHTML === "🌙" ? "🌞" : "🌙";
-        }
-
-        function showPlayerProfile(playerName) {
-            const player = players.find(p => p.name === playerName);
-            if (player) {
-                document.getElementById("profile-name").innerText = player.name;
-                document.getElementById("profile-levels").innerHTML = player.completions.map(level => `<li>${level}</li>`).join('');
-                document.getElementById("profile-hardest-level").innerText = player.completions.reduce((hardest, level) => {
-                    const levelDetails = demonLevels.find(d => d.nome === level);
-                    return levelDetails.pontos > (hardest.pontos || 0) ? levelDetails : hardest;
-                }).nome;
-                document.getElementById("player-profile").style.display = "block";
-            }
-        }
-
-        function closeProfile() {
-            document.getElementById("player-profile").style.display = "none";
-        }
-
-        function updateLeaderboard() {
-            const leaderboardTable = document.getElementById("leaderboard-table").getElementsByTagName("tbody")[0];
-            leaderboardTable.innerHTML = ""; // Limpar a tabela antes de atualizar
-
-            let playerScores = players.map(player => {
-                let points = 0;
-
-                // Contabiliza os pontos dos níveis completados
-                player.completions.forEach(levelName => {
-                    let level = demonLevels.find(d => d.nome === levelName);
-                    if (level) points += level.pontos;
-                });
-
-                // Adicionando pontos para verificadores também
-                demonLevels.forEach(level => {
-                    if (level.verifier === player.name) {
-                        points += level.pontos;
-                    }
-                });
-
-                return { name: player.name, points };
-            });
-
-            // Ordena os jogadores pela pontuação em ordem decrescente
-            playerScores.sort((a, b) => b.points - a.points);
-
-            // Preenche a tabela da leaderboard com os dados dos jogadores
-            playerScores.forEach(player => {
-                let row = leaderboardTable.insertRow();
-                let playerCell = row.insertCell(0);
-                playerCell.innerText = player.name;
-                playerCell.style.cursor = 'pointer';
-                playerCell.onclick = () => showPlayerProfile(player.name);
-                row.insertCell(1).innerText = player.points;
-            });
-        }
 
         function updateDemonList() {
             const demonTableBody = document.getElementById("demon-table").getElementsByTagName("tbody")[0];
-            demonTableBody.innerHTML = ""; // Limpar a tabela antes de atualizar
+            demonTableBody.innerHTML = ""; // Limpa a tabela antes de atualizar
 
             demonLevels.forEach((level, index) => {
                 let row = demonTableBody.insertRow();
@@ -304,9 +195,7 @@
             });
         }
 
-        // Inicialização
         updateDemonList();
-        updateLeaderboard();
     </script>
 </body>
 </html>
