@@ -202,15 +202,17 @@
             document.getElementById('level-id').innerText = id;
             document.getElementById('level-verifier').innerText = verifier;
 
-            // Exibe o vídeo somente para "Crumbling Caverns"
-            if (nome === "Crumbling Caverns") {
-                const videoContainer = document.getElementById('video-container');
-                videoContainer.innerHTML = `<iframe src="https://www.youtube.com/embed/g30LCGq1cDE?start=495" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
-            } else {
-                // Limpa o conteúdo do vídeo para outros níveis
-                document.getElementById('video-container').innerHTML = '';
-            }
-        }
+   // Exibe o vídeo somente para "Crumbling Caverns"
+if (nome === "Crumbling Caverns") {
+    console.log("Carregando vídeo para Crumbling Caverns..."); // Log para depuração
+    const videoContainer = document.getElementById('video-container');
+    videoContainer.innerHTML = `<iframe width="560" height="315" src="https://www.youtube.com/embed/g30LCGq1cDE?start=495" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+} else {
+    console.log("Nenhum vídeo para este nível"); // Log para depuração
+    // Limpa o conteúdo do vídeo para outros níveis
+    document.getElementById('video-container').innerHTML = '';
+}
+
 
         // Mostra ou oculta o modal do leaderboard
         function toggleLeaderboard() {
