@@ -10,7 +10,7 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #1a1a1a; /* Fundo escuro */
+            background-color: #1a1a1a;
             color: #f5f5f5;
             display: flex;
             flex-direction: column;
@@ -21,12 +21,13 @@
         header {
             background-color: #ff6b00;
             color: white;
-            padding: 15px 0;
+            padding: 10px 0;
             text-align: center;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
             position: sticky;
             top: 0;
             z-index: 1000;
+            font-size: 18px; /* Cabeçalho reduzido */
         }
 
         .sidebar {
@@ -63,7 +64,7 @@
             cursor: pointer;
         }
 
-        .sidebar ul li:hover {
+        .sidebar ul li:hover, .sidebar ul li.active {
             background-color: #ff6b00;
             color: #1a1a1a;
         }
@@ -71,131 +72,117 @@
         .content {
             margin-left: 260px;
             padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: calc(100vh - 60px);
+            text-align: center;
         }
 
-        .section-title {
-            font-size: 24px;
+        .level-details {
+            background-color: #292929;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            width: 100%;
+        }
+
+        .level-details h2 {
             color: #ff6b00;
-            text-align: left;
             margin-bottom: 10px;
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-            background-color: #292929;
-            color: #ffffff;
-        }
-
-        th, td {
-            padding: 10px;
-            text-align: center;
-            border: 1px solid #3a3a3a;
-        }
-
-        th {
-            background-color: #ff6b00;
-            color: #ffffff;
+        .level-details p {
             font-size: 16px;
-            text-transform: uppercase;
-        }
-
-        td {
-            font-size: 14px;
-        }
-
-        button {
-            background-color: #ff6b00;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background-color: #ff4500;
+            margin: 5px 0;
         }
     </style>
 </head>
 <body>
     <header>
         <h1>Tropa do Cano Demon List</h1>
-        <p>Os níveis mais difíceis da Tropa do Cano</p>
     </header>
 
     <div class="sidebar">
         <h3>Ranking</h3>
-        <ul>
-            <li>#1 - Waka Waka Interface</li>
-            <li>#2 - Crumbling Caverns</li>
-            <li>#3 - Phobia</li>
-            <li>#4 - Dedicacao</li>
-            <li>#5 - Alpha Coronae</li>
+        <ul id="level-list">
+            <!-- Os níveis serão preenchidos dinamicamente -->
         </ul>
     </div>
 
     <div class="content">
-        <section id="demon-list">
-            <h2 class="section-title">Lista de Níveis Demon</h2>
-            <table id="demon-table">
-                <thead>
-                    <tr>
-                        <th>Posição</th>
-                        <th>Nome do Nível</th>
-                        <th>Criador</th>
-                        <th>Verificador</th>
-                        <th>Pontos</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Demon list será preenchida dinamicamente -->
-                </tbody>
-            </table>
-        </section>
-
-        <section id="leaderboard">
-            <h2 class="section-title">Leaderboard</h2>
-            <table id="leaderboard-table">
-                <thead>
-                    <tr>
-                        <th>Jogador</th>
-                        <th>Pontos</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Leaderboard será preenchida dinamicamente -->
-                </tbody>
-            </table>
-        </section>
+        <div class="level-details" id="level-details">
+            <h2>Selecione um nível</h2>
+            <p>Clique em um nível na barra lateral para ver mais detalhes.</p>
+        </div>
     </div>
 
     <script>
-        // Mantendo o mesmo JavaScript para funcionalidade
-        let demonLevels = [
-            { nome: "Waka Waka Interface", creator: "vrdr", verifier: "Hyfera", pontos: 150 },
-            { nome: "Crumbling Caverns", creator: "vitnz", verifier: "Arepy", pontos: 149 },
-            { nome: "Phobia", creator: "vrdr", verifier: "JustusRL", pontos: 148 },
-            { nome: "Dedicacao", creator: "vidashgd", verifier: "vidashgd", pontos: 147 },
-            { nome: "Alpha Coronae", creator: "vrdr", verifier: "vrdr", pontos: 146 }
+        // Dados dos níveis
+        const demonLevels = [
+            { 
+                nome: "Waka Waka Interface", 
+                creator: "vrdr", 
+                verifier: "Hyfera", 
+                pontos: 150 
+            },
+            { 
+                nome: "Crumbling Caverns", 
+                creator: "vitnz", 
+                verifier: "Arepy", 
+                pontos: 149 
+            },
+            { 
+                nome: "Phobia", 
+                creator: "vrdr", 
+                verifier: "JustusRL", 
+                pontos: 148 
+            },
+            { 
+                nome: "Dedicacao", 
+                creator: "vidashgd", 
+                verifier: "vidashgd", 
+                pontos: 147 
+            },
+            { 
+                nome: "Alpha Coronae", 
+                creator: "vrdr", 
+                verifier: "vrdr", 
+                pontos: 146 
+            }
         ];
 
-        function updateDemonList() {
-            const demonTableBody = document.getElementById("demon-table").getElementsByTagName("tbody")[0];
-            demonTableBody.innerHTML = ""; // Limpa a tabela antes de atualizar
+        const levelList = document.getElementById('level-list');
+        const levelDetails = document.getElementById('level-details');
 
-            demonLevels.forEach((level, index) => {
-                let row = demonTableBody.insertRow();
-                row.insertCell(0).innerText = index + 1;
-                row.insertCell(1).innerText = level.nome;
-                row.insertCell(2).innerText = level.creator;
-                row.insertCell(3).innerText = level.verifier;
-                row.insertCell(4).innerText = level.pontos;
+        // Preenche a lista na barra lateral
+        demonLevels.forEach((level, index) => {
+            const li = document.createElement('li');
+            li.innerText = `${index + 1} - ${level.nome}`;
+            li.dataset.index = index;
+
+            li.addEventListener('click', () => {
+                // Remove a classe "active" de todos os itens
+                document.querySelectorAll('.sidebar ul li').forEach(item => item.classList.remove('active'));
+                li.classList.add('active');
+
+                // Atualiza os detalhes do nível
+                updateLevelDetails(level);
             });
-        }
 
-        updateDemonList();
+            levelList.appendChild(li);
+        });
+
+        // Atualiza os detalhes do nível no centro da tela
+        function updateLevelDetails(level) {
+            levelDetails.innerHTML = `
+                <h2>${level.nome}</h2>
+                <p><strong>Criador:</strong> ${level.creator}</p>
+                <p><strong>Verificador:</strong> ${level.verifier}</p>
+                <p><strong>Pontos:</strong> ${level.pontos}</p>
+            `;
+        }
     </script>
 </body>
 </html>
