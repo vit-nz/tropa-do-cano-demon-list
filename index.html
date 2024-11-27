@@ -233,3 +233,43 @@
     </script>
 </body>
 </html>
+
+      <script>
+    // Objeto global que armazena os pontos de cada nível
+    let levelPoints = {
+        "Crumbling Caverns": 150,
+        // Outros níveis podem ser adicionados aqui
+    };
+
+    // Função para atualizar os pontos de um nível
+    function setLevelPoints(nome, pontos) {
+        // Verifica se o nível já existe e atualiza os pontos
+        if (levelPoints.hasOwnProperty(nome)) {
+            levelPoints[nome] = pontos;
+        } else {
+            // Se o nível não existe, cria uma nova entrada
+            levelPoints[nome] = pontos;
+        }
+        console.log(`Pontos do nível "${nome}" atualizados para ${pontos}`);
+    }
+
+    // Atualize a função showLevelInfo para utilizar os pontos do objeto global
+    function showLevelInfo(nome, criador, id, verifier) {
+        document.getElementById('level-name').innerText = nome;
+        document.getElementById('level-creator').innerText = criador;
+        document.getElementById('level-id').innerText = id;
+        document.getElementById('level-verifier').innerText = verifier;
+
+        // Exibe os pontos para o nível Crumbling Caverns
+        const pointsContainer = document.getElementById('points-container');
+        const points = levelPoints[nome]; // Obtém os pontos dinamicamente do objeto
+        document.getElementById('list-points-text').innerText = "List points: ";
+        document.getElementById('list-points').innerText = points;
+    }
+
+    // Exemplo de como atualizar os pontos
+    setLevelPoints("Crumbling Caverns", 150);
+</script>
+
+
+
