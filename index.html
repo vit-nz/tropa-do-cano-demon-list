@@ -197,22 +197,26 @@
         ];
 
         // Mostra as informações de um nível no painel principal
-        function showLevelInfo(nome, criador, id, verifier) {
-            document.getElementById('level-name').innerText = nome;
-            document.getElementById('level-creator').innerText = criador;
-            document.getElementById('level-id').innerText = id;
-            document.getElementById('level-verifier').innerText = verifier;
+       function showLevelInfo(nome, criador, id, verifier) {
+    // Exibe as informações do nível
+    document.getElementById('level-name').innerText = nome;
+    document.getElementById('level-creator').innerText = criador;
+    document.getElementById('level-id').innerText = id;
+    document.getElementById('level-verifier').innerText = verifier;
 
-   // Exibe o vídeo das verificações
-if (nome === "Crumbling Caverns") {
-    console.log("Carregando vídeo para Crumbling Caverns..."); // Log para depuração
+    // Exibe o vídeo dependendo do nível
     const videoContainer = document.getElementById('video-container');
-    videoContainer.innerHTML = `<iframe width="560" height="315" src="https://www.youtube.com/embed/g30LCGq1cDE?start=495" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
-} else if (nome === "WakaWaka Interface") {
-    console.log("Carregando vídeo para WakaWaka Interface..."); // Log para depuração
-    const videoContainer = document.getElementById('video-container');
-    videoContainer.innerHTML = `<iframe width="560" height="315" src="https://www.youtube.com/embed/TRKK4y63Wcg?start=1" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
-} else {
+    if (nome === "Crumbling Caverns") {
+        console.log("Carregando vídeo para Crumbling Caverns..."); // Log para depuração
+        videoContainer.innerHTML = `<iframe width="560" height="315" src="https://www.youtube.com/embed/g30LCGq1cDE?start=495" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+    } else if (nome === "WakaWaka Interface") {
+        console.log("Carregando vídeo para WakaWaka Interface..."); // Log para depuração
+        videoContainer.innerHTML = `<iframe width="560" height="315" src="https://www.youtube.com/embed/TRKK4y63Wcg?start=1" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+    } else {
+        // Limpa o conteúdo do vídeo para outros níveis
+        videoContainer.innerHTML = '';
+    }
+}
     
     console.log("Nenhum vídeo para este nível"); // Log para depuração
     // Limpa o conteúdo do vídeo para outros níveis
