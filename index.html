@@ -1,251 +1,48 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+
+<html>
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width-device-width, initial-scale-1.0">
     <title>Tropa do Cano Demon List</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #2b2b2b;
-            color: #f5f5f5;
-        }
-
-        header {
-            background-color: #0078D4;
-            color: white;
-            padding: 10px;
-            width: 100%;
-            text-align: center;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-            font-size: 20px;
-        }
-
-        .content {
-            display: flex;
-            flex-direction: row;
-            margin-top: 60px;
-        }
-
-        #sidebar {
-            width: 25%;
-            background-color: #1e1e1e;
-            padding: 20px;
-            height: calc(100vh - 60px);
-            overflow-y: auto;
-            box-shadow: 2px 0 4px rgba(0, 0, 0, 0.2);
-        }
-
-        #main {
-            width: 75%;
-            padding: 20px;
-        }
-
-        .level-name {
-            cursor: pointer;
-            color: white;
-            background-color: #1e1e1e;
-            border: 2px solid transparent;
-            border-radius: 12px;
-            padding: 10px 20px;
-            text-align: center;
-            font-size: 18px;
-            margin: 10px 0;
-            transition: background-color 0.3s, border-color 0.3s;
-            width: 100%;
-            box-sizing: border-box;
-        }
-
-        .level-name:hover {
-            background-color: #0078D4;
-            border-color: #0056a1;
-        }
-
-        .leaderboard-button {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background-color: #0078D4;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-
-        .leaderboard-button:hover {
-            background-color: #0056a1;
-        }
-
-        #leaderboard-modal {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: white;
-            color: black;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-            z-index: 2000;
-            max-width: 600px;
-            width: 80%;
-        }
-
-        #leaderboard-modal table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-        }
-
-        #leaderboard-modal th, #leaderboard-modal td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
-
-        #leaderboard-modal th {
-            background-color: #0078D4;
-            color: white;
-        }
-
-        #close-leaderboard {
-            background-color: #ff4d4d;
-            color: white;
-            border: none;
-            padding: 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            float: right;
-        }
-
-        #close-leaderboard:hover {
-            background-color: #d13333;
-        }
-
-        /* CSS para o vídeo */
-        .video-container {
-            position: relative;
-            width: 100%;
-            padding-bottom: 56.25%; /* Mantém a proporção 16:9 */
-            height: 0;
-            overflow: hidden;
-            max-width: 100%;
-            margin: 20px 0;
-        }
-
-        .video-container iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-        }
-    </style>
 </head>
+
 <body>
     <header>
-        Tropa do Cano Demon List
-        <button class="leaderboard-button" onclick="toggleLeaderboard()">Leaderboard</button>
+            <h1>Tropa do Cano Demon List</h1>
+            <p>Bem vindo a Tropa do Cano</p>
     </header>
-
-    <div class="content">
-        <div id="sidebar">
-            <ul>
-                <li class="level-name" onclick="showLevelInfo('WakaWaka Interface', 'vrdr', '105437840', 'Hyfera')">Waka Waka Interface</li>
-                <li class="level-name" onclick="showLevelInfo('Crumbling Caverns', 'vitnz', '105437840', 'Arepy')">Crumbling Caverns</li>
-                <!-- Adicione outros níveis aqui -->
-            </ul>
-        </div>
-        <div id="main">
-            <h2>Informações do Nível</h2>
-            <p><strong>Nome:</strong> <span id="level-name">Clique em um nível</span></p>
-            <p><strong>Criador:</strong> <span id="level-creator">---</span></p>
-            <p><strong>ID:</strong> <span id="level-id">---</span></p>
-            <p><strong>Verifier:</strong> <span id="level-verifier">---</span></p>
-
-            <!-- Aqui vai o vídeo -->
-            <div class="video-container" id="video-container">
-                <!-- Embed do vídeo será adicionado aqui -->
-            </div>
-        </div>
-    </div>
-
-    <div id="leaderboard-modal">
-        <button id="close-leaderboard" onclick="toggleLeaderboard()">Fechar</button>
-        <h2>Leaderboard</h2>
+<main>
         <table>
             <thead>
                 <tr>
-                    <th>Jogador</th>
-                    <th>Pontos</th>
+                    <th>Level Name</th>
+                    <th>Creator</th>
+                    <th>Difficulty</th>
+                    <th>Status</th>
+                    <th>Notes</th>
                 </tr>
             </thead>
-            <tbody id="leaderboard-data">
-                <!-- Dados do leaderboard serão adicionados dinamicamente -->
+            <tbody>
+                <!-- Exemplo de Demons -->
+                <tr>
+                    <td>Bloodbath</td>
+                    <td>Riot</td>
+                    <td class="difficulty extreme">Extreme</td>
+                    <td class="status in-progress">In Progress</td>
+                    <td>Stuck at 92%</td>
+                </tr>
+                <tr>
+                    <td>Deadlocked</td>
+                    <td>RobTop</td>
+                    <td class="difficulty hard">Hard</td>
+                    <td class="status completed">Completed</td>
+                    <td>Fun level!</td>
+                </tr>
+                <!-- Adicione mais linhas conforme necessário -->
             </tbody>
         </table>
-    </div>
-
-    <script>
-        // Dados fictícios do leaderboard
-        const leaderboard = [
-            { jogador: "Player1", pontos: 150 },
-            { jogador: "Player2", pontos: 140 },
-            { jogador: "Player3", pontos: 130 },
-        ];
-
-        // Mostra as informações de um nível no painel principal
-        function showLevelInfo(nome, criador, id, verifier) {
-            document.getElementById('level-name').innerText = nome;
-            document.getElementById('level-creator').innerText = criador;
-            document.getElementById('level-id').innerText = id;
-            document.getElementById('level-verifier').innerText = verifier;
-
-            // Exibe o vídeo das verificações
-            if (nome === "Crumbling Caverns") {
-                console.log("Carregando vídeo para Crumbling Caverns..."); // Log para depuração
-                const videoContainer = document.getElementById('video-container');
-                videoContainer.innerHTML = `<iframe src="https://www.youtube.com/embed/g30LCGq1cDE?start=495" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
-            } else if (nome === "WakaWaka Interface") {
-                console.log("Carregando vídeo para WakaWaka Interface..."); // Log para depuração
-                const videoContainer = document.getElementById('video-container');
-                videoContainer.innerHTML = `<iframe src="https://www.youtube.com/embed/TRKK4y63Wcg?start=1" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
-            } else {
-                console.log("Nenhum vídeo para este nível"); // Log para depuração
-                // Limpa o conteúdo do vídeo para outros níveis
-                document.getElementById('video-container').innerHTML = '';
-            }
-        }
-
-        // Mostra ou oculta o modal do leaderboard
-        function toggleLeaderboard() {
-            const modal = document.getElementById('leaderboard-modal');
-            modal.style.display = modal.style.display === 'block' ? 'none' : 'block';
-
-            // Popula a tabela do leaderboard se necessário
-            if (modal.style.display === 'block') {
-                const tbody = document.getElementById('leaderboard-data');
-                tbody.innerHTML = ""; // Limpa os dados antigos
-                leaderboard.forEach(player => {
-                    const row = `<tr>
-                        <td>${player.jogador}</td>
-                        <td>${player.pontos}</td>
-                    </tr>`;
-                    tbody.innerHTML += row;
-                });
-            }
-        }
-    </script>
-</body>
-</html>
+    </main>
+         </body>
+    </html>
