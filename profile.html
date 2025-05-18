@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tropa do Cano - Perfil</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="logo">TROPA DO CANO</div>
+        <div class="nav-buttons">
+            <button onclick="window.location.href='index.html'">Lista</button>
+            <button onclick="window.location.href='leaderboard.html'">Leaderboard</button>
+            <button onclick="window.location.href='rules.html'">Regras</button>
+        </div>
+    </header>
+    <main>
+        <div class="profile">
+            <h2>Perfil de <span id="player-name">Carregando...</span></h2>
+            <p><strong>Pontos (Verificador):</strong> <span id="player-points">0</span></p>
+            <h3>Níveis Verificados</h3>
+            <ul id="verified-levels">
+                <li>Nenhum nível verificado.</li>
+            </ul>
+            <h3>Níveis Completados</h3>
+            <ul id="completed-levels">
+                <li>Nenhum nível completado ainda.</li>
+            </ul>
+        </div>
+    </main>
+    <script>
+        // Dados dos verificadores, seus pontos e os níveis que verificaram
+        const verifiersData = {
+            'hyfera': {
+                points: 100,
+                verifiedLevels: ['Waka Waka Interface']
+            },
+            'Arepy': {
+                points: 100,
+                verifiedLevels: ['Crumbling Caverns', 'Invicible']
+            },
+            'vrdr': {
+                points: 180,
+                verifiedLevels: ['Phobia', 'Alpha Coronae']
+            },
+            'vidashgd': {
+                points: 80,
+                verifiedLevels: ['Dedicação', 'Obscuro']
+            },
+            'vitnz': {
+                points: 120,
+                verifiedLevels: ['Don Pous', 'Saas III', 'Saas II', 'Coolio', 'Nem fodendo', 'Tudo fodendo', 'Saas']
+            },
+            'justusrl': {
+                points: 30,
+                verifiedLevels: ['Cursed Circles Lmao', 'Mixtape', 'Renan Circles']
+            }
+        };
+
+        // Lê o parâmetro 'player' da URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const player = urlParams.get('player');
+
+        // Atualiza a página com os dados do jogador
+        document.getElementById('player-name').textContent = player || 'Desconhecido';
+
+        // Atualiza os pontos
+        const playerData = verifiersData[player] || { points: 0, verifiedLevels: [] };
+        document.getElementById('player-points').textContent = playerData.points;
+
+        // Atualiza a lista de níveis verificados
+        const verifiedList = document.getElementById('verified-levels');
+        verifiedList.innerHTML = ''; // Limpa a lista atual
+        if (playerData.verifiedLevels.length === 0) {
+            const li = document.createElement('li');
+            li.textContent = 'Nenhum nível verificado.';
+            verifiedList.appendChild(li);
+        } else {
+            playerData.verifiedLevels.forEach(level => {
+                const li = document.createElement('li');
+                li.textContent = level;
+                verifiedList.appendChild(li);
+            });
+        }
+
+        // Atualiza a lista de níveis completados (por enquanto, vazia)
+        const completedList = document.getElementById('completed-levels');
+        completedList.innerHTML = ''; // Limpa a lista atual
+        const li = document.createElement('li');
+        li.textContent = 'Nenhum nível completado ainda.';
+        completedList.appendChild(li);
+    </script>
+</body>
+</html>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tropa do Cano Demon List</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="logo">TROPA DO CANO</div>
+        <div class="nav-buttons">
+            <button onclick="window.location.href='leaderboard.html'">Leaderboard</button>
+            <button onclick="window.location.href='rules.html'">Regras</button>
+        </div>
+    </header>
+    <div class="container">
+        <!-- Lista de níveis à esquerda -->
+        <aside class="level-list">
+            <div class="level selected" onclick="showLevel('Waka Waka Interface', 'vrdr', 'hyfera', 100, 100001, 'Free Copy', 'dQw4w9WgXcQ', [])">
+                <div class="level-info">ID: 100001 | Extreme Demon</div>
+                #1 Waka Waka Interface
+            </div>
+            <div class="level" onclick="showLevel('Crumbling Caverns', 'Vitnz', 'Arepy', 90, 100002, 'Free Copy', '3nQNiWdeH2Q', [])">
+                <div class="level-info">ID: 100002 | Hard Demon</div>
+                #2 Crumbling Caverns
+            </div>
+            <div class="level" onclick="showLevel('Phobia', 'vrdr', 'vrdr', 80, 100003, 'Free Copy', 'k5nQNiWdeH2', [])">
+                <div class="level-info">ID: 100003 | Insane Demon</div>
+                #3 Phobia
+            </div>
+            <div class="level" onclick="showLevel('Dedicação', 'vidashgd', 'vidashgd', 70, 100004, 'Free Copy', 'yZ2aYsbM8LA', [])">
+                <div class="level-info">ID: 100004 | Medium Demon</div>
+                #4 Dedicação
+            </div>
+            <div class="level" onclick="showLevel('Don Pous', 'vitnz and arepy', 'vitnz', 60, 100005, 'Free Copy', 'vG1A2k5zM3N', [])">
+                <div class="level-info">ID: 100005 | Hard Demon</div>
+                #5 Don Pous
+            </div>
+            <div class="level" onclick="showLevel('Alpha Coronae', 'vrdr', 'vrdr', 50, 100006, 'Free Copy', 'dQw4w9WgXcQ', [])">
+                <div class="level-info">ID: 100006 | Insane Demon</div>
+                #6 Alpha Coronae
+            </div>
+            <div class="level" onclick="showLevel('Saas III', 'vitnz', 'vitnz', 40, 100007, 'Free Copy', '3nQNiWdeH2Q', [])">
+                <div class="level-info">ID: 100007 | Hard Demon</div>
+                #7 Saas III
+            </div>
+            <div class="level" onclick="showLevel('Saas II', 'vitnz', 'vitnz', 30, 100008, 'Free Copy', 'k5nQNiWdeH2', [])">
+                <div class="level-info">ID: 100008 | Hard Demon</div>
+                #8 Saas II
+            </div>
+            <div class="level" onclick="showLevel('Coolio', 'vitnz', 'vitnz', 20, 100009, 'Free Copy', 'yZ2aYsbM8LA', [])">
+                <div class="level-info">ID: 100009 | Medium Demon</div>
+                #9 Coolio
+            </div>
+            <div class="level" onclick="showLevel('Nem fodendo', 'vitnz', 'vitnz', 10, 100010, 'Free Copy', 'vG1A2k5zM3N', [])">
+                <div class="level-info">ID: 100010 | Easy Demon</div>
+                #10 Nem fodendo
+            </div>
+            <div class="level" onclick="showLevel('Tudo fodendo', 'vitnz', 'vitnz', 10, 100011, 'Free Copy', 'dQw4w9WgXcQ', [])">
+                <div class="level-info">ID: 100011 | Easy Demon</div>
+                #11 Tudo fodendo
+            </div>
+            <div class="level" onclick="showLevel('Cursed Circles Lmao', 'justusrl', 'justusrl', 10, 100012, 'Free Copy', '3nQNiWdeH2Q', [])">
+                <div class="level-info">ID: 100012 | Extreme Demon</div>
+                #12 Cursed Circles Lmao
+            </div>
+            <div class="level" onclick="showLevel('Obscuro', 'vidashgd', 'vidashgd', 10, 100013, 'Free Copy', 'k5nQNiWdeH2', [])">
+                <div class="level-info">ID: 100013 | Medium Demon</div>
+                #13 Obscuro
+            </div>
+            <div class="level" onclick="showLevel('Saas', 'vitnz', 'vitnz', 10, 100014, 'Free Copy', 'yZ2aYsbM8LA', [])">
+                <div class="level-info">ID: 100014 | Hard Demon</div>
+                #14 Saas
+            </div>
+            <div class="level" onclick="showLevel('Invicible', 'arepy', 'arepy', 10, 100015, 'Free Copy', 'vG1A2k5zM3N', [])">
+                <div class="level-info">ID: 100015 | Medium Demon</div>
+                #15 Invicible
+            </div>
+            <div class="level" onclick="showLevel('Mixtape', 'justusrl', 'justusrl', 10, 100016, 'Free Copy', 'dQw4w9WgXcQ', [])">
+                <div class="level-info">ID: 100016 | Hard Demon</div>
+                #16 Mixtape
+            </div>
+            <div class="level" onclick="showLevel('Renan Circles', 'justusrl', 'justusrl', 10, 100017, 'Free Copy', '3nQNiWdeH2Q', [])">
+                <div class="level-info">ID: 100017 | Extreme Demon</div>
+                #17 Renan Circles
+            </div>
+        </aside>
+        <!-- Seção central -->
+        <main>
+            <h1 id="level-title">Waka Waka Interface</h1>
+            <div class="info">
+                <p><strong>CREATOR</strong> <a id="creator-link" href="profile.html?player=vrdr" class="profile-link">vrdr</a></p>
+                <p><strong>VERIFIER</strong> <a id="verifier-link" href="profile.html?player=hyfera" class="profile-link">hyfera</a></p>
+            </div>
+            <div class="video">
+                <div class="verified">VERIFIED</div>
+                <iframe id="level-video" src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allowfullscreen></iframe>
+            </div>
+            <div class="details">
+                <div class="detail-box">
+                    <p>List Points</p>
+                    <p id="level-points">100</p>
+                </div>
+                <div class="detail-box">
+                    <p>Level Id</p>
+                    <p id="level-id">100001</p>
+                </div>
+                <div class="detail-box">
+                    <p>Password</p>
+                    <p id="level-password">Free Copy</p>
+                </div>
+            </div>
+            <div class="records">
+                <h2>Players Who Completed This Level</h2>
+                <ul id="level-records">
+                    <li>Nenhum jogador completou este nível ainda.</li>
+                </ul>
+            </div>
+        </main>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
